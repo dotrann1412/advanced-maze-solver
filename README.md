@@ -1,1 +1,1 @@
-# introduction-to-artificial-intelligence
+# Lab 1 - Search Algorithms
