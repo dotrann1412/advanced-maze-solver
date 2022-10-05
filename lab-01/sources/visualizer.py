@@ -48,8 +48,11 @@ def visualizer(bonus_points, matrix, start, end, block_size=20):
     # Render maze and run algorithm
     renderMap(bonus_points, matrix, start, end, block_size)
     bfs_testing(matrix, start, end, set_color)
-    while True:
-        for event in pygame.event.get():
-            if event.type == QUIT:
-                pygame.quit()
-                sys.exit()
+    # Wait 2 seconds before closing
+    pygame.time.wait(2000)
+    
+    # while True:
+    #     for event in pygame.event.get():
+    #         if event.type == QUIT:
+    #             pygame.quit()
+    #             sys.exit()
