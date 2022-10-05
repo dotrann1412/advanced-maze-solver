@@ -1,35 +1,39 @@
-from algorithms_utils import direction, extra_direction, valid_graph, AlgorithmsMode
+from algorithms_utils import *
 
 def __normal_dfs(graph, callback):
-	dim = [len(graph), len(graph[0])]
-	starting_point = __detect_starting_point(graph)
+	dim = graphDim(graph)
+	starting_point = detect_starting_point(graph)
 	if starting_point[0] < 0 or starting_point[0] >= dim[0] or starting_point[1] < 0 or starting_point[1] >= dim[1]:
 		return None
 
-	mark = [[False for __ in range(dim[1])] for _ in (dim[0])]
+	mark = [[False for __ in range(dim[1])] for _ in range(dim[0])]
 	answer = []
 
 	def __process(current_position):
-		if isExit(graph[*current_position]):
+		if isExit(graph[current_position[0]][current_position[1]]):
 			return True
 
-		mark[*current_position] = True
+		if not isEmptyCell(graph[current_position[0]][current_position[1]]) or mark[current_position[0]][current_position[1]]:
+			return False
 
+		mark[current_position[0]][current_position[1]] = True
+
+		found = False
 		for element in extra_direction:
-			next_step = current[0] + element[0], current[1] + element[1]
+			next_step = current_position[0] + element[0], current_position[1] + element[1]
+			
 			if next_step[0] < 0 or next_step[0] >= dim[0] or next_step[1] < 0 or next_step[1] >= dim[1]:
 				continue
 
-			if not mark[*next_step] and not isEmptyCell(graph[*next_step]):
-				result = __process(next_step)
-				if result:
-					answer.append(next_step)
-					return True
+			found = __process(next_step)
+			
+			if found:
+				answer.append(next_step)
+				break
 
-		mark[*current_position] = False
-		return False
+		mark[current_position[0]][current_position[1]] = False
+		return found
 
-	mark[*starting_point] = True
 	found = __process(starting_point)
 
 	if not found:
@@ -46,42 +50,49 @@ def __dfs_intermediate_point(graph, callback):
 		pass
 
 def __dfs_with_teleport_point(graph, callback):
-	starting_point = __detect_starting_point(graph)
-	teleport_list = teleport_list(graph)
+	dim = graphDim(graph)
+	starting_point = detect_starting_point(graph)
+	teleport_list = detect_teleport_list(graph)
 	
 	if starting_point[0] < 0 or starting_point[0] >= dim[0] or starting_point[1] < 0 or starting_point[1] >= dim[1]:
 		return None
 
-	mark = [[False for __ in range(dim[1])] for _ in (dim[0])]
+	mark = [[False for __ in range(dim[1])] for _ in range(dim[0])]
 	answer = []
 
-	def __process(current_position):
-		if isExit(graph[*current_position]):
+
+	print('[DEBUG] ', teleport_list)
+
+	def __process(current_position, tele = False):
+		if isExit(graph[current_position[0]][current_position[1]]):
 			return True
 
-		available_next_step = extra_direction
+		if mark[current_position[0]][current_position[1]] or not isEmptyCell(graph[current_position[0]][current_position[1]]):
+			return False
 
-		if isTeleport(graph[*current_position]):
-			available_next_step += teleport_list
+		mark[current_position[0]][current_position[1]] = True
 
-		for element in available_next_step:
-			next_step = current[0] + element[0], current[1] + element[1]
+		found = False
+
+		for element in extra_direction:
+			next_step = current_position[0] + element[0], current_position[1] + element[1]
+			
 			if next_step[0] < 0 or next_step[0] >= dim[0] or next_step[1] < 0 or next_step[1] >= dim[1]:
 				continue
+			
+			if isTeleportCell(graph[next_step[0]][next_step[1]]):
+				pass # stuck
+			
+			found = __process(next_step)
 
-			if not mark[*next_step] and not isEmptyCell(graph[*next_step]):
-				
-				mark[*current_position] = True
-				result = __process(next_step)
-				mark[*current_position] = False
+			if found:
+				answer.append(next_step)
+				break
 
-				if result:
-					answer.append(next_step)
-					return True
+		mark[current_position[0]][current_position[1]] = False
 		
-		return False
+		return found
 
-	mark[*starting_point] = True
 	found = __process(starting_point)
 
 	if not found:
@@ -90,9 +101,6 @@ def __dfs_with_teleport_point(graph, callback):
 	return answer[::-1]
 
 def dfs(graph, mode, call_back):
-	if not valid_graph(graph):
-		return None
-
 	if mode == AlgorithmsMode.NORMAL:
 		return __normal_dfs(graph, call_back)
 
