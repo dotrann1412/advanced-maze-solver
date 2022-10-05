@@ -21,8 +21,8 @@ valid_character = {
 	'*': 'Starting point',
 	'x': 'Blocker',
 	'+': 'Bonus cell',
-	'?': 'Way out' # not defined yet
-	'?': 'Intermediate point'
+	'?': 'Way out', # not defined yet
+	'?': 'Intermediate point',
 	'??': 'Teleport' # not defined yet
 }
 
