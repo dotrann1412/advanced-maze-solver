@@ -10,10 +10,37 @@ direction = [
 	[0, 1], [1, 0], [0, -1], [-1, 0]
 ]
 
+direction_str = [
+	'D', 'L', 'U', 'D'
+]
+
 extra_direction = [
 	[0, 1], [1, 0], [0, -1], [-1, 0], 
 	[-1, 1], [1, -1], [1, -1], [-1, 1]
 ]
+
+extra_direction_str = [
+	'D', 'L', 'U', 'D',
+]
+
+def isEmptyCell(ch):
+	pass
+
+def isExit(ch):
+	pass
+
+def isTeleportCell(char):
+	pass
+
+def detect_starting_point(graph):
+	pass
+
+def detect_exit_way(graph):
+	pass
+
+def teleport_list(graph):
+	pass
+
 
 
 valid_character = {
