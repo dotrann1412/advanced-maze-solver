@@ -33,3 +33,9 @@ def valid_graph(graph):
 		if len(line) != len(graph[0]):
 			return False
 	return True
+
+def is_in_graph(matrix, point):
+    return point[0] >= 0 and point[0] < len(matrix) and point[1] >= 0 and point[1] < len(matrix[0])
+
+def calc_sleep_time(dim):
+    return max(15000 // dim[0] // dim[1], 15)
