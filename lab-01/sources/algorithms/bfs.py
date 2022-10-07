@@ -1,4 +1,4 @@
-from algorithms.algorithms_utils import direction, valid_graph, AlgorithmsMode
+from algorithms.algorithms_utils import *
 from constants import *
 
 def __detect_starting_point(graph):
@@ -47,6 +47,7 @@ def bfs_testing(matrix, start, end, callback):
     terminated = (-1, -1)
 
     dim = [len(matrix), len(matrix[0])]
+    sleep_time = calc_sleep_time(dim)
     queue = []
 
     if start[0] < 0 or start[0] >= dim[0] or start[1] < 0 or start[1] >= dim[1]:
@@ -79,7 +80,7 @@ def bfs_testing(matrix, start, end, callback):
 
         # set color at current point. notice that we do not change the color of starting and ending point
         if current != start:
-            callback(current[1], current[0], FRONTIER_COLOR, sleep_time=30)
+            callback(current[1], current[0], FRONTIER_COLOR, sleep_time)
 
     if not end or not parent[end[0]][end[1]]:
         return None
@@ -93,7 +94,7 @@ def bfs_testing(matrix, start, end, callback):
 
     # set color for points in answer (optimize path)
     for point in answer[1:]:
-        callback(point[1], point[0], PATH_COLOR, sleep_time=10)
+        callback(point[1], point[0], PATH_COLOR, sleep_time)
 
     return answer[::-1]
 
