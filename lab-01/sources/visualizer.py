@@ -4,6 +4,8 @@ from pygame.locals import *
 from constants import *
 
 from algorithms.bfs import bfs_testing
+from algorithms.gbfs import gbfs
+from utils import manhattan_distance
 
 def drawGrid(x, y, block_size=20, color=WHITE, border=WHITE):
     rect = pygame.Rect(x * block_size, y * block_size, block_size, block_size)
@@ -47,7 +49,8 @@ def visualizer(bonus_points, matrix, start, end, block_size=20):
 
     # Render maze and run algorithm
     renderMap(bonus_points, matrix, start, end, block_size)
-    bfs_testing(matrix, start, end, set_color)
+    # result = bfs_testing(matrix, start, end, set_color)
+    result = gbfs(matrix, start, end, set_color, manhattan_distance)
     # Wait 2 seconds before closing
     pygame.time.wait(2000)
     
