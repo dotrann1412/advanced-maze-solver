@@ -1,3 +1,6 @@
+from math import sqrt
+
+
 def read_file(file_name: str = 'maze.txt'):
     f = open(file_name, 'r')
     n_bonus_points = int(next(f)[:-1])
@@ -23,6 +26,18 @@ def read_file(file_name: str = 'maze.txt'):
                 pass
 
     return bonus_points, matrix, start, end
+
+
+def euclidean_distance(first_node, second_node):
+    x_dif = first_node[0] - second_node[0]
+    y_dif = first_node[1] - second_node[1]
+    return sqrt(x_dif**2 + y_dif**2)
+
+
+def manhattan_distance(first_node, second_node):
+    x_dif = first_node[0] - second_node[0]
+    y_dif = first_node[1] - second_node[1]
+    return abs(x_dif) + abs(y_dif)
 
 
 if __name__ == '__main__':
