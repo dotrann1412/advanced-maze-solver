@@ -80,3 +80,9 @@ def isValidGraph(graph):
 		if len(line) != len(graph[0]):
 			return False
 	return True
+
+def isInGraph(matrix, point):
+    return point[0] >= 0 and point[0] < len(matrix) and point[1] >= 0 and point[1] < len(matrix[0])
+
+def calcSleepTime(dim):
+    return max(15000 // dim[0] // dim[1], 15)
