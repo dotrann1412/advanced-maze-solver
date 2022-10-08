@@ -2,11 +2,8 @@ from algorithms_utils import *
 from .. import constants
 from constants import *
 
-def __normal_dfs(graph, callback):
+def __normal_dfs(graph, starting_point, ending_point, callback):
 	size = grapthSize(graph)
-	
-	starting_point = detectStartingPoint(graph)
-	ending_point = detectEndingPoint(graph)
 
 	if starting_point[0] < 0 or starting_point[0] >= size[0] or starting_point[1] < 0 or starting_point[1] >= size[1]:
 		return None
@@ -51,15 +48,15 @@ def __normal_dfs(graph, callback):
 
 	return answer[::-1]
 
-def __dfs_with_bonus_point(graph, starting_point, ending_point, bonus_point_list, callback):
+def __dfs_with_bonus_point(graph, starting_point, ending_point, bonus_points, callback):
 	def __process(current_position):
 		pass
 
-def __dfs_intermediate_point(graph, starting_point, ending_point, itermediate_point_list, callback):
+def __dfs_intermediate_point(graph, starting_point, ending_point, itermediate_points, callback):
 	def __process(current_position):
 		pass
 
-def __dfs_with_teleport_point(graph, starting_point, ending_point, teleport_point_list, callback):
+def __dfs_with_teleport_point(graph, starting_point, ending_point, teleport_points, callback):
 	size = grapthSize(graph)
 	
 	if starting_point[0] < 0 or starting_point[0] >= size[0] or starting_point[1] < 0 or starting_point[1] >= size[1]:
@@ -106,7 +103,7 @@ def __dfs_with_teleport_point(graph, starting_point, ending_point, teleport_poin
 					break
 		
 		if not found:
-			callback(current_position[1], current_position[0], Colors.EMPTY)
+			callback(current_position[1], current_position[0], Colors.WHITE)
 
 		mark[current_position[0]][current_position[1]] = False
 		
@@ -119,17 +116,16 @@ def __dfs_with_teleport_point(graph, starting_point, ending_point, teleport_poin
 
 	return answer[::-1]
 
-def dfs(graph, starting_point, ending_point, mode, call_back,
-	teleport_list = [], bonus_point_list = [], itermediate_point_list = []):
+def dfs(graph, starting_point, ending_point, mode, bonus_points, intermediate_points, teleport_points, call_back):
 	
 	if mode == AlgorithmsMode.NORMAL:
 		return __normal_dfs(graph, starting_point, ending_point, call_back)
 
 	if mode == AlgorithmsMode.BONUS_POINT:
-		return __dfs_with_bonus_point(graph, starting_point, ending_point, bonus_point_list, call_back)
+		return __dfs_with_bonus_point(graph, starting_point, ending_point, bonus_points, call_back)
 	
 	if mode == AlgorithmsMode.INTERMEDIATE_POINT:
-		return __dfs_intermediate_point(graph, starting_point, ending_point, itermediate_point_list, call_back)
+		return __dfs_intermediate_point(graph, starting_point, ending_point, intermediate_points, call_back)
 	
 	if mode == AlgorithmsMode.TELEPORT_POINT:
-		return __dfs_with_teleport_point(graph, starting_point, ending_point, teleport_list, call_back)
+		return __dfs_with_teleport_point(graph, starting_point, ending_point, teleport_points, call_back)
