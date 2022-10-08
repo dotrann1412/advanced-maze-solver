@@ -60,9 +60,6 @@ def __dfs_with_teleport_point(graph, callback):
 	mark = [[False for __ in range(dim[1])] for _ in range(dim[0])]
 	answer = []
 
-
-	print('[DEBUG] ', teleport_list)
-
 	def __process(current_position, tele = False):
 		if isExit(graph[current_position[0]][current_position[1]]):
 			return True
@@ -80,14 +77,23 @@ def __dfs_with_teleport_point(graph, callback):
 			if next_step[0] < 0 or next_step[0] >= dim[0] or next_step[1] < 0 or next_step[1] >= dim[1]:
 				continue
 			
-			if isTeleportCell(graph[next_step[0]][next_step[1]]):
-				pass # stuck
-			
-			found = __process(next_step)
+			if not tele and isTeleportCell(graph[next_step[0]][next_step[1]]):
+				# Stuck
+				# __found = False
+				# print('haha')
+				# for teleport in teleport_list:
+				# 	__found = __process(next_step, tele = True)
+				# 	if __found:
+				# 		answer.append(teleport)
+				# 		break
+				# if __found:
+				# 	break
+			else:
+				found = __process(next_step)
 
-			if found:
-				answer.append(next_step)
-				break
+				if found:
+					answer.append(next_step)
+					break
 
 		mark[current_position[0]][current_position[1]] = False
 		
