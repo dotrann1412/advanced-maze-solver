@@ -33,7 +33,7 @@ valid_character = {
 	'o': 'Teleport' # not defined yet
 }
 
-def graphDim(graph):
+def grapthSize(graph):
 	return len(graph), len(graph[0])
 
 def isEmptyCell(ch):
@@ -45,8 +45,8 @@ def isExit(ch):
 def isTeleportCell(ch):
 	return ch == 'o'
 
-def detect_starting_point(graph):
-	dim = graphDim(graph)
+def detectStartingPoint(graph):
+	dim = grapthSize(graph)
 	for i in range(dim[0]):
 		for j in range(dim[1]):
 			if graph[i][j] == '*':
@@ -54,8 +54,8 @@ def detect_starting_point(graph):
 
 	return None
 
-def detect_exit_way(graph):
-	dim = graphDim(graph)
+def detectEndingPoint(graph):
+	dim = grapthSize(graph)
 	for i in range(dim[0]):
 		for j in range(dim[1]):
 			if graph[i][j] == '?':
@@ -63,9 +63,9 @@ def detect_exit_way(graph):
 
 	return None
 
-def detect_teleport_list(graph):
+def detectTeleportList(graph):
 	teleport_list = []
-	dim = graphDim(graph)
+	dim = grapthSize(graph)
 	for i in range(dim[0]):
 		for j in range(dim[1]):
 			if graph[i][j] == 'o':
@@ -73,7 +73,7 @@ def detect_teleport_list(graph):
 
 	return teleport_list
 
-def valid_graph(graph):
+def isValidGraph(graph):
 	if not len(graph) or not len(graph[0]):
 		return False
 	for line in graph[1:]:

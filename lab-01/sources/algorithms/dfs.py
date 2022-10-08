@@ -1,16 +1,19 @@
 from algorithms_utils import *
 
 def __normal_dfs(graph, callback):
-	dim = graphDim(graph)
-	starting_point = detect_starting_point(graph)
-	if starting_point[0] < 0 or starting_point[0] >= dim[0] or starting_point[1] < 0 or starting_point[1] >= dim[1]:
+	size = grapthSize(graph)
+	
+	starting_point = detectStartingPoint(graph)
+	ending_point = detectEndingPoint(graph)
+
+	if starting_point[0] < 0 or starting_point[0] >= size[0] or starting_point[1] < 0 or starting_point[1] >= size[1]:
 		return None
 
-	mark = [[False for __ in range(dim[1])] for _ in range(dim[0])]
+	mark = [[False for __ in range(size[1])] for _ in range(size[0])]
 	answer = []
 
 	def __process(current_position):
-		if isExit(graph[current_position[0]][current_position[1]]):
+		if ending_point == current_position:
 			return True
 
 		if not isEmptyCell(graph[current_position[0]][current_position[1]]) or mark[current_position[0]][current_position[1]]:
@@ -22,7 +25,7 @@ def __normal_dfs(graph, callback):
 		for element in extra_direction:
 			next_step = current_position[0] + element[0], current_position[1] + element[1]
 			
-			if next_step[0] < 0 or next_step[0] >= dim[0] or next_step[1] < 0 or next_step[1] >= dim[1]:
+			if next_step[0] < 0 or next_step[0] >= size[0] or next_step[1] < 0 or next_step[1] >= size[1]:
 				continue
 
 			found = __process(next_step)
@@ -50,14 +53,15 @@ def __dfs_intermediate_point(graph, callback):
 		pass
 
 def __dfs_with_teleport_point(graph, callback):
-	dim = graphDim(graph)
-	starting_point = detect_starting_point(graph)
-	teleport_list = detect_teleport_list(graph)
+	size = grapthSize(graph)
+	starting_point = detectStartingPoint(graph)
+	ending_point = detectEndingPoint(graph)
+	teleport_list = detectTeleportList(graph)
 	
-	if starting_point[0] < 0 or starting_point[0] >= dim[0] or starting_point[1] < 0 or starting_point[1] >= dim[1]:
+	if starting_point[0] < 0 or starting_point[0] >= size[0] or starting_point[1] < 0 or starting_point[1] >= size[1]:
 		return None
 
-	mark = [[False for __ in range(dim[1])] for _ in range(dim[0])]
+	mark = [[False for __ in range(size[1])] for _ in range(size[0])]
 	answer = []
 
 	def __process(current_position, tele = False):
@@ -74,7 +78,7 @@ def __dfs_with_teleport_point(graph, callback):
 		for element in extra_direction:
 			next_step = current_position[0] + element[0], current_position[1] + element[1]
 			
-			if next_step[0] < 0 or next_step[0] >= dim[0] or next_step[1] < 0 or next_step[1] >= dim[1]:
+			if next_step[0] < 0 or next_step[0] >= size[0] or next_step[1] < 0 or next_step[1] >= size[1]:
 				continue
 			
 			if not tele and isTeleportCell(graph[next_step[0]][next_step[1]]):
@@ -88,6 +92,7 @@ def __dfs_with_teleport_point(graph, callback):
 				# 		break
 				# if __found:
 				# 	break
+				pass
 			else:
 				found = __process(next_step)
 

@@ -1,27 +1,27 @@
 from algorithms_utils import *
 
 def __normal_bfs(graph, callback):
-	dim = [len(graph), len(graph[0])]
-	queue = []
-	starting_point = detect_starting_point(graph)
+	size = [len(graph), len(graph[0])]
+	frontier = []
+	starting_point = detectStartingPoint(graph)
 
-	if starting_point[0] < 0 or starting_point[0] >= dim[0] or starting_point[1] < 0 or starting_point[1] >= dim[1]:
+	if starting_point[0] < 0 or starting_point[0] >= size[0] or starting_point[1] < 0 or starting_point[1] >= size[1]:
 		return None
 
-	parrent = [[None for __ in range(dim[1])] for _ in range(dim[0])]
+	parrent = [[None for __ in range(size[1])] for _ in range(size[0])]
 	
-	queue.append(starting_point)
+	frontier.append(starting_point)
 	parrent[starting_point[0]][starting_point[1]] = starting_point
 	
 	found = False
 
-	while len(queue) != 0 and not found:
-		current = queue[0]
-		queue.pop(0)
+	while len(frontier) != 0 and not found:
+		current = frontier[0]
+		frontier.pop(0)
 		for element in extra_direction:
 			next_step_x, next_step_y = current[0] + element[0], current[1] + element[1]
 			
-			if next_step_x < 0 or next_step_x >= dim[0] or next_step_y < 0 or next_step_y >= dim[1]:
+			if next_step_x < 0 or next_step_x >= size[0] or next_step_y < 0 or next_step_y >= size[1]:
 				continue
 
 			if isExit(graph[next_step_x][next_step_y]):
@@ -31,17 +31,17 @@ def __normal_bfs(graph, callback):
 
 			if isEmptyCell(graph[next_step_x][next_step_y]) and not parrent[next_step_x][next_step_y]:
 				parrent[next_step_x][next_step_y] = current
-				queue.append([next_step_x, next_step_y])
+				frontier.append([next_step_x, next_step_y])
 
-	wayout_position = detect_exit_way(graph)
+	ending_point = detectEndingPoint(graph)
 
-	if not wayout_position or not parrent[wayout_position[0]][wayout_position[1]]:
+	if not ending_point or not parrent[ending_point[0]][ending_point[1]]:
 		return None
 
 	answer = []
-	pointer = wayout_position
+	pointer = ending_point
 
-	limit = dim[0] + dim[1]
+	limit = size[0] + size[1]
 
 	while pointer != starting_point:
 		answer.append(pointer)
@@ -55,37 +55,37 @@ def __normal_bfs(graph, callback):
 	return answer
 
 def __bfs_with_bonus_point(graph, callback):
-	dim = [len(graph), len(graph[0])]
-	starting_point = detect_starting_point(graph)
+	size = [len(graph), len(graph[0])]
+	starting_point = detectStartingPoint(graph)
 
 def __bfs_intermediate_point(graph, callback):
-	starting_point = detect_starting_point(graph)
+	starting_point = detectStartingPoint(graph)
 
 def __bfs_with_teleport_point(graph, callback):
-	dim = graphDim(graph)
-	starting_point = detect_starting_point(graph)
-	queue = []
+	size = grapthSize(graph)
+	starting_point = detectStartingPoint(graph)
+	frontier = []
 
-	teleport_list = detect_teleport_list(graph)
+	teleport_list = detectTeleportList(graph)
 	ignore_teleport = False
 
-	if starting_point[0] < 0 or starting_point[0] >= dim[0] or starting_point[1] < 0 or starting_point[1] >= dim[1]:
+	if starting_point[0] < 0 or starting_point[0] >= size[0] or starting_point[1] < 0 or starting_point[1] >= size[1]:
 		return None
 
-	parrent = [[None for __ in range(dim[1])] for _ in range(dim[0])]
+	parrent = [[None for __ in range(size[1])] for _ in range(size[0])]
 	
-	queue.append(starting_point)
+	frontier.append(starting_point)
 	parrent[starting_point[0]][starting_point[1]] = starting_point
 
 	found = False
 
-	while len(queue) != 0 and not found:
-		current = queue[0]
-		queue.pop(0)
+	while len(frontier) != 0 and not found:
+		current = frontier[0]
+		frontier.pop(0)
 
 		for element in extra_direction:
 			next_step_x, next_step_y = current[0] + element[0], current[1] + element[1]
-			if next_step_x < 0 or next_step_x >= dim[0] or next_step_y < 0 or next_step_y >= dim[1]:
+			if next_step_x < 0 or next_step_x >= size[0] or next_step_y < 0 or next_step_y >= size[1]:
 				continue
 
 			if isExit(graph[next_step_x][next_step_y]):
@@ -96,23 +96,23 @@ def __bfs_with_teleport_point(graph, callback):
 			if not ignore_teleport and isTeleportCell(graph[next_step_x][next_step_y]):
 				for teleport in teleport_list:
 					parrent[teleport[0]][teleport[1]] = current if teleport == [next_step_x, next_step_y] else [next_step_x, next_step_y]
-					queue.append(teleport)
+					frontier.append(teleport)
 				ignore_teleport = True
 
 			if isEmptyCell(graph[next_step_x][next_step_y]) and not parrent[next_step_x][next_step_y]:
 				parrent[next_step_x][next_step_y] = current
-				queue.append([next_step_x, next_step_y])
+				frontier.append([next_step_x, next_step_y])
 
 
-	wayout_position = detect_exit_way(graph)
+	ending_point = detectEndingPoint(graph)
 
-	if not wayout_position or not parrent[wayout_position[0]][wayout_position[1]]:
+	if not ending_point or not parrent[ending_point[0]][ending_point[1]]:
 		return None
 
 	answer = []
-	pointer = wayout_position
+	pointer = ending_point
 
-	limit = dim[0] + dim[1]
+	limit = size[0] + size[1]
 
 	while pointer != starting_point:
 		answer.append(pointer)
@@ -128,7 +128,7 @@ def __bfs_with_teleport_point(graph, callback):
 
 
 def bfs(graph, mode, call_back):
-	if not valid_graph(graph):
+	if not isValidGraph(graph):
 		return None
 
 	if mode == AlgorithmsMode.NORMAL:
