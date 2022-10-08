@@ -4,10 +4,9 @@ from pygame.locals import *
 from constants import *
 
 from algorithms.algorithms_utils import AlgorithmsMode
-from algorithms.bfs import bfs_testing
-from algorithms.a_star import a_star
+from algorithms.a_star import aStar
 
-def drawGrid(x, y, block_size=20, color=WHITE, border=WHITE):
+def drawGrid(x, y, block_size=20, color=Colors.WHITE, border=Colors.WHITE):
     rect = pygame.Rect(x * block_size, y * block_size, block_size, block_size)
     pygame.draw.rect(SCREEN, color, rect, block_size//2)
     pygame.draw.rect(SCREEN, border, rect, 1)
@@ -15,18 +14,18 @@ def drawGrid(x, y, block_size=20, color=WHITE, border=WHITE):
 def renderMap(bonus_points, matrix, start, end, block_size=20):
     for y in range(len(matrix)):
         for x in range(len(matrix[0])):
-            if matrix[y][x] == WALL:
-                color = BLACK
-            elif matrix[y][x] == START:
-                color = GREEN
-            elif matrix[y][x] == BONUS:
-                color = RED
+            if matrix[y][x] == MazeObject.WALL:
+                color = Colors.BLACK
+            elif matrix[y][x] == MazeObject.START:
+                color = Colors.GREEN
+            elif matrix[y][x] == MazeObject.BONUS:
+                color = Colors.RED
             else:
-                color = WHITE
+                color = Colors.WHITE
             drawGrid(x, y, block_size, color)
 
-    drawGrid(start[1], start[0], color=ORANGE)
-    drawGrid(end[1], end[0], color=BLUE)
+    drawGrid(start[1], start[0], color=Colors.ORANGE)
+    drawGrid(end[1], end[0], color=Colors.BLUE)
     pygame.display.update()
 
 
@@ -60,10 +59,11 @@ def visualizer(algorithm, matrix, start, end, bonus_points=[], inter_points=[], 
         mode = AlgorithmsMode.TELEPORT_POINT
 
     # Run algorithm
-    if algorithm == A_STAR:
-        a_star(matrix, start, end, mode, set_color)
-    elif algorithm == BFS:
-        bfs_testing(matrix, start, end, set_color)
+    if algorithm == Algorithms.A_STAR:
+        aStar(matrix, start, end, mode, set_color)
+    elif algorithm == Algorithms.BFS:
+        pass
+        # bfs(matrix, start, end, set_color)
 
     # Wait 2 seconds before closing
     # pygame.time.wait(2000)

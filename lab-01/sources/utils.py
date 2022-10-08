@@ -18,10 +18,10 @@ def read_file(file_name: str = 'maze.txt'):
 
     for i in range(len(matrix)):
         for j in range(len(matrix[0])):
-            if matrix[i][j] == START:
+            if matrix[i][j] == MazeObject.START:
                 start = (i, j)
 
-            elif matrix[i][j] == EMPTY:
+            elif matrix[i][j] == MazeObject.EMPTY:
                 if (i == 0) or (i == len(matrix)-1) or (j == 0) or (j == len(matrix[0])-1):
                     end = (i, j)
 

@@ -11,4 +11,4 @@ if __name__ == "__main__":
     print(f'Ending point (x, y) = {end[0], end[1]}')
 
     # visualizer(BFS, matrix, start, end, bonus_points, inter_points, teleport_points)
-    visualizer(A_STAR, matrix, start, end, bonus_points, inter_points, teleport_points)
+    visualizer(Algorithms.A_STAR, matrix, start, end, bonus_points, inter_points, teleport_points)

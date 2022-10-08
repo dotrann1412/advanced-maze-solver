@@ -8,14 +8,14 @@ from queue import PriorityQueue
 
     I have also added an option to use Euclidean distance as heuristic function
 '''
-def __normal_a_star(matrix, start, end, callback, euclid = False):
+def __normalAStar(matrix, start, end, callback, euclid = False):
     def h(point):
         if euclid:
             return ((point[0] - end[0]) ** 2 + (point[1] - end[1]) ** 2) ** 0.5
         return abs(point[0] - end[0]) + abs(point[1] - end[1])
 
     dim = [len(matrix), len(matrix[0])]
-    sleep_time = calc_sleep_time(dim)
+    sleep_time = calcSleepTime(dim)
     print('Sleep time:', sleep_time)
 
     parent = [[None for __ in range(dim[1])] for _ in range(dim[0])]
@@ -35,11 +35,11 @@ def __normal_a_star(matrix, start, end, callback, euclid = False):
             break
             
         if point != start:
-            callback(point[1], point[0], FRONTIER_COLOR, sleep_time)
+            callback(point[1], point[0], Colors.FRONTIER_COLOR, sleep_time)
 
         for d in direction:
             child = (point[0] + d[0], point[1] + d[1])
-            if not is_in_graph(matrix, child) or matrix[child[0]][child[1]] != EMPTY:
+            if not isInGraph(matrix, child) or matrix[child[0]][child[1]] != Colors.EMPTY:
                 continue
 
             if g[child[0]][child[1]] > g[point[0]][point[1]] + 1:
@@ -59,32 +59,32 @@ def __normal_a_star(matrix, start, end, callback, euclid = False):
     answer.append(start)
 
     for point in answer[1:-1]:
-        callback(point[1], point[0], PATH_COLOR, sleep_time)
+        callback(point[1], point[0], Colors.PATH_COLOR, sleep_time)
     
     return answer
 
-def __a_star_with_bonus_point(graph):
+def __aStarWithBonusPoint(graph):
     pass
 
-def __a_star_intermediate_point(graph):
+def __aStarIntermediatePoint(graph):
     pass
 
-def __a_star_with_teleport_point(graph):
+def __aStarWithTeleportPoint(graph):
     pass
 
 
-def a_star(graph, start, end, mode, callback, *args):
-    if not valid_graph(graph):
+def aStar(graph, start, end, mode, callback, *args):
+    if not isValidGraph(graph):
         return None
 
     if mode == AlgorithmsMode.NORMAL:
-        return __normal_a_star(graph, start, end, callback, *args)
+        return __normalAStar(graph, start, end, callback, *args)
 
     if mode == AlgorithmsMode.BONUS_POINT:
-        return __a_star_with_bonus_point(graph)
+        return __aStarWithBonusPoint(graph)
 
     if mode == AlgorithmsMode.INTERMEDIATE_POINT:
-        return __a_star_intermediate_point(graph)
+        return __aStarIntermediatePoint(graph)
 
     if mode == AlgorithmsMode.TELEPORT_POINT:
-        return __a_star_with_teleport_point(graph)
+        return __aStarWithTeleportPoint(graph)
