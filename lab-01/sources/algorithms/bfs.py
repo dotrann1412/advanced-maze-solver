@@ -1,9 +1,8 @@
 from algorithms_utils import *
 
-def __normal_bfs(graph, callback):
+def __normal_bfs(graph, starting_point, ending_point, callback):
 	size = [len(graph), len(graph[0])]
 	frontier = []
-	starting_point = detectStartingPoint(graph)
 
 	if starting_point[0] < 0 or starting_point[0] >= size[0] or starting_point[1] < 0 or starting_point[1] >= size[1]:
 		return None
@@ -18,6 +17,10 @@ def __normal_bfs(graph, callback):
 	while len(frontier) != 0 and not found:
 		current = frontier[0]
 		frontier.pop(0)
+
+		if current != starting_point:
+			callback(current[1], current[0], FRONTIER_COLOR)
+
 		for element in direction:
 			next_step_x, next_step_y = current[0] + element[0], current[1] + element[1]
 			
@@ -32,8 +35,6 @@ def __normal_bfs(graph, callback):
 			if isEmptyCell(graph[next_step_x][next_step_y]) and not parrent[next_step_x][next_step_y]:
 				parrent[next_step_x][next_step_y] = current
 				frontier.append([next_step_x, next_step_y])
-
-	ending_point = detectEndingPoint(graph)
 
 	if not ending_point or not parrent[ending_point[0]][ending_point[1]]:
 		return None
@@ -50,23 +51,25 @@ def __normal_bfs(graph, callback):
 		limit -= 1
 		if limit == 0:
 			raise Exception("Infinite loop!")
-	
+
 	answer.append(starting_point)
+	answer = answer[::-1]
+
+	for point in answer:
+		callback(point[1], point[0], PATH_COLOR)
+
 	return answer
 
-def __bfs_with_bonus_point(graph, callback):
-	size = [len(graph), len(graph[0])]
-	starting_point = detectStartingPoint(graph)
-
-def __bfs_intermediate_point(graph, callback):
-	starting_point = detectStartingPoint(graph)
-
-def __bfs_with_teleport_point(graph, callback):
+def __bfs_with_bonus_point(graph, starting_point, ending_point, bonus_point_list, callback):
 	size = grapthSize(graph)
-	starting_point = detectStartingPoint(graph)
+
+def __bfs_intermediate_point(graph, starting_point, ending_point, itermediate_point_list, callback):
+	size = grapthSize(graph)
+
+def __bfs_with_teleport_point(graph, starting_point, ending_point, teleport_list, callback):
+	size = grapthSize(graph)
 	frontier = []
 
-	teleport_list = detectTeleportList(graph)
 	ignore_teleport = False
 
 	if starting_point[0] < 0 or starting_point[0] >= size[0] or starting_point[1] < 0 or starting_point[1] >= size[1]:
@@ -82,6 +85,9 @@ def __bfs_with_teleport_point(graph, callback):
 	while len(frontier) != 0 and not found:
 		current = frontier[0]
 		frontier.pop(0)
+
+		if current != starting_point:
+			callback(current[1], current[0], FRONTIER_COLOR)
 
 		for element in direction:
 			next_step_x, next_step_y = current[0] + element[0], current[1] + element[1]
@@ -103,9 +109,6 @@ def __bfs_with_teleport_point(graph, callback):
 				parrent[next_step_x][next_step_y] = current
 				frontier.append([next_step_x, next_step_y])
 
-
-	ending_point = detectEndingPoint(graph)
-
 	if not ending_point or not parrent[ending_point[0]][ending_point[1]]:
 		return None
 
@@ -123,11 +126,15 @@ def __bfs_with_teleport_point(graph, callback):
 			raise Exception("Infinite loop!")
 	
 	answer.append(starting_point)
+	answer = answer[::-1] 
+	for point in answer:
+		callback(point[1], point[0], PATH_COLOR)
+	return answer
 
-	return answer[::-1]
 
-
-def bfs(graph, mode, call_back):
+def bfs(graph, starting_point, ending_point, mode, call_back,
+	teleport_list = [], bonus_point_list = [], itermediate_point_list = []):
+	
 	if not isValidGraph(graph):
 		return None
 
@@ -135,10 +142,10 @@ def bfs(graph, mode, call_back):
 		return __normal_bfs(graph, call_back)
 
 	if mode == AlgorithmsMode.BONUS_POINT:
-		return __bfs_with_bonus_point(graph, call_back)
-	
+		return __bfs_with_bonus_point(graph, starting_point, ending_point, bonus_point_list, call_back)
+
 	if mode == AlgorithmsMode.INTERMEDIATE_POINT:
-		return __bfs_intermediate_point(graph, call_back)
-	
+		return __bfs_intermediate_point(graph, starting_point, ending_point, itermediate_point_list, call_back)
+
 	if mode == AlgorithmsMode.TELEPORT_POINT:
-		return __bfs_with_teleport_point(graph, call_back)
+		return __bfs_with_teleport_point(graph, starting_point, ending_point, call_back)

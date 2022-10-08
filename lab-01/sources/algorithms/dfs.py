@@ -20,6 +20,8 @@ def __normal_dfs(graph, callback):
 			return False
 
 		mark[current_position[0]][current_position[1]] = True
+		if current_position != starting_point:
+			callback(current_position[1], current_position[0], PATH_COLOR)
 
 		found = False
 		for element in direction:
@@ -29,11 +31,14 @@ def __normal_dfs(graph, callback):
 				continue
 
 			found = __process(next_step)
-			
+
 			if found:
 				answer.append(next_step)
 				break
 
+		if not found:
+			callback(current_position[1], current_position[0], EMPTY)
+		
 		mark[current_position[0]][current_position[1]] = False
 		return found
 
@@ -44,19 +49,16 @@ def __normal_dfs(graph, callback):
 
 	return answer[::-1]
 
-def __dfs_with_bonus_point(graph, callback):
+def __dfs_with_bonus_point(graph, starting_point, ending_point, bonus_point_list, callback):
 	def __process(current_position):
 		pass
 
-def __dfs_intermediate_point(graph, callback):
+def __dfs_intermediate_point(graph, starting_point, ending_point, itermediate_point_list, callback):
 	def __process(current_position):
 		pass
 
-def __dfs_with_teleport_point(graph, callback):
+def __dfs_with_teleport_point(graph, starting_point, ending_point, teleport_point_list, callback):
 	size = grapthSize(graph)
-	starting_point = detectStartingPoint(graph)
-	ending_point = detectEndingPoint(graph)
-	teleport_list = detectTeleportList(graph)
 	
 	if starting_point[0] < 0 or starting_point[0] >= size[0] or starting_point[1] < 0 or starting_point[1] >= size[1]:
 		return None
@@ -65,14 +67,15 @@ def __dfs_with_teleport_point(graph, callback):
 	answer = []
 
 	def __process(current_position, tele = False):
-		if isExit(graph[current_position[0]][current_position[1]]):
+		if current_position == ending_point:
 			return True
 
 		if mark[current_position[0]][current_position[1]] or not isEmptyCell(graph[current_position[0]][current_position[1]]):
 			return False
 
 		mark[current_position[0]][current_position[1]] = True
-
+		if current_position != starting_point:
+			callback(current_position[1], current_position[0], PATH_COLOR)
 		found = False
 
 		for element in direction:
@@ -99,6 +102,9 @@ def __dfs_with_teleport_point(graph, callback):
 				if found:
 					answer.append(next_step)
 					break
+		
+		if not found:
+			callback(current_position[1], current_position[0], EMPTY)
 
 		mark[current_position[0]][current_position[1]] = False
 		
@@ -111,15 +117,17 @@ def __dfs_with_teleport_point(graph, callback):
 
 	return answer[::-1]
 
-def dfs(graph, mode, call_back):
+def dfs(graph, starting_point, ending_point, mode, call_back,
+	teleport_list = [], bonus_point_list = [], itermediate_point_list = []):
+	
 	if mode == AlgorithmsMode.NORMAL:
-		return __normal_dfs(graph, call_back)
+		return __normal_dfs(graph, starting_point, ending_point, call_back)
 
 	if mode == AlgorithmsMode.BONUS_POINT:
-		return __dfs_with_bonus_point(graph, call_back)
+		return __dfs_with_bonus_point(graph, starting_point, ending_point, bonus_point_list, call_back)
 	
 	if mode == AlgorithmsMode.INTERMEDIATE_POINT:
-		return __dfs_intermediate_point(graph, call_back)
+		return __dfs_intermediate_point(graph, starting_point, ending_point, itermediate_point_list, call_back)
 	
 	if mode == AlgorithmsMode.TELEPORT_POINT:
-		return __dfs_with_teleport_point(graph, call_back)
+		return __dfs_with_teleport_point(graph, starting_point, ending_point, teleport_list, call_back)
