@@ -18,7 +18,7 @@ def __normal_bfs(graph, callback):
 	while len(frontier) != 0 and not found:
 		current = frontier[0]
 		frontier.pop(0)
-		for element in extra_direction:
+		for element in direction:
 			next_step_x, next_step_y = current[0] + element[0], current[1] + element[1]
 			
 			if next_step_x < 0 or next_step_x >= size[0] or next_step_y < 0 or next_step_y >= size[1]:
@@ -83,7 +83,7 @@ def __bfs_with_teleport_point(graph, callback):
 		current = frontier[0]
 		frontier.pop(0)
 
-		for element in extra_direction:
+		for element in direction:
 			next_step_x, next_step_y = current[0] + element[0], current[1] + element[1]
 			if next_step_x < 0 or next_step_x >= size[0] or next_step_y < 0 or next_step_y >= size[1]:
 				continue

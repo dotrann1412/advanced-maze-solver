@@ -22,7 +22,7 @@ def __normal_dfs(graph, callback):
 		mark[current_position[0]][current_position[1]] = True
 
 		found = False
-		for element in extra_direction:
+		for element in direction:
 			next_step = current_position[0] + element[0], current_position[1] + element[1]
 			
 			if next_step[0] < 0 or next_step[0] >= size[0] or next_step[1] < 0 or next_step[1] >= size[1]:
@@ -75,7 +75,7 @@ def __dfs_with_teleport_point(graph, callback):
 
 		found = False
 
-		for element in extra_direction:
+		for element in direction:
 			next_step = current_position[0] + element[0], current_position[1] + element[1]
 			
 			if next_step[0] < 0 or next_step[0] >= size[0] or next_step[1] < 0 or next_step[1] >= size[1]:
