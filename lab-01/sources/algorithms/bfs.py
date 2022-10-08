@@ -1,4 +1,5 @@
-from algorithms_utils import *
+from algorithms.algorithms_utils import *
+from constants import *
 
 def __normal_bfs(graph, starting_point, ending_point, callback):
 	size = [len(graph), len(graph[0])]
