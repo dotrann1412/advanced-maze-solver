@@ -1,5 +1,7 @@
 from algorithms_utils import *
 from queue import PriorityQueue
+from .. import constants
+from constants import *
 
 def __normal_ucs(graph, starting_point, ending_point, callback):
 	frontier = PriorityQueue
@@ -15,10 +17,13 @@ def __normal_ucs(graph, starting_point, ending_point, callback):
 	found = False
 	while not frontier.empty() and not found:
 		current_cost, current_point = frontier.get()
-
+		
 		if cost[current_point[0]][current_point[1]] != current_cost:
 			continue
 		
+		if current_point != starting_point:
+			callback(current_point[1], point[0], Colors.FRONTIER_COLOR)
+
 		for dir in direction:
 			next_x, next_y = current_point[0] + dir[0], current_point[1] + dir[1]
 			
@@ -51,7 +56,11 @@ def __normal_ucs(graph, starting_point, ending_point, callback):
 		if limit == 0:
 			raise Exception("Infinite loop!")
 	
-	answer.append(starting_point)
+	answer = answer[::-1]
+
+	for point in answer:
+		callback(point[1], point[0], Colors.PATH_COLOR)
+
 	return answer
 
 def __ucs_with_bonus_point(graph, starting_point, ending_point, bonus_point_list, callback):
@@ -79,7 +88,7 @@ def __ucs_with_teleport_point(graph, starting_point, ending_point, teleport_list
 			continue
 
 		if current_point != starting_point:
-			callback(current_point[1], current_point[0], FRONTIER_COLOR)
+			callback(current_point[1], current_point[0], Colors.FRONTIER_COLOR)
 		
 		for dir in direction:
 			next_x, next_y = current_point[0] + dir[0], current_point[1] + dir[1]
@@ -127,6 +136,12 @@ def __ucs_with_teleport_point(graph, starting_point, ending_point, teleport_list
 			raise Exception("Infinite loop!")
 	
 	answer.append(starting_point)
+
+	answer = answer[::-1]
+
+	for point in answer:
+		callback(point[1], point[0], Colors.PATH_COLOR)
+
 	return answer
 
 def ucs(graph, starting_point, ending_point, mode, callback, 

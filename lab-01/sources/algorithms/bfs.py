@@ -1,4 +1,5 @@
 from algorithms.algorithms_utils import *
+from .. import constants
 from constants import *
 
 def __normal_bfs(graph, starting_point, ending_point, callback):
@@ -20,7 +21,7 @@ def __normal_bfs(graph, starting_point, ending_point, callback):
 		frontier.pop(0)
 
 		if current != starting_point:
-			callback(current[1], current[0], FRONTIER_COLOR)
+			callback(current[1], current[0], Colors.FRONTIER_COLOR)
 
 		for element in direction:
 			next_step_x, next_step_y = current[0] + element[0], current[1] + element[1]
@@ -57,7 +58,7 @@ def __normal_bfs(graph, starting_point, ending_point, callback):
 	answer = answer[::-1]
 
 	for point in answer:
-		callback(point[1], point[0], PATH_COLOR)
+		callback(point[1], point[0], Colors.PATH_COLOR)
 
 	return answer
 
@@ -88,7 +89,7 @@ def __bfs_with_teleport_point(graph, starting_point, ending_point, teleport_list
 		frontier.pop(0)
 
 		if current != starting_point:
-			callback(current[1], current[0], FRONTIER_COLOR)
+			callback(current[1], current[0], Colors.FRONTIER_COLOR)
 
 		for element in direction:
 			next_step_x, next_step_y = current[0] + element[0], current[1] + element[1]
@@ -129,7 +130,7 @@ def __bfs_with_teleport_point(graph, starting_point, ending_point, teleport_list
 	answer.append(starting_point)
 	answer = answer[::-1] 
 	for point in answer:
-		callback(point[1], point[0], PATH_COLOR)
+		callback(point[1], point[0], Colors.PATH_COLOR)
 	return answer
 
 
