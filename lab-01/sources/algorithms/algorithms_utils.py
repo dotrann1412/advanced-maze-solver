@@ -23,35 +23,55 @@ extra_direction_str = [
 	'D', 'L', 'U', 'D',
 ]
 
-def isEmptyCell(ch):
-	pass
-
-def isExit(ch):
-	pass
-
-def isTeleportCell(char):
-	pass
-
-def detect_starting_point(graph):
-	pass
-
-def detect_exit_way(graph):
-	pass
-
-def teleport_list(graph):
-	pass
-
-
-
 valid_character = {
 	' ': 'Available cell',
 	'*': 'Starting point',
 	'x': 'Blocker',
 	'+': 'Bonus cell',
-	'?': 'Way out' # not defined yet
-	'?': 'Intermediate point'
-	'??': 'Teleport' # not defined yet
+	'?': 'Way out', # not defined yet
+	'>': 'Intermediate point',
+	'o': 'Teleport' # not defined yet
 }
+
+def graphDim(graph):
+	return len(graph), len(graph[0])
+
+def isEmptyCell(ch):
+	return ch != 'x'
+
+def isExit(ch):
+	return ch == '?'
+
+def isTeleportCell(ch):
+	return ch == 'o'
+
+def detect_starting_point(graph):
+	dim = graphDim(graph)
+	for i in range(dim[0]):
+		for j in range(dim[1]):
+			if graph[i][j] == '*':
+				return (i, j)
+
+	return None
+
+def detect_exit_way(graph):
+	dim = graphDim(graph)
+	for i in range(dim[0]):
+		for j in range(dim[1]):
+			if graph[i][j] == '?':
+				return [i, j]
+
+	return None
+
+def detect_teleport_list(graph):
+	teleport_list = []
+	dim = graphDim(graph)
+	for i in range(dim[0]):
+		for j in range(dim[1]):
+			if graph[i][j] == 'o':
+				teleport_list.append([i, j])
+
+	return teleport_list
 
 def valid_graph(graph):
 	if not len(graph) or not len(graph[0]):
