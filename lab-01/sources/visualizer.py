@@ -3,6 +3,9 @@ import sys
 from pygame.locals import *
 from constants import *
 
+from algorithms.bfs import bfs_testing
+from algorithms.gbfs import gbfs
+from utils import manhattan_distance
 from algorithms.algorithms_utils import AlgorithmsMode
 from algorithms.a_star import aStar
 
@@ -48,6 +51,8 @@ def visualizer(algorithm, matrix, start, end, bonus_points=[], inter_points=[], 
 
     # Render maze
     renderMap(bonus_points, matrix, start, end, block_size)
+    # result = bfs_testing(matrix, start, end, set_color)
+    # result = gbfs(matrix, start, end, set_color, manhattan_distance)
 
     # Mode of matrix
     mode = AlgorithmsMode.NORMAL
