@@ -6,6 +6,8 @@ class AlgorithmsMode(Enum):
 	INTERMEDIATE_POINT = 2
 	TELEPORT_POINT = 3
 
+INF = 1 << 31 - 1
+
 direction = [
 	[0, 1], [1, 0], [0, -1], [-1, 0]
 ]
