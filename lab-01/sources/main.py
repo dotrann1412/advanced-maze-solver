@@ -1,5 +1,5 @@
 from constants import *
-from visualizer import visualizer
+from visualizer import visualize
 from utils import read_file
 import argparse
 import sys
@@ -7,10 +7,6 @@ from utils import euclidean_distance, manhattan_distance
 
 from algorithms import a_star, bfs, dfs, ucs
 from algorithms.algorithms_utils import AlgorithmsMode
-
-
-
-
 
 if __name__ == "__main__":
     AlgorithmsMapping = {
@@ -61,4 +57,7 @@ if __name__ == "__main__":
     print(f'Starting point (x, y) = {start[0], start[1]}')
     print(f'Ending point (x, y) = {end[0], end[1]}')
 
-    visualizer(algorithm, matrix, start, end, bonus_points, inter_points, teleport_points)
+    visualize (
+        algorithm, matrix, start, end, mode, 
+        bonus_points, inter_points, teleport_points, hf = heuristic
+    )
