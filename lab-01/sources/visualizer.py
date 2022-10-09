@@ -3,10 +3,11 @@ import sys
 from pygame.locals import *
 from constants import *
 
-from algorithms.bfs import bfs_testing
-from algorithms.gbfs import gbfs
-from utils import manhattan_distance
 from algorithms.algorithms_utils import AlgorithmsMode
+
+from utils import manhattan_distance
+
+from algorithms.gbfs import gbfs
 from algorithms.a_star import aStar
 
 def drawGrid(x, y, block_size=20, color=Colors.WHITE, border=Colors.WHITE):
@@ -39,7 +40,7 @@ def set_color(x, y, color, sleep_time=30):
     # sleep_time = 10 if color == FRONTIER_COLOR else 5
     pygame.time.wait(sleep_time)
 
-def visualizer(algorithm, matrix, start, end, bonus_points=[], inter_points=[], teleport_points=[], block_size=20):
+def visualizer(algorithm, matrix, start, end, bonus_points=[], inter_points=[], teleport_points=[], block_size=20, hf=manhattan_distance):
     global SCREEN, CLOCK
     pygame.init()
     WIN_HEIGHT = block_size * len(matrix)
@@ -65,16 +66,15 @@ def visualizer(algorithm, matrix, start, end, bonus_points=[], inter_points=[], 
 
     # Run algorithm
     if algorithm == Algorithms.A_STAR:
-        aStar(matrix, start, end, mode, set_color)
-    elif algorithm == Algorithms.BFS:
-        pass
-        # bfs(matrix, start, end, set_color)
+        aStar(matrix, start, end, mode, set_color, hf=hf)
+    elif algorithm == Algorithms.GBFS:
+        gbfs(matrix, start, end, mode, set_color, hf=hf)
 
     # Wait 2 seconds before closing
-    # pygame.time.wait(2000)
+    pygame.time.wait(2000)
     
-    while True:
-        for event in pygame.event.get():
-            if event.type == QUIT:
-                pygame.quit()
-                sys.exit()
+    # while True:
+    #     for event in pygame.event.get():
+    #         if event.type == QUIT:
+    #             pygame.quit()
+    #             sys.exit()
