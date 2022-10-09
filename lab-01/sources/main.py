@@ -10,10 +10,10 @@ from algorithms.algorithms_utils import AlgorithmsMode
 
 if __name__ == "__main__":
     AlgorithmsMapping = {
-        'A_STAR': type(a_star.aStar),
-        'BFS': type(bfs.bfs),
-        'DFS': type(dfs.dfs),
-        'UCS': type(ucs.ucs),
+        'A_STAR': a_star.aStar,
+        'BFS': bfs.bfs,
+        'DFS': dfs.dfs,
+        'UCS': ucs.ucs,
     }
     
     HeuristicMapping = {
