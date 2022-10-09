@@ -23,13 +23,13 @@ def renderMap(bonus_points, matrix, start, end, block_size=20):
             elif matrix[y][x] == MazeObject.START:
                 color = Colors.GREEN
             elif matrix[y][x] == MazeObject.BONUS:
-                color = Colors.RED
+                color = Colors.BONUS_COLOR
             else:
                 color = Colors.WHITE
             drawGrid(x, y, block_size, color)
 
-    drawGrid(start[1], start[0], color=Colors.ORANGE)
-    drawGrid(end[1], end[0], color=Colors.BLUE)
+    drawGrid(start[1], start[0], color=Colors.START_COLOR)
+    drawGrid(end[1], end[0], color=Colors.END_COLOR)
     pygame.display.update()
 
 
@@ -66,9 +66,9 @@ def visualizer(algorithm, matrix, start, end, bonus_points=[], inter_points=[], 
 
     # Run algorithm
     if algorithm == Algorithms.A_STAR:
-        aStar(matrix, start, end, mode, set_color, hf=hf)
+        aStar(matrix, start, end, mode, bonus_points, inter_points, teleport_points, set_color, hf=hf)
     elif algorithm == Algorithms.GBFS:
-        gbfs(matrix, start, end, mode, set_color, hf=hf)
+        gbfs(matrix, start, end, mode, bonus_points, inter_points, teleport_points, set_color, hf=hf)
 
     # Wait 2 seconds before closing
     pygame.time.wait(2000)
