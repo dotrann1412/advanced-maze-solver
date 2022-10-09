@@ -1,7 +1,5 @@
-from enum import Enum
-
 # Maze object
-class MazeObject(Enum):
+class MazeObject():
     START = 'S'
     WALL = 'x'
     BONUS = '+'
@@ -10,7 +8,7 @@ class MazeObject(Enum):
     TELE = 'o'
 
 # Colors
-class Colors(Enum):
+class Colors():
     BLACK = (0, 0, 0)
     WHITE = (255, 255, 255)
     BLUE = (0, 0, 255)
@@ -28,9 +26,9 @@ WIN_WIDTH = 400
 WIN_HEIGHT = 300
 
 # Algorithms
-class Algorithms(Enum):
+class Algorithms():
     BFS = 'bfs'
     DFS = 'dfs'
     UCS = 'ucs'
-    GREEDY = 'greedy'
+    GBFS = 'gbfs'
     A_STAR = 'a_star'

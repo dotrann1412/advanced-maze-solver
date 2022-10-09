@@ -1,10 +1,9 @@
 from algorithms.algorithms_utils import *
 from constants import *
 
-def __normal_bfs(graph, callback):
+def __normal_bfs(graph, starting_point, ending_point, callback):
 	size = [len(graph), len(graph[0])]
 	frontier = []
-	starting_point = detectStartingPoint(graph)
 
 	if starting_point[0] < 0 or starting_point[0] >= size[0] or starting_point[1] < 0 or starting_point[1] >= size[1]:
 		return None
@@ -19,7 +18,11 @@ def __normal_bfs(graph, callback):
 	while len(frontier) != 0 and not found:
 		current = frontier[0]
 		frontier.pop(0)
-		for element in extra_direction:
+
+		if current != starting_point:
+			callback(current[1], current[0], Colors.FRONTIER_COLOR)
+
+		for element in direction:
 			next_step_x, next_step_y = current[0] + element[0], current[1] + element[1]
 			
 			if next_step_x < 0 or next_step_x >= size[0] or next_step_y < 0 or next_step_y >= size[1]:
@@ -33,8 +36,6 @@ def __normal_bfs(graph, callback):
 			if isEmptyCell(graph[next_step_x][next_step_y]) and not parrent[next_step_x][next_step_y]:
 				parrent[next_step_x][next_step_y] = current
 				frontier.append([next_step_x, next_step_y])
-
-	ending_point = detectEndingPoint(graph)
 
 	if not ending_point or not parrent[ending_point[0]][ending_point[1]]:
 		return None
@@ -51,23 +52,25 @@ def __normal_bfs(graph, callback):
 		limit -= 1
 		if limit == 0:
 			raise Exception("Infinite loop!")
-	
+
 	answer.append(starting_point)
+	answer = answer[::-1]
+
+	for point in answer:
+		callback(point[1], point[0], Colors.PATH_COLOR)
+
 	return answer
 
-def __bfs_with_bonus_point(graph, callback):
-	size = [len(graph), len(graph[0])]
-	starting_point = detectStartingPoint(graph)
-
-def __bfs_intermediate_point(graph, callback):
-	starting_point = detectStartingPoint(graph)
-
-def __bfs_with_teleport_point(graph, callback):
+def __bfs_with_bonus_point(graph, starting_point, ending_point, bonus_points, callback):
 	size = grapthSize(graph)
-	starting_point = detectStartingPoint(graph)
+
+def __bfs_intermediate_point(graph, starting_point, ending_point, intermediate_points, callback):
+	size = grapthSize(graph)
+
+def __bfs_with_teleport_point(graph, starting_point, ending_point, teleport_points, callback):
+	size = grapthSize(graph)
 	frontier = []
 
-	teleport_list = detectTeleportList(graph)
 	ignore_teleport = False
 
 	if starting_point[0] < 0 or starting_point[0] >= size[0] or starting_point[1] < 0 or starting_point[1] >= size[1]:
@@ -84,7 +87,10 @@ def __bfs_with_teleport_point(graph, callback):
 		current = frontier[0]
 		frontier.pop(0)
 
-		for element in extra_direction:
+		if current != starting_point:
+			callback(current[1], current[0], Colors.FRONTIER_COLOR)
+
+		for element in direction:
 			next_step_x, next_step_y = current[0] + element[0], current[1] + element[1]
 			if next_step_x < 0 or next_step_x >= size[0] or next_step_y < 0 or next_step_y >= size[1]:
 				continue
@@ -95,7 +101,7 @@ def __bfs_with_teleport_point(graph, callback):
 				break
 
 			if not ignore_teleport and isTeleportCell(graph[next_step_x][next_step_y]):
-				for teleport in teleport_list:
+				for teleport in teleport_points:
 					parrent[teleport[0]][teleport[1]] = current if teleport == [next_step_x, next_step_y] else [next_step_x, next_step_y]
 					frontier.append(teleport)
 				ignore_teleport = True
@@ -103,9 +109,6 @@ def __bfs_with_teleport_point(graph, callback):
 			if isEmptyCell(graph[next_step_x][next_step_y]) and not parrent[next_step_x][next_step_y]:
 				parrent[next_step_x][next_step_y] = current
 				frontier.append([next_step_x, next_step_y])
-
-
-	ending_point = detectEndingPoint(graph)
 
 	if not ending_point or not parrent[ending_point[0]][ending_point[1]]:
 		return None
@@ -124,11 +127,14 @@ def __bfs_with_teleport_point(graph, callback):
 			raise Exception("Infinite loop!")
 	
 	answer.append(starting_point)
+	answer = answer[::-1] 
+	for point in answer:
+		callback(point[1], point[0], Colors.PATH_COLOR)
+	return answer
 
-	return answer[::-1]
 
-
-def bfs(graph, mode, call_back):
+def bfs(graph, starting_point, ending_point, mode, bonus_points, intermediate_points, teleport_points, call_back):
+	
 	if not isValidGraph(graph):
 		return None
 
@@ -136,10 +142,10 @@ def bfs(graph, mode, call_back):
 		return __normal_bfs(graph, call_back)
 
 	if mode == AlgorithmsMode.BONUS_POINT:
-		return __bfs_with_bonus_point(graph, call_back)
-	
+		return __bfs_with_bonus_point(graph, starting_point, ending_point, bonus_points, call_back)
+
 	if mode == AlgorithmsMode.INTERMEDIATE_POINT:
-		return __bfs_intermediate_point(graph, call_back)
-	
+		return __bfs_intermediate_point(graph, starting_point, ending_point, intermediate_points, call_back)
+
 	if mode == AlgorithmsMode.TELEPORT_POINT:
-		return __bfs_with_teleport_point(graph, call_back)
+		return __bfs_with_teleport_point(graph, starting_point, ending_point, teleport_points, call_back)
