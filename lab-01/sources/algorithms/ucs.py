@@ -1,6 +1,5 @@
 from algorithms_utils import *
 from queue import PriorityQueue
-from .. import constants
 from constants import *
 
 def __normal_ucs(graph, starting_point, ending_point, callback):
@@ -63,13 +62,13 @@ def __normal_ucs(graph, starting_point, ending_point, callback):
 
 	return answer
 
-def __ucs_with_bonus_point(graph, starting_point, ending_point, bonus_point_list, callback):
+def __ucs_with_bonus_point(graph, starting_point, ending_point, bonus_points, callback):
 	pass
 
-def __ucs_intermediate_point(graph, starting_point, ending_point, itermediate_point_list, callback):
+def __ucs_intermediate_point(graph, starting_point, ending_point, itermediate_points, callback):
 	pass
 
-def __ucs_with_teleport_point(graph, starting_point, ending_point, teleport_list, callback):
+def __ucs_with_teleport_point(graph, starting_point, ending_point, teleport_points, callback):
 	frontier = PriorityQueue
 	size = grapthSize(graph)
 	
@@ -96,8 +95,8 @@ def __ucs_with_teleport_point(graph, starting_point, ending_point, teleport_list
 			if next_x < 0 or next_x >= size[0] or next_y < 0 or next_y >= size[1] or not isEmptyCell(graph[next_x][next_y]):
 				continue
 
-			if [next_x, next_y] in teleport_list and not found:
-				for teleport in teleport_list:
+			if [next_x, next_y] in teleport_points and not found:
+				for teleport in teleport_points:
 					if cost[teleport[0]][teleport[1]] > current_cost + 1:
 						cost[teleport[0]][teleport[1]] = current_cost + 1
 						parrent[teleport[0]][teleport[1]] = current_point
@@ -144,8 +143,7 @@ def __ucs_with_teleport_point(graph, starting_point, ending_point, teleport_list
 
 	return answer
 
-def ucs(graph, starting_point, ending_point, mode, callback, 
-		teleport_list = [], bonus_point_list = [], itermediate_point_list = []):
+def ucs(graph, starting_point, ending_point, mode, callback, bonus_points = [], itermediate_points = [], teleport_points = []):
 
 	if not isValidGraph(graph):
 		return None
@@ -154,10 +152,10 @@ def ucs(graph, starting_point, ending_point, mode, callback,
 		return __normal_ucs(graph, starting_point, ending_point, callback)
 
 	if mode == AlgorithmsMode.BONUS_POINT:
-		return __ucs_with_bonus_point(graph, starting_point, ending_point, bonus_point_list, callback)
+		return __ucs_with_bonus_point(graph, starting_point, ending_point, bonus_points, callback)
 
 	if mode == AlgorithmsMode.INTERMEDIATE_POINT:
-		return __ucs_intermediate_point(graph, starting_point, ending_point, itermediate_point_list, callback)
+		return __ucs_intermediate_point(graph, starting_point, ending_point, itermediate_points, callback)
 
 	if mode == AlgorithmsMode.TELEPORT_POINT:
-		return __ucs_with_teleport_point(graph, starting_point, ending_point, teleport_list, callback)
+		return __ucs_with_teleport_point(graph, starting_point, ending_point, teleport_points, callback)

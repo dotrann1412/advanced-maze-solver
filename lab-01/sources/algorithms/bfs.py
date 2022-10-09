@@ -1,5 +1,4 @@
 from algorithms.algorithms_utils import *
-from .. import constants
 from constants import *
 
 def __normal_bfs(graph, starting_point, ending_point, callback):
@@ -62,13 +61,13 @@ def __normal_bfs(graph, starting_point, ending_point, callback):
 
 	return answer
 
-def __bfs_with_bonus_point(graph, starting_point, ending_point, bonus_point_list, callback):
+def __bfs_with_bonus_point(graph, starting_point, ending_point, bonus_points, callback):
 	size = grapthSize(graph)
 
-def __bfs_intermediate_point(graph, starting_point, ending_point, itermediate_point_list, callback):
+def __bfs_intermediate_point(graph, starting_point, ending_point, intermediate_points, callback):
 	size = grapthSize(graph)
 
-def __bfs_with_teleport_point(graph, starting_point, ending_point, teleport_list, callback):
+def __bfs_with_teleport_point(graph, starting_point, ending_point, teleport_points, callback):
 	size = grapthSize(graph)
 	frontier = []
 
@@ -102,7 +101,7 @@ def __bfs_with_teleport_point(graph, starting_point, ending_point, teleport_list
 				break
 
 			if not ignore_teleport and isTeleportCell(graph[next_step_x][next_step_y]):
-				for teleport in teleport_list:
+				for teleport in teleport_points:
 					parrent[teleport[0]][teleport[1]] = current if teleport == [next_step_x, next_step_y] else [next_step_x, next_step_y]
 					frontier.append(teleport)
 				ignore_teleport = True
@@ -134,8 +133,7 @@ def __bfs_with_teleport_point(graph, starting_point, ending_point, teleport_list
 	return answer
 
 
-def bfs(graph, starting_point, ending_point, mode, call_back,
-	teleport_list = [], bonus_point_list = [], itermediate_point_list = []):
+def bfs(graph, starting_point, ending_point, mode, bonus_points, intermediate_points, teleport_points, call_back):
 	
 	if not isValidGraph(graph):
 		return None
@@ -144,10 +142,10 @@ def bfs(graph, starting_point, ending_point, mode, call_back,
 		return __normal_bfs(graph, call_back)
 
 	if mode == AlgorithmsMode.BONUS_POINT:
-		return __bfs_with_bonus_point(graph, starting_point, ending_point, bonus_point_list, call_back)
+		return __bfs_with_bonus_point(graph, starting_point, ending_point, bonus_points, call_back)
 
 	if mode == AlgorithmsMode.INTERMEDIATE_POINT:
-		return __bfs_intermediate_point(graph, starting_point, ending_point, itermediate_point_list, call_back)
+		return __bfs_intermediate_point(graph, starting_point, ending_point, intermediate_points, call_back)
 
 	if mode == AlgorithmsMode.TELEPORT_POINT:
-		return __bfs_with_teleport_point(graph, starting_point, ending_point, call_back)
+		return __bfs_with_teleport_point(graph, starting_point, ending_point, teleport_points, call_back)
