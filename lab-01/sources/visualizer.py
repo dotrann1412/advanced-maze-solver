@@ -3,8 +3,8 @@ import sys
 from pygame.locals import *
 from constants import *
 
-from algorithms.bfs import bfs_testing
-from algorithms.gbfs import gbfs
+# from algorithms.bfs import bfs_testing
+# from algorithms.gbfs import gbfs
 from utils import manhattan_distance
 from algorithms.algorithms_utils import AlgorithmsMode
 from algorithms.a_star import aStar
@@ -63,15 +63,7 @@ def visualizer(algorithm, matrix, start, end, bonus_points=[], inter_points=[], 
     elif len(teleport_points) > 0:
         mode = AlgorithmsMode.TELEPORT_POINT
 
-    # Run algorithm
-    if algorithm == Algorithms.A_STAR:
-        aStar(matrix, start, end, mode, set_color)
-    elif algorithm == Algorithms.BFS:
-        pass
-        # bfs(matrix, start, end, set_color)
-
-    # Wait 2 seconds before closing
-    # pygame.time.wait(2000)
+    algorithm(matrix, start, end, mode, set_color)
     
     while True:
         for event in pygame.event.get():

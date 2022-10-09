@@ -1,4 +1,4 @@
-from algorithms_utils import *
+from .algorithms_utils import *
 
 def __normal_dfs(graph, callback):
 	size = grapthSize(graph)
