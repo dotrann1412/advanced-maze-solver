@@ -81,8 +81,6 @@ def __aStarWithBonusPointRecur(graph, start, end, bonus_points, callback, hf):
 
     hBonusArr = sorted([[calcHBonus(start, bonus, end), bonus] for bonus in bonus_points])
     hStart = h(start)
-    print(hBonusArr)
-    print(hStart)
 
     for hBonusItem in hBonusArr:
         hBonus, bonus = hBonusItem
@@ -93,15 +91,12 @@ def __aStarWithBonusPointRecur(graph, start, end, bonus_points, callback, hf):
         part1 = __normalAStar(graph, start, bonus[:2], callback, hf, drawPath=False)
         if part1 is None:
             continue
-        print('Reaced bonus point: ', bonus[:2])
         next_bonus_points = bonus_points.copy()
         next_bonus_points.remove(bonus)
         part2 = __aStarWithBonusPointRecur(graph, bonus[:2], end, next_bonus_points, callback, hf)
         if part2 is None:
             continue
         return part2 + part1
-
-    print('-----------------------------')
     
     return __normalAStar(graph, start, end, callback, hf, drawPath=False)
 
@@ -110,7 +105,6 @@ def __aStarWithBonusPoint(graph, start, end, bonus_points, callback, hf):
     sleep_time = calcSleepTime(dim)
 
     answer = __aStarWithBonusPointRecur(graph, start, end, bonus_points, callback, hf)
-
 
     bonus_dict = {}
     for bonus in bonus_points:

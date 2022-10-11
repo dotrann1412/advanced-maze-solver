@@ -133,7 +133,7 @@ def __bfs_with_teleport_point(graph, starting_point, ending_point, teleport_poin
 	return answer
 
 
-def bfs(graph, starting_point, ending_point, mode, bonus_points, intermediate_points, teleport_points, call_back):
+def bfs(graph, starting_point, ending_point, mode, bonus_points, intermediate_points, teleport_points, call_back, hf=None):
 	
 	if not isValidGraph(graph):
 		return None
