@@ -5,7 +5,7 @@ import argparse
 import sys
 from utils import euclidean_distance, manhattan_distance
 
-from algorithms import a_star, bfs, dfs, ucs
+from algorithms import a_star, bfs, dfs, ucs, gbfs
 from algorithms.algorithms_utils import AlgorithmsMode
 
 if __name__ == "__main__":
@@ -14,6 +14,7 @@ if __name__ == "__main__":
         'BFS': bfs.bfs,
         'DFS': dfs.dfs,
         'UCS': ucs.ucs,
+        'GBFS': gbfs.gbfs
     }
 
     HeuristicMapping = {
