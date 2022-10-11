@@ -40,7 +40,10 @@ def set_color(x, y, color, sleep_time=30):
     # sleep_time = 10 if color == FRONTIER_COLOR else 5
     pygame.time.wait(sleep_time)
 
-def visualizer(algorithm, matrix, start, end, bonus_points=[], inter_points=[], teleport_points=[], block_size=20, hf=manhattan_distance):
+def visualize(algorithm, matrix, start, end, mode, 
+    bonus_points=[], inter_points=[], teleport_points=[], 
+    block_size=20, hf=manhattan_distance
+):
     global SCREEN, CLOCK
     pygame.init()
     WIN_HEIGHT = block_size * len(matrix)
@@ -52,10 +55,8 @@ def visualizer(algorithm, matrix, start, end, bonus_points=[], inter_points=[], 
 
     # Render maze
     renderMap(bonus_points, matrix, start, end, block_size)
-    # result = bfs_testing(matrix, start, end, set_color)
-    # result = gbfs(matrix, start, end, set_color, manhattan_distance)
 
-    # Mode of matrix
+    # Specify mode of matrix
     mode = AlgorithmsMode.NORMAL
     if len(bonus_points) > 0:
         mode = AlgorithmsMode.BONUS_POINT
@@ -64,15 +65,17 @@ def visualizer(algorithm, matrix, start, end, bonus_points=[], inter_points=[], 
     elif len(teleport_points) > 0:
         mode = AlgorithmsMode.TELEPORT_POINT
 
-    # Run algorithm
-    if algorithm == Algorithms.A_STAR:
-        aStar(matrix, start, end, mode, bonus_points, inter_points, teleport_points, set_color, hf=hf)
-    elif algorithm == Algorithms.GBFS:
-        gbfs(matrix, start, end, mode, bonus_points, inter_points, teleport_points, set_color, hf=hf)
+    # # Run algorithm (for demo)
+    # if algorithm == Algorithms.A_STAR:
+    #     aStar(matrix, start, end, mode, bonus_points, inter_points, teleport_points, set_color, hf=hf)
+    # elif algorithm == Algorithms.GBFS:
+    #     gbfs(matrix, start, end, mode, bonus_points, inter_points, teleport_points, set_color, hf=hf)
+    
+    algorithm(matrix, start, end, mode, bonus_points, inter_points, teleport_points, set_color)
 
     # Wait 2 seconds before closing
     pygame.time.wait(2000)
-    
+
     # while True:
     #     for event in pygame.event.get():
     #         if event.type == QUIT:
