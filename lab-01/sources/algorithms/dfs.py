@@ -1,5 +1,4 @@
-
-from .algorithms_utils import *
+from algorithms.algorithms_utils import *
 from constants import *
 
 def __normal_dfs(graph, starting_point, ending_point, callback):
@@ -100,7 +99,7 @@ def __dfs_with_teleport_point(graph, starting_point, ending_point, teleport_poin
 
 	return answer[::-1]
 
-def dfs(graph, starting_point, ending_point, mode, bonus_points, intermediate_points, teleport_points, call_back):
+def dfs(graph, starting_point, ending_point, mode, bonus_points, intermediate_points, teleport_points, call_back, hf=None):
 	
 	if mode == AlgorithmsMode.NORMAL:
 		return __normal_dfs(graph, starting_point, ending_point, call_back)
