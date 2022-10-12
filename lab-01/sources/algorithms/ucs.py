@@ -1,4 +1,4 @@
-from algorithms_utils import *
+from algorithms.algorithms_utils import *
 from queue import PriorityQueue
 from constants import *
 
@@ -143,7 +143,7 @@ def __ucs_with_teleport_point(graph, starting_point, ending_point, teleport_poin
 
 	return answer
 
-def ucs(graph, starting_point, ending_point, mode, callback, bonus_points = [], itermediate_points = [], teleport_points = []):
+def ucs(graph, starting_point, ending_point, mode, callback, bonus_points = [], itermediate_points = [], teleport_points = [], hf=None):
 
 	if not isValidGraph(graph):
 		return None

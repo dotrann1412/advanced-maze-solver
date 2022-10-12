@@ -1,7 +1,7 @@
 0
 xxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxx x  xxx
-xxxx    xxxx x x  x
+xxxxxxxxxxxx      x
+xxxx    xxxx x xxxx
 xxxxxxx xxxx x     
 x xx x  xxxx   xxxx
 x  x  xxxxxxxx x  x
