@@ -8,25 +8,51 @@ def read_file(file_name: str = 'maze.txt'):
     inter_points = []
     teleport_points = []
     matrix = None
+    start, end = (-1, -1), (-1, -1)
     
+    matrix_allowed_character = set([MazeObject.START, MazeObject.EMPTY, MazeObject.WALL, MazeObject.INTER, MazeObject.BONUS])
+
     try:
         with open(file_name, 'r') as fp:
             n_bonus_points = int(fp.readline())
+
             for i in range(n_bonus_points):
                 x, y, reward = map(int, fp.readline().split())
                 bonus_points.append((x, y, reward))
 
-            n_itermediate_points = int(fp.readline(' '))
-            for i in range(n_itermediate_points):
-                x, y = map(int, fp.readline().split(' '))
-                inter_points.append((x, y))
+            prev_position, line_content  = fp.tell(), fp.readline().rstrip('\n')
+            matrix = []
 
-            n_telepor_points = int(fp.readline(' '))
-            for i in range(n_telepor_points):
-                x, y, xt, yt = map(int, fp.readline().split(' '))
-                teleport_points.append((x, y, xt, yt))
+            while all(c in matrix_allowed_character for c in line_content):
+                matrix.append(list(line_content))
+                prev_position = fp.tell()
+                if fp.readable(): line_content = fp.readline().rstrip('\n')
 
-            matrix = [list(i) for i in fp.read().splitlines()]
+            fp.seek(prev_position, 0)
+            
+            try:
+                n_itermediate_points = int(fp.readline(' '))
+                for i in range(n_itermediate_points):
+                    x, y = map(int, fp.readline().split(' '))
+                    inter_points.append((x, y))
+
+                n_telepor_points = int(fp.readline(' '))
+                for i in range(n_telepor_points):
+                    x, y, xt, yt = map(int, fp.readline().split(' '))
+                    teleport_points.append((x, y, xt, yt))
+            except:
+                inter_points = []
+                teleport_points = []
+            
+            size_x = len(matrix)
+            size_y = 0 if not size_x else len(matrix[0])
+
+            for i in range(0, size_x):
+                for j in range(0, size_y):
+                    if MazeObject.START == matrix[i][j]:
+                        start = (i, j)
+                    elif (not i or not j or not (size_x - 1 - i) or not (size_y - 1 - j)) and matrix[i][j] == MazeObject.EMPTY:
+                        end = (i, j)
 
         for i in range(len(matrix)):
             for j in range(len(matrix[0])):
