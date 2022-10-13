@@ -2,7 +2,7 @@ from visualizer import visualizer
 from utils import read_file
 
 if __name__ == "__main__":
-    bonus_points, matrix, start, end = read_file('../input-samples/maze_map_2.txt')
+    bonus_points, matrix, start, end = read_file('../input-samples/maze_map.txt')
     # print(matrix)
     print(f'The height of the matrix: {len(matrix)}')
     print(f'The width of the matrix: {len(matrix[0])}')
