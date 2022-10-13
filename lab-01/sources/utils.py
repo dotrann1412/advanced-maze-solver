@@ -6,7 +6,7 @@ def read_file(file_name: str = 'maze.txt'):
     
     bonus_points = []
     inter_points = []
-    teleport_points = []
+    teleport_points = {}
     matrix = None
     start, end = (-1, -1), (-1, -1)
     
@@ -39,7 +39,8 @@ def read_file(file_name: str = 'maze.txt'):
                 n_telepor_points = int(fp.readline(' '))
                 for i in range(n_telepor_points):
                     x, y, xt, yt = map(int, fp.readline().split(' '))
-                    teleport_points.append((x, y, xt, yt))
+                    teleport_points[(x, y)] = (xt, yt)
+                    teleport_points[(xt, yt)] = (x, y)
             except:
                 inter_points = []
                 teleport_points = []
@@ -51,7 +52,7 @@ def read_file(file_name: str = 'maze.txt'):
                 for j in range(0, size_y):
                     if MazeObject.START == matrix[i][j]:
                         start = (i, j)
-                    elif (not i or not j or not (size_x - 1 - i) or not (size_y - 1 - j)) and matrix[i][j] == MazeObject.EMPTY:
+                    elif (not i or not j or size_x - 1 == i or size_y - 1 == j) and matrix[i][j] == MazeObject.EMPTY:
                         end = (i, j)
 
         for i in range(len(matrix)):
