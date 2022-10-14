@@ -82,22 +82,36 @@ def __aStarWithBonusPointRecur(graph, start, end, bonus_points, callback, hf):
     hBonusArr = sorted([[calcHBonus(start, bonus, end), bonus] for bonus in bonus_points])
     hStart = h(start)
 
+    bonus_to_be_removed = []
     for hBonusItem in hBonusArr:
         hBonus, bonus = hBonusItem
         
         if hBonus >= hStart:
             break
 
+        # go to the "best" bonus point (if possible)
         part1 = __normalAStar(graph, start, bonus[:2], callback, hf, drawPath=False)
         if part1 is None:
+            bonus_to_be_removed.append(bonus)
             continue
+        print('Reach bonus point: ', bonus[:2])
+        # remove bonus point that we don't need to consider in part2
         next_bonus_points = bonus_points.copy()
         next_bonus_points.remove(bonus)
+        for cant_reach_point in bonus_to_be_removed:    # start can't go to these bonus points
+            next_bonus_points.remove(cant_reach_point) 
+        for reached_point in part1:     # we already go through these bonus points in part1
+            for bonus_point in next_bonus_points:
+                if reached_point == bonus_point[:2]:
+                    next_bonus_points.remove(bonus_point)
+            
+        # go from the "best" bonus point to end
         part2 = __aStarWithBonusPointRecur(graph, bonus[:2], end, next_bonus_points, callback, hf)
         if part2 is None:
             continue
         return part2 + part1
     
+    # if we can't go to any bonus point to get profit, just go to end directly
     return __normalAStar(graph, start, end, callback, hf, drawPath=False)
 
 def __aStarWithBonusPoint(graph, start, end, bonus_points, callback, hf):
@@ -108,7 +122,7 @@ def __aStarWithBonusPoint(graph, start, end, bonus_points, callback, hf):
 
     bonus_dict = {}
     for bonus in bonus_points:
-        bonus_dict[bonus[:2]] = [bonus[2], False]   # bonus point, is visited
+        bonus_dict[bonus[:2]] = [bonus[2], False]   # [value of bonus, is visited]
     
     cost = len(answer) - 1
     for point in answer:
@@ -131,7 +145,8 @@ def __aStarWithBonusPoint(graph, start, end, bonus_points, callback, hf):
         color = Colors.PATH_COLOR if point not in bonus_dict else Colors.BONUS_PASSED
         callback(point[1], point[0], color, sleep_time)
     
-        
+    print(answer)
+    print(cost)
     return answer, cost
         
 
@@ -140,7 +155,63 @@ def __aStarIntermediatePoint(graph, start, end, intermediate_points, callback, h
 
 
 def __aStarWithTeleportPoint(graph, start, end, teleport_points, callback, hf):
-    pass
+    def h(point):
+        return hf(point, end)
+
+    dim = [len(graph), len(graph[0])]
+    sleep_time = calcSleepTime(dim)
+
+    parent = [[None for __ in range(dim[1])] for _ in range(dim[0])]
+    g = [[float('inf') for __ in range(dim[1])] for _ in range(dim[0])]
+    g[start[0]][start[1]] = 0
+
+    pq = PriorityQueue()
+    # pq compare f, then h (if f of two node are equal)
+    pq.put([g[start[0]][start[1]] + h(start), h(start), start])
+
+    found = False
+    while not pq.empty():
+        _, _, point = pq.get()
+
+        if point == end:
+            found = True
+            break
+            
+        if point != start:
+            callback(point[1], point[0], Colors.FRONTIER_COLOR, sleep_time)
+
+        for d in direction:
+            child = (point[0] + d[0], point[1] + d[1])
+            if not isInGraph(graph, child) or graph[child[0]][child[1]] == MazeObject.WALL:
+                continue
+
+            if g[child[0]][child[1]] > g[point[0]][point[1]] + 1:
+                g[child[0]][child[1]] = g[point[0]][point[1]] + 1
+                parent[child[0]][child[1]] = point
+                pq.put([g[child[0]][child[1]] + h(child), h(child), child])
+
+            for teleport in teleport_points:
+                if teleport[:2] == child:
+                    if g[teleport[2]][teleport[3]] > g[point[0]][point[1]] + 1:
+                        g[teleport[2]][teleport[3]] = g[point[0]][point[1]] + 1
+                        parent[teleport[2]][teleport[3]] = point
+                        pq.put([g[teleport[2]][teleport[3]] + h(teleport[2:]), h(teleport[2:]), teleport[2:]])
+        
+    if not found:
+        return None
+    
+    answer = []
+    pointer = end
+
+    while pointer != start:
+        answer.append(pointer)
+        pointer = parent[pointer[0]][pointer[1]]
+    answer.append(start)
+
+    for point in answer[1:-1]:
+        callback(point[1], point[0], Colors.PATH_COLOR, sleep_time)
+    
+    return answer
 
 
 def aStar(graph, start, end, mode, bonus_points, intermediate_points, teleport_points, callback, hf=manhattan_distance):
