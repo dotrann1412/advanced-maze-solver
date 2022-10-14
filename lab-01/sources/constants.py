@@ -13,7 +13,7 @@ class Colors():
     WHITE = (255, 255, 255)
     BLUE = (0, 0, 255)
     RED = (255, 0, 0)
-    RED_LIGHT = (255, 100, 100)
+    RED_LIGHT = (255, 150, 150)
     GREEN = (0, 150, 0)
     YELLOW = (255, 255, 0)
     ORANGE = (255, 165, 0)
