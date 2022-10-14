@@ -72,17 +72,15 @@ def __dfs_with_teleport_point(graph, starting_point, ending_point, teleport_poin
 		for element in direction:
 			next_x, next_y = current_position[0] + element[0], current_position[1] + element[1]
 
-			next_char = graph[next_x][next_y]
-			if not isInGraph(graph, [next_x, next_y]) or not isEmptyCell(next_char) \
+			if not isInGraph(graph, [next_x, next_y]) or graph[next_x][next_y] != MazeObject.EMPTY \
 				or visited[next_x][next_y]:
 				continue
 
 			if (next_x, next_y) in teleport_points:
-				for x, y in teleport_points:
-					if not visited[x][y]:
-						if __process((x, y)):
-							answer.append((next_x, next_y))
-							return True
+				destination_x, destination_y = teleport_points[(next_x, next_y)]
+				if not visited[destination_x][destination_y] and __process(*teleport_points[next_x, next_y]):
+					answer.append((destination_x, destination_y))
+					return True
 
 			if __process((next_x, next_y)):
 				answer.append((next_x, next_y))
