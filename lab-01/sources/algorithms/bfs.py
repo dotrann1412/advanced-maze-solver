@@ -1,5 +1,6 @@
 from algorithms.algorithms_utils import *
 from constants import *
+from utils import manhattan_distance
 
 def __normal_bfs(graph, starting_point, ending_point, callback):
 	size = [len(graph), len(graph[0])]
@@ -62,10 +63,27 @@ def __normal_bfs(graph, starting_point, ending_point, callback):
 	return answer
 
 def __bfs_with_bonus_point(graph, starting_point, ending_point, bonus_points, callback):
-	size = grapthSize(graph)
+	# bfs is a uniform cost search --> this mode is not really available
+	return __normal_bfs(graph, starting_point, ending_point, callback)
 
-def __bfs_intermediate_point(graph, starting_point, ending_point, intermediate_points, callback):
-	size = grapthSize(graph)
+def __bfs_intermediate_point(graph, starting_point, ending_point, intermediate_points: list, callback):
+	def choose(_starting_point, destinations):
+		good = destinations[0]
+		for point in destinations[1:]:
+			if manhattan_distance(good, _starting_point) > manhattan_distance(good, point):
+				good = point
+		return good
+
+	current_position = starting_point
+	while len(intermediate_points) != 0:
+		destination = choose(current_position, intermediate_points)
+		intermediate_points.remove(destination)
+		path = __normal_bfs(graph, current_position, destination, callback)
+		current_position = destination
+
+	path = __normal_bfs(graph, current_position, ending_point, callback)
+
+	return __normal_bfs(graph, starting_point, ending_point, callback)
 
 def __bfs_with_teleport_point(graph, starting_point, ending_point, teleport_points, callback):
 	size = [len(graph), len(graph[0])]
