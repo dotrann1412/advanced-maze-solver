@@ -13,7 +13,7 @@ import cv2
 from PIL import Image
 import numpy as np
 
-def drawGrid(x, y, block_size=20, color=Color.WHITE, border=Color.WHITE):
+def drawGrid(x, y, block_size=20, color=Colors.WHITE, border=Colors.WHITE):
     rect = pygame.Rect(x * block_size, y * block_size, block_size, block_size)
     pygame.draw.rect(SCREEN, color, rect, block_size//2)
     pygame.draw.rect(SCREEN, border, rect, 1)
@@ -38,10 +38,11 @@ def renderMap(graph, start, end, block_size=20):
     pygame.display.update()
 
     # write frame to MP4 output
-    current_frame_str = pygame.image.tostring(SCREEN, "RGB")    
-    current_frame_dat = Image.frombytes('RGB', (WIN_WIDTH, WIN_HEIGHT), bytes(current_frame_str), 'raw')
-    frame = cv2.cvtColor(np.array(current_frame_dat), cv2.COLOR_BGR2RGB)
-    ANIMATE.write(frame)
+    if ANIMATE is not None:
+        current_frame_str = pygame.image.tostring(SCREEN, "RGB")    
+        current_frame_dat = Image.frombytes('RGB', (WIN_WIDTH, WIN_HEIGHT), bytes(current_frame_str), 'raw')
+        frame = cv2.cvtColor(np.array(current_frame_dat), cv2.COLOR_BGR2RGB)
+        ANIMATE.write(frame)
 
 # function to set color at cell (x, y) in grid
 def set_color(x, y, color, sleep_time=30):
@@ -50,22 +51,34 @@ def set_color(x, y, color, sleep_time=30):
     pygame.time.wait(sleep_time)
 
     # write frame to MP4 output
-    current_frame_str = pygame.image.tostring(SCREEN, "RGB")
-    current_frame_dat = Image.frombytes('RGB', (WIN_WIDTH, WIN_HEIGHT), bytes(current_frame_str), 'raw')
-    frame = cv2.cvtColor(np.array(current_frame_dat), cv2.COLOR_BGR2RGB)
-    ANIMATE.write(frame)
+    if ANIMATE is not None:
+        current_frame_str = pygame.image.tostring(SCREEN, "RGB")    
+        current_frame_dat = Image.frombytes('RGB', (WIN_WIDTH, WIN_HEIGHT), bytes(current_frame_str), 'raw')
+        frame = cv2.cvtColor(np.array(current_frame_dat), cv2.COLOR_BGR2RGB)
+        ANIMATE.write(frame)
 
-def visualizer(bonus_points, graph, start, end, block_size=20):
+def visualize(algorithm, graph, start, end, 
+    bonus_points=[], inter_points=[], teleport_points=[], 
+    block_size=20, hf=manhattan_distance,
+    output_path=None
+):
     global SCREEN, CLOCK
     pygame.init()
-    global WIN_HEIGHT, WIN_WIDTH
+    global WIN_WIDTH, WIN_HEIGHT
     WIN_HEIGHT = block_size * len(graph)
     WIN_WIDTH = block_size * len(graph[0])
-    print(WIN_WIDTH, WIN_HEIGHT)
     SCREEN = pygame.display.set_mode((WIN_WIDTH, WIN_HEIGHT))
     pygame.display.set_caption('Hello World!')
     CLOCK = pygame.time.Clock()
     CLOCK.tick(60)
+
+    fps = 30
+    fourcc = cv2.VideoWriter_fourcc(*"mp4v")
+    global ANIMATE 
+    if output_path is not None:
+        ANIMATE = cv2.VideoWriter(output_path, fourcc, fps, (WIN_WIDTH, WIN_HEIGHT))
+    else:
+        ANIMATE = None
 
     # Render maze
     renderMap(graph, start, end, block_size)
@@ -80,26 +93,9 @@ def visualizer(bonus_points, graph, start, end, block_size=20):
         mode = AlgorithmsMode.TELEPORT_POINT
 
     algorithm(graph, start, end, mode, bonus_points, inter_points, teleport_points, set_color, hf=hf)
+    if ANIMATE is not None:
+        ANIMATE.release()
 
-    output_path = 'frames/demo2.mp4'
-    fps = 30
-    fourcc = cv2.VideoWriter_fourcc(*"mp4v")
-    global ANIMATE 
-    ANIMATE = cv2.VideoWriter(output_path, fourcc, fps, (WIN_WIDTH, WIN_HEIGHT))
-
-    # Render maze and run algorithm
-    renderMap(bonus_points, graph, start, end, block_size)
-    # result = bfs_testing(matrix, start, end, set_color)
-    result = gbfs(graph, start, end, set_color, manhattan_distance)
     # Wait 2 seconds before closing
     pygame.time.wait(2000)
 
-    ANIMATE.release()
-
-    # while True:
-    #     for event in pygame.event.get():
-    #         if event.type == QUIT:
-    #             pygame.quit()
-    #             sys.exit()
-
-    
