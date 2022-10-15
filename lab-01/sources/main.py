@@ -33,7 +33,7 @@ if __name__ == "__main__":
                         choices=HeuristicMapping.keys(),
                         type=str, default='MANHATTAN')
     parser.add_argument("-i", "--input", help="Maze input file",
-                        type=str, default=None)
+                        type=str, required=True)
     parser.add_argument("-o", "--output",
                         help="Folder to save visualization output video and statistical information",
                         type=str, default=None)
@@ -44,6 +44,8 @@ if __name__ == "__main__":
     algorithm = None  # function
     mode = None  # enum
     heuristic = None
+    input_file = None
+    output_file = None
 
     if args.algorithms:
         algorithm = AlgorithmsMapping[args.algorithms]
