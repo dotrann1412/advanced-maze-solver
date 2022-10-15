@@ -141,7 +141,7 @@ def __aStarWithBonusPoint(graph, start, end, bonus_points, hf):
 
 	# draw bonus points again
 	for bonus in bonus_dict:
-		set_color(bonus[1], bonus[0], Colors.BONUS_COLOR, 100)
+		set_color(bonus[1], bonus[0], Colors.BONUS_COLOR, 0)
 
 	set_path_color(answer, sleep_time)
 	

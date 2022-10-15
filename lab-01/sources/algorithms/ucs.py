@@ -139,12 +139,12 @@ def __ucs_with_bonus_point(graph, starting_point, ending_point, bonus_points):
 	magican = path[0]
 
 	while magican != starting_point:
-		path = path_to_bonus[magican] + path
+		path = path_to_bonus[magican] + path[1:]
 		magican = path[0]
 	
-	# for point in path[1:-1]:
-	# 	if point not in path_to_bonus:
-	# 		callback(point[1], point[0], Colors.PATH_COLOR, 10)
+	for bonus in bonus_points:
+		set_color(bonus[1], bonus[0], Colors.BONUS_COLOR, 0)
+
 	set_path_color(path, sleep_time)
 	
 	print(path)
