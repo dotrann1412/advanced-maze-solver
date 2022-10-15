@@ -1,0 +1,22 @@
+5
+3 6 -5
+5 14 -1
+1 19 -999
+12 18 -100
+6 4 -2
+xxxxxxxxxxxxxxxxxxxxxxxx
+x   x   xx xx      +   x
+x     x     xxxxxxxxxxxx
+x x   +xx  xxxx xxx xxxx
+  x   x x xx   xxxx  xxx
+x   x      xx +xx  x xxx
+xxxx+xx x      xx  x xxx
+xx   xxxx  x x  xx   xxx
+x          x x  x x  xxx
+xxxxx x  x x       x xxx
+x xxx  xxxxxxxx xxxx  xx
+x x    xxx xx   xxx  xxx
+xS  xxxxxx    x   +x xxx
+xxxxxxxxxxxxxxxxxxxxxxxx
+0
+0

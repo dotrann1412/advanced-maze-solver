@@ -2,8 +2,8 @@ import pygame
 from pygame.locals import *
 from constants import *
 
-from algorithms.bfs import bfs_testing
-from algorithms.gbfs import gbfs
+from algorithms.algorithms_utils import AlgorithmsMode
+
 from utils import manhattan_distance
 
 # for screen recorder
@@ -16,21 +16,23 @@ def drawGrid(x, y, block_size=20, color=WHITE, border=WHITE):
     pygame.draw.rect(SCREEN, color, rect, block_size//2)
     pygame.draw.rect(SCREEN, border, rect, 1)
 
-def renderMap(bonus_points, matrix, start, end, block_size=20):
-    for y in range(len(matrix)):
-        for x in range(len(matrix[0])):
-            if matrix[y][x] == 'x':
-                color = BLACK
-            elif matrix[y][x] == 'S':
-                color = GREEN
-            elif matrix[y][x] == '+':
-                color = RED
+def renderMap(graph, start, end, block_size=20):
+    for y in range(len(graph)):
+        for x in range(len(graph[0])):
+            if graph[y][x] == MazeObject.WALL:
+                color = Colors.BLACK
+            elif graph[y][x] == MazeObject.START:
+                color = Colors.GREEN
+            elif graph[y][x] == MazeObject.BONUS:
+                color = Colors.BONUS_COLOR
+            # add for intermediate_points, teleport_points
+            # ...
             else:
-                color = WHITE
+                color = Colors.WHITE
             drawGrid(x, y, block_size, color)
 
-    drawGrid(start[1], start[0], color=PINK)
-    drawGrid(end[1], end[0], color=BLUE)
+    drawGrid(start[1], start[0], color=Colors.START_COLOR)
+    drawGrid(end[1], end[0], color=Colors.END_COLOR)
     pygame.display.update()
 
     # write frame to MP4 output
@@ -59,10 +61,23 @@ def visualizer(bonus_points, matrix, start, end, block_size=20):
     WIN_WIDTH = block_size * len(matrix[0])
     print(WIN_WIDTH, WIN_HEIGHT)
     SCREEN = pygame.display.set_mode((WIN_WIDTH, WIN_HEIGHT))
-    CLOCK = pygame.time.Clock()
     pygame.display.set_caption('Hello World!')
-
+    CLOCK = pygame.time.Clock()
     CLOCK.tick(60)
+
+    # Render maze
+    renderMap(graph, start, end, block_size)
+
+    # Specify mode of graph
+    mode = AlgorithmsMode.NORMAL
+    if len(bonus_points) > 0:
+        mode = AlgorithmsMode.BONUS_POINT
+    elif len(inter_points) > 0:
+        mode = AlgorithmsMode.INTERMEDIATE_POINT
+    elif len(teleport_points) > 0:
+        mode = AlgorithmsMode.TELEPORT_POINT
+
+    algorithm(graph, start, end, mode, bonus_points, inter_points, teleport_points, set_color, hf=hf)
 
     output_path = 'frames/demo2.mp4'
     fps = 30
