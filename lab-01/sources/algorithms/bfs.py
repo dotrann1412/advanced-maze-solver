@@ -75,15 +75,16 @@ def __bfs_intermediate_point(graph, starting_point, ending_point, intermediate_p
 		return good
 
 	current_position = starting_point
+	
+	path = []
 	while len(intermediate_points) != 0:
 		destination = choose(current_position, intermediate_points)
 		intermediate_points.remove(destination)
-		path = __normal_bfs(graph, current_position, destination, callback)
+		path += __normal_bfs(graph, current_position, destination, callback)
 		current_position = destination
 
-	path = __normal_bfs(graph, current_position, ending_point, callback)
-
-	return __normal_bfs(graph, starting_point, ending_point, callback)
+	path += __normal_bfs(graph, current_position, ending_point, callback)
+	return path
 
 def __bfs_with_teleport_point(graph, starting_point, ending_point, teleport_points, callback):
 	size = [len(graph), len(graph[0])]
@@ -99,7 +100,7 @@ def __bfs_with_teleport_point(graph, starting_point, ending_point, teleport_poin
 	
 	found = False
 
-	while len(frontier) != 0 and not found:
+	while not frontier.empty() != 0 and not found:
 		current = frontier[0]
 		frontier.pop(0)
 
@@ -164,7 +165,7 @@ def bfs(graph, starting_point, ending_point, mode, bonus_points, intermediate_po
 		return None
 
 	if mode == AlgorithmsMode.NORMAL:
-		return __normal_bfs(graph, call_back)
+		return __normal_bfs(graph, starting_point, ending_point, call_back)
 
 	if mode == AlgorithmsMode.BONUS_POINT:
 		return __bfs_with_bonus_point(graph, starting_point, ending_point, bonus_points, call_back)
