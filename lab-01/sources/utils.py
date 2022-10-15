@@ -46,7 +46,6 @@ def read_file(file_name: str = 'maze.txt', mode: Enum = AlgorithmsMode.NORMAL) -
 
     return matrix, start, end, bonus_points, inter_points, teleport_points
 
-
 def euclidean_distance(first_node, second_node):
     x_dif = first_node[0] - second_node[0]
     y_dif = first_node[1] - second_node[1]
@@ -58,10 +57,7 @@ def manhattan_distance(first_node, second_node):
     y_dif = first_node[1] - second_node[1]
     return abs(x_dif) + abs(y_dif)
 
-
-if __name__ == '__main__':
-    matrix, start, end, bonus_points, inter_points, teleport_points = read_file('maze_map.txt')
-    print(f'The height of the matrix: {len(matrix)}')
-    print(f'The width of the matrix: {len(matrix[0])}')
-    print(f'Starting point (x, y) = {start[0], start[1]}')
-    print(f'Ending point (x, y) = {end[0], end[1]}')
+def darker_color(color, factor=60):
+    # set the color to a darker shade
+    color = [max(0, i - factor) for i in color]
+    return tuple(color)

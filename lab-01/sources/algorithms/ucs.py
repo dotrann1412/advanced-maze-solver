@@ -6,12 +6,12 @@ def __normal_ucs(graph, starting_point, ending_point, callback):
 	frontier = PriorityQueue
 	size = grapthSize(graph)
 	
-	parrent = [[None for __ in size[1]] for _ in size[0]]
+	parent = [[None for __ in size[1]] for _ in size[0]]
 	cost = [[INF for __ in size[1]] for _ in size[0]]
 
 	frontier.put([0, starting_point])
 	cost[starting_point[0]][starting_point[1]] = 0
-	parrent[starting_point[0]][starting_point[1]] = starting_point
+	parent[starting_point[0]][starting_point[1]] = starting_point
 
 	found = False
 	while not frontier.empty() and not found:
@@ -31,7 +31,7 @@ def __normal_ucs(graph, starting_point, ending_point, callback):
 			
 			if cost[next_x][next_y] > current_cost + 1:
 				cost[next_x][next_y] = current_cost + 1
-				parrent[next_x][next_y] = current_point
+				parent[next_x][next_y] = current_point
 				
 				if [next_x, next_y] == ending_point:
 					found = True
@@ -49,7 +49,7 @@ def __normal_ucs(graph, starting_point, ending_point, callback):
 
 	while pointer != starting_point:
 		answer.append(pointer)
-		pointer = parrent[pointer[0]][pointer[1]]
+		pointer = parent[pointer[0]][pointer[1]]
 
 		limit -= 1
 		if limit == 0:
@@ -72,12 +72,12 @@ def __ucs_with_teleport_point(graph, starting_point, ending_point, teleport_poin
 	frontier = PriorityQueue
 	size = grapthSize(graph)
 	
-	parrent = [[None for __ in size[1]] for _ in size[0]]
+	parent = [[None for __ in size[1]] for _ in size[0]]
 	cost = [[INF for __ in size[1]] for _ in size[0]]
 
 	frontier.put([0, starting_point])
 	cost[starting_point[0]][starting_point[1]] = 0
-	parrent[starting_point[0]][starting_point[1]] = starting_point
+	parent[starting_point[0]][starting_point[1]] = starting_point
 
 	found = False
 	while not frontier.empty() and not found:
@@ -99,7 +99,7 @@ def __ucs_with_teleport_point(graph, starting_point, ending_point, teleport_poin
 				for teleport in teleport_points:
 					if cost[teleport[0]][teleport[1]] > current_cost + 1:
 						cost[teleport[0]][teleport[1]] = current_cost + 1
-						parrent[teleport[0]][teleport[1]] = current_point
+						parent[teleport[0]][teleport[1]] = current_point
 
 					# case not occur
 					if [next_x, next_y] == ending_point:
@@ -110,7 +110,7 @@ def __ucs_with_teleport_point(graph, starting_point, ending_point, teleport_poin
 			
 			if cost[next_x][next_y] > current_cost + 1:
 				cost[next_x][next_y] = current_cost + 1
-				parrent[next_x][next_y] = current_point
+				parent[next_x][next_y] = current_point
 				
 				if [next_x, next_y] == ending_point:
 					found = True
@@ -128,7 +128,7 @@ def __ucs_with_teleport_point(graph, starting_point, ending_point, teleport_poin
 
 	while pointer != starting_point:
 		answer.append(pointer)
-		pointer = parrent[pointer[0]][pointer[1]]
+		pointer = parent[pointer[0]][pointer[1]]
 
 		limit -= 1
 		if limit == 0:

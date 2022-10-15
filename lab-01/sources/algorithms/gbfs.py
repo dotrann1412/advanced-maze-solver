@@ -1,21 +1,20 @@
 from algorithms.algorithms_utils import *
 from constants import *
-from utils import euclidean_distance, manhattan_distance
+from utils import manhattan_distance
 from queue import PriorityQueue
+from visualizer import set_path_color, set_frontier_color
 
-
-def __normalGbfs(graph, start, end, callback, heuristic):
+def __normalGbfs(graph, start, end, heuristic):
     def h(point):
         return heuristic(point, end)
 
     terminated = [-1, -1]
     dim = [len(graph), len(graph[0])]
+    sleep_time = calcSleepTime(dim)
 
     priority_queue = PriorityQueue()
-    print("[DEBUG] Priority queue created...")
 
     if start[0] < 0 or start[0] >= dim[0] or start[1] < 0 or start[1] >= dim[1]:
-        print("[DEBUG] Invalid starting point...")
         return None
 
     parent = [[None for __ in range(dim[1])] for _ in range(dim[0])]
@@ -24,8 +23,6 @@ def __normalGbfs(graph, start, end, callback, heuristic):
     parent[start[0]][start[1]] = terminated
 
     found = False
-
-    print("[DEBUG] Go into loop...")
 
     while not priority_queue.empty() and not found:
         _, current = priority_queue.get()
@@ -48,10 +45,9 @@ def __normalGbfs(graph, start, end, callback, heuristic):
                 priority_queue.put([h(next_step), next_step])
         
         if current != start:
-            callback(current[1], current[0], Colors.FRONTIER_COLOR, sleep_time=30)
+            set_frontier_color(current[1], current[0], sleep_time)
 
     if not end or not parent[end[0]][end[1]]:
-        print("[DEBUG] Unreachable...")
         return None
     
     answer = []
@@ -60,34 +56,36 @@ def __normalGbfs(graph, start, end, callback, heuristic):
     while parent[pointer[0]][pointer[1]] != terminated:
         answer.append(pointer)
         pointer = parent[pointer[0]][pointer[1]]
+    answer.append(start)
+    
+    answer = answer[::-1]
 
-    for point in answer[1:]:
-        callback(point[1], point[0], Colors.PATH_COLOR, sleep_time=10)
+    set_path_color(answer, sleep_time)
 
-    return answer[::-1]
+    return answer
 
-def __gbfsWithBonusPoint(graph, start, end, bonus_points, callback, hf):
+def __gbfsWithBonusPoint(graph, start, end, bonus_points, hf):
     pass
 
-def __gbfsIntermediatePoint(graph, start, end, intermediate_points, callback, hf):
+def __gbfsIntermediatePoint(graph, start, end, intermediate_points, hf):
     pass
 
-def __gbfsWithTeleportPoint(graph, start, end, teleport_points, callback, hf):
+def __gbfsWithTeleportPoint(graph, start, end, teleport_points, hf):
     pass
 
-def gbfs(graph, start, end, mode, bonus_points, intermediate_points, teleport_points, callback, hf=manhattan_distance):
+def gbfs(graph, start, end, mode, bonus_points, intermediate_points, teleport_points, hf=manhattan_distance):
     if not isValidGraph(graph):
         return None
 
     if mode == AlgorithmsMode.NORMAL:
-        return __normalGbfs(graph, start, end, callback, hf)
+        return __normalGbfs(graph, start, end, hf)
 
     if mode == AlgorithmsMode.BONUS_POINT:
-        return __gbfsWithBonusPoint(graph, start, end, bonus_points, callback, hf)
+        return __gbfsWithBonusPoint(graph, start, end, bonus_points, hf)
 
     if mode == AlgorithmsMode.INTERMEDIATE_POINT:
-        return __gbfsIntermediatePoint(graph, start, end, intermediate_points, callback, hf)
+        return __gbfsIntermediatePoint(graph, start, end, intermediate_points, hf)
 
     if mode == AlgorithmsMode.TELEPORT_POINT:
-        return __gbfsWithTeleportPoint(graph, start, end, teleport_points, callback, hf)
+        return __gbfsWithTeleportPoint(graph, start, end, teleport_points, hf)
 

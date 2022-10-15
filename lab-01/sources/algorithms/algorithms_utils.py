@@ -1,5 +1,4 @@
 from enum import Enum
-
 class AlgorithmsMode(Enum):
 	NORMAL = 0
 	BONUS_POINT = 1
@@ -84,7 +83,7 @@ def isValidGraph(graph):
 	return True
 
 def isInGraph(matrix, point):
-    return point[0] >= 0 and point[0] < len(matrix) and point[1] >= 0 and point[1] < len(matrix[0])
+	return point[0] >= 0 and point[0] < len(matrix) and point[1] >= 0 and point[1] < len(matrix[0])
 
 def calcSleepTime(dim):
-    return min(max(15000 // dim[0] // dim[1], 15), 40)
+	return min(max(15000 // dim[0] // dim[1], 15), 40)

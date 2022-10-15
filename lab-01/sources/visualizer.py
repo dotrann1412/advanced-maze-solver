@@ -3,11 +3,7 @@ import sys
 from pygame.locals import *
 from constants import *
 
-from algorithms.algorithms_utils import AlgorithmsMode
-
-from utils import manhattan_distance
-
-from algorithms.gbfs import gbfs
+from utils import manhattan_distance, darker_color
 
 # for screen recorder
 import cv2
@@ -45,6 +41,11 @@ def renderMap(graph, start, end, block_size=20):
         frame = cv2.cvtColor(np.array(current_frame_dat), cv2.COLOR_BGR2RGB)
         ANIMATE.write(frame)
 
+
+def get_color(x, y, block_size=20,):
+    global SCREEN
+    return SCREEN.get_at((x * block_size + block_size // 2, y * block_size + block_size // 2))
+
 # function to set color at cell (x, y) in grid
 def set_color(x, y, color, sleep_time=30):
     drawGrid(x, y, color=color)
@@ -57,6 +58,21 @@ def set_color(x, y, color, sleep_time=30):
         current_frame_dat = Image.frombytes('RGB', (WIN_WIDTH, WIN_HEIGHT), bytes(current_frame_str), 'raw')
         frame = cv2.cvtColor(np.array(current_frame_dat), cv2.COLOR_BGR2RGB)
         ANIMATE.write(frame)
+
+def set_frontier_color(x, y, sleep_time):
+	color = Colors.FRONTIER_COLOR
+	cur_color = get_color(x, y)
+	if cur_color != Colors.WHITE:
+		color = darker_color(cur_color)
+	set_color(x, y, color, sleep_time)
+
+def set_path_color(path, sleep_time):
+	for point in path[1:-1]:
+		color = Colors.PATH_COLOR
+		cur_color = get_color(point[1], point[0])
+		if cur_color == Colors.PATH_COLOR or cur_color == Colors.BONUS_COLOR:
+			color = darker_color(cur_color)
+		set_color(point[1], point[0], color, sleep_time)
 
 def visualize(algorithm, mode, graph, start, end, 
     bonus_points=[], inter_points=[], teleport_points=[], 
@@ -84,7 +100,7 @@ def visualize(algorithm, mode, graph, start, end,
     # Render maze
     renderMap(graph, start, end, block_size)
 
-    algorithm(graph, start, end, mode, bonus_points, inter_points, teleport_points, set_color, hf=hf)
+    algorithm(graph, start, end, mode, bonus_points, inter_points, teleport_points, hf=hf)
     if ANIMATE is not None:
         ANIMATE.release()
 
