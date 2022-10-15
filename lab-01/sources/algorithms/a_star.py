@@ -77,7 +77,7 @@ def __aStarWithBonusPointRecur(graph, start, end, bonus_points, callback, hf):
         return hf(p1, p2)
 
     def calcHBonus(start, bonus, end):
-        return h(start, bonus[:2]) + +  h(bonus[:2], end) + bonus[2]
+        return 3 * h(start, bonus[:2]) + +  h(bonus[:2], end) + bonus[2]
 
     hBonusArr = sorted([[calcHBonus(start, bonus, end), bonus] for bonus in bonus_points])
     hStart = h(start)
