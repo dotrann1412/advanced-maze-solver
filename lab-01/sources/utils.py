@@ -1,59 +1,34 @@
 
+from enum import Enum
 from math import sqrt
 from constants import *
+from algorithms.algorithms_utils import AlgorithmsMode
 
-def read_file(file_name: str = 'maze.txt'):
-    
+def read_file(file_name: str = 'maze.txt', mode: Enum = AlgorithmsMode.NORMAL) -> list:
     bonus_points = []
     inter_points = []
     teleport_points = {}
     matrix = None
     start, end = (-1, -1), (-1, -1)
-    
-    matrix_allowed_character = set([MazeObject.START, MazeObject.EMPTY, MazeObject.WALL, MazeObject.INTER, MazeObject.BONUS])
 
     try:
         with open(file_name, 'r') as fp:
-            n_bonus_points = int(fp.readline())
+            n_special_points = int(fp.readline())
 
-            for i in range(n_bonus_points):
-                x, y, reward = map(int, fp.readline().split())
-                bonus_points.append((x, y, reward))
-
-            prev_position, line_content  = fp.tell(), fp.readline().rstrip('\n')
-            matrix = []
-
-            while all(c in matrix_allowed_character for c in line_content):
-                matrix.append(list(line_content))
-                prev_position = fp.tell()
-                if fp.readable(): line_content = fp.readline().rstrip('\n')
-
-            fp.seek(prev_position, 0)
-            
-            try:
-                n_itermediate_points = int(fp.readline(' '))
-                for i in range(n_itermediate_points):
-                    x, y = map(int, fp.readline().split(' '))
+            for i in range(n_special_points):
+                if mode == AlgorithmsMode.BONUS_POINT:
+                    x, y, reward = map(int, fp.readline().split())
+                    bonus_points.append((x, y, reward))
+                elif mode == AlgorithmsMode.INTERMEDIATE_POINT:
+                    x, y = map(int, fp.readline().split())
                     inter_points.append((x, y))
+                elif mode == AlgorithmsMode.TELEPORT_POINT:
+                    x1, y1, x2, y2 = map(int, fp.readline().split())
+                    teleport_points[(x1, y1)] = (x2, y2)
+                    teleport_points[(x2, y2)] = (x1, y1)
 
-                n_telepor_points = int(fp.readline(' '))
-                for i in range(n_telepor_points):
-                    x, y, xt, yt = map(int, fp.readline().split(' '))
-                    teleport_points[(x, y)] = (xt, yt)
-                    teleport_points[(xt, yt)] = (x, y)
-            except:
-                inter_points = []
-                teleport_points = []
-            
-            size_x = len(matrix)
-            size_y = 0 if not size_x else len(matrix[0])
-
-            for i in range(0, size_x):
-                for j in range(0, size_y):
-                    if MazeObject.START == matrix[i][j]:
-                        start = (i, j)
-                    elif (not i or not j or size_x - 1 == i or size_y - 1 == j) and matrix[i][j] == MazeObject.EMPTY:
-                        end = (i, j)
+            text = fp.read()
+            matrix = [list(i) for i in text.splitlines()]
 
         for i in range(len(matrix)):
             for j in range(len(matrix[0])):
