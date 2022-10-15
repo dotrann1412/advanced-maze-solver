@@ -224,7 +224,7 @@ def __ucs_with_teleport_point(graph, starting_point, ending_point, teleport_poin
 	
 	path = __trace_back(parrent, starting_point, ending_point, limit = size[0] + size[1])
 
-	for point in path:
+	for point in path[1:-1]:
 		callback(point[1], point[0], Colors.PATH_COLOR)
 
 	return path
