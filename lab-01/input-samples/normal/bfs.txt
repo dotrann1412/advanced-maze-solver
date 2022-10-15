@@ -14,3 +14,5 @@ x x xxx xxxxx xxxxx
 x x      xxxx     x
 x xxxxxxxxxx  xxxxx
 xxxxxxxxxxxxxxxxxxx
+0
+0
