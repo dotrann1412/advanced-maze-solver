@@ -6,12 +6,14 @@ from algorithms.algorithms_utils import AlgorithmsMode
 
 from utils import manhattan_distance
 
+from algorithms.gbfs import gbfs
+
 # for screen recorder
 import cv2
 from PIL import Image
 import numpy as np
 
-def drawGrid(x, y, block_size=20, color=WHITE, border=WHITE):
+def drawGrid(x, y, block_size=20, color=Color.WHITE, border=Color.WHITE):
     rect = pygame.Rect(x * block_size, y * block_size, block_size, block_size)
     pygame.draw.rect(SCREEN, color, rect, block_size//2)
     pygame.draw.rect(SCREEN, border, rect, 1)
@@ -53,12 +55,12 @@ def set_color(x, y, color, sleep_time=30):
     frame = cv2.cvtColor(np.array(current_frame_dat), cv2.COLOR_BGR2RGB)
     ANIMATE.write(frame)
 
-def visualizer(bonus_points, matrix, start, end, block_size=20):
+def visualizer(bonus_points, graph, start, end, block_size=20):
     global SCREEN, CLOCK
     pygame.init()
     global WIN_HEIGHT, WIN_WIDTH
-    WIN_HEIGHT = block_size * len(matrix)
-    WIN_WIDTH = block_size * len(matrix[0])
+    WIN_HEIGHT = block_size * len(graph)
+    WIN_WIDTH = block_size * len(graph[0])
     print(WIN_WIDTH, WIN_HEIGHT)
     SCREEN = pygame.display.set_mode((WIN_WIDTH, WIN_HEIGHT))
     pygame.display.set_caption('Hello World!')
@@ -86,9 +88,9 @@ def visualizer(bonus_points, matrix, start, end, block_size=20):
     ANIMATE = cv2.VideoWriter(output_path, fourcc, fps, (WIN_WIDTH, WIN_HEIGHT))
 
     # Render maze and run algorithm
-    renderMap(bonus_points, matrix, start, end, block_size)
+    renderMap(bonus_points, graph, start, end, block_size)
     # result = bfs_testing(matrix, start, end, set_color)
-    result = gbfs(matrix, start, end, set_color, manhattan_distance)
+    result = gbfs(graph, start, end, set_color, manhattan_distance)
     # Wait 2 seconds before closing
     pygame.time.wait(2000)
 
