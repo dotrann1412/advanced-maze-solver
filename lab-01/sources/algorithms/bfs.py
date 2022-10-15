@@ -26,7 +26,7 @@ def __normal_bfs(graph, starting_point, ending_point, callback):
 		for element in direction:
 			next_x, next_y = current[0] + element[0], current[1] + element[1]
 			
-			if next_x < 0 or next_x >= size[0] or next_y < 0 or next_y >= size[1]:
+			if not isInGraph(graph, (next_x, next_y)) or parent[next_x][next_y] or graph[next_x][next_y] == MazeObject.WALL:
 				continue
 
 			if (next_x, next_y) == ending_point:
@@ -34,9 +34,8 @@ def __normal_bfs(graph, starting_point, ending_point, callback):
 				found = True
 				break
 
-			if graph[next_x][next_y] == MazeObject.EMPTY and not parent[next_x][next_y]:
-				parent[next_x][next_y] = current
-				frontier.append([next_x, next_y])
+			parent[next_x][next_y] = current
+			frontier.append([next_x, next_y])
 
 	if not ending_point or not parent[ending_point[0]][ending_point[1]]:
 		return None
@@ -44,7 +43,7 @@ def __normal_bfs(graph, starting_point, ending_point, callback):
 	answer = []
 	pointer = ending_point
 
-	limit = size[0] + size[1]
+	limit = size[0] * size[1]
 
 	while pointer != starting_point:
 		answer.append(pointer)
@@ -57,7 +56,7 @@ def __normal_bfs(graph, starting_point, ending_point, callback):
 	answer.append(starting_point)
 	answer = answer[::-1]
 
-	for point in answer:
+	for point in answer[1:-1]:
 		callback(point[1], point[0], Colors.PATH_COLOR)
 
 	return answer
@@ -140,7 +139,7 @@ def __bfs_with_teleport_point(graph, starting_point, ending_point, teleport_poin
 	answer = []
 	pointer = ending_point
 
-	limit = size[0] + size[1]
+	limit = size[0] * size[1]
 
 	while pointer != starting_point:
 		answer.append(pointer)
@@ -153,7 +152,7 @@ def __bfs_with_teleport_point(graph, starting_point, ending_point, teleport_poin
 	answer.append(starting_point)
 	answer = answer[::-1]
 
-	for point in answer:
+	for point in answer[1:-1]:
 		callback(point[1], point[0], Colors.PATH_COLOR)
 
 	return answer

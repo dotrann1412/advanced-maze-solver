@@ -58,10 +58,11 @@ def __normal_ucs(graph, starting_point, ending_point, callback):
 	if not found:
 		return None
 	
-	path = __trace_back(parent, starting_point, ending_point, limit = size[0] + size[1])
+	path = [starting_point] + __trace_back(parent, starting_point, ending_point, limit = size[0] * size[1])
 
 	
-	for point in path:
+
+	for point in path[1:-1]:
 		callback(point[1], point[0], Colors.PATH_COLOR)
 	
 	
@@ -223,7 +224,7 @@ def __ucs_with_teleport_point(graph, starting_point, ending_point, teleport_poin
 	if not found:
 		return None
 	
-	path = __trace_back(parent, starting_point, ending_point, limit = size[0] + size[1])
+	path = __trace_back(parent, starting_point, ending_point, limit = size[0] * size[1])
 
 	for point in path[1:-1]:
 		callback(point[1], point[0], Colors.PATH_COLOR)
