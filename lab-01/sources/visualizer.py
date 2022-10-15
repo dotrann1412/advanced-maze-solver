@@ -79,7 +79,7 @@ def set_path_color(path, sleep_time, special_points={}):
 	for point in path:
 		passed[point] = False
 
-	for point in path:
+	for point in path[1:-1]:
 		color = Colors.PATH
 		cur_color = get_color(point[1], point[0])
 		if cur_color == Colors.PATH or cur_color == Colors.SPECIAL or point in special_points or passed[point]:
