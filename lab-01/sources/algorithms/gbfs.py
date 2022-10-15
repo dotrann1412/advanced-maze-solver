@@ -1,16 +1,15 @@
-from numpy import empty
 from algorithms.algorithms_utils import *
 from constants import *
 from utils import euclidean_distance, manhattan_distance
 from queue import PriorityQueue
 
 
-def gbfs(matrix, start, end, callback, heuristic):
+def __normalGbfs(graph, start, end, callback, heuristic):
     def h(point):
         return heuristic(point, end)
 
     terminated = [-1, -1]
-    dim = [len(matrix), len(matrix[0])]
+    dim = [len(graph), len(graph[0])]
 
     priority_queue = PriorityQueue()
     print("[DEBUG] Priority queue created...")
