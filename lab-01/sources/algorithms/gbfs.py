@@ -16,7 +16,7 @@ from queue import PriorityQueue
 '''
 def __normalGbfs(graph, start, end, callback, hf):
     def h(point):
-        return heuristic(point, end)
+        return hf(point, end)
     terminated = [-1, -1]
     dim = grapthSize(graph)
 
