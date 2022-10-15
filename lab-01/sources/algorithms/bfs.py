@@ -26,19 +26,18 @@ def __normal_bfs(graph, starting_point, ending_point):
 			set_frontier_color(current[1], current[0], sleep_time)
 
 		for element in direction:
-			next_step_x, next_step_y = current[0] + element[0], current[1] + element[1]
+			next_x, next_y = current[0] + element[0], current[1] + element[1]
 			
-			if next_step_x < 0 or next_step_x >= size[0] or next_step_y < 0 or next_step_y >= size[1]:
+			if not isInGraph(graph, (next_x, next_y)) or parent[next_x][next_y] or graph[next_x][next_y] == MazeObject.WALL:
 				continue
 
-			if (next_step_x, next_step_y) == ending_point:
-				parent[next_step_x][next_step_y] = current
+			if (next_x, next_y) == ending_point:
+				parent[next_x][next_y] = current
 				found = True
 				break
 
-			if graph[next_step_x][next_step_y] == MazeObject.EMPTY and not parent[next_step_x][next_step_y]:
-				parent[next_step_x][next_step_y] = current
-				frontier.append([next_step_x, next_step_y])
+			parent[next_x][next_y] = current
+			frontier.append([next_x, next_y])
 
 	if not ending_point or not parent[ending_point[0]][ending_point[1]]:
 		return None
@@ -46,7 +45,7 @@ def __normal_bfs(graph, starting_point, ending_point):
 	answer = []
 	pointer = ending_point
 
-	limit = size[0] + size[1]
+	limit = size[0] * size[1]
 
 	while pointer != starting_point:
 		answer.append(pointer)
@@ -70,7 +69,7 @@ def __bfs_with_bonus_point(graph, starting_point, ending_point, bonus_points):
 
 
 def __bfs_intermediate_point(graph, starting_point, ending_point, intermediate_points: list):
-	def choose(_starting_point, destinations):
+	def pick_next_bonus(_starting_point, destinations):
 		good = destinations[0]
 		for point in destinations[1:]:
 			if manhattan_distance(good, _starting_point) > manhattan_distance(good, point):
@@ -81,7 +80,7 @@ def __bfs_intermediate_point(graph, starting_point, ending_point, intermediate_p
 	
 	path = []
 	while len(intermediate_points) != 0:
-		destination = choose(current_position, intermediate_points)
+		destination = pick_next_bonus(current_position, intermediate_points)
 		intermediate_points.remove(destination)
 		path += __normal_bfs(graph, current_position, destination)
 		current_position = destination
@@ -146,7 +145,7 @@ def __bfs_with_teleport_point(graph, starting_point, ending_point, teleport_poin
 	answer = []
 	pointer = ending_point
 
-	limit = size[0] + size[1]
+	limit = size[0] * size[1]
 
 	while pointer != starting_point:
 		answer.append(pointer)
