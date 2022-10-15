@@ -12,20 +12,18 @@ class Colors():
     WHITE = (255, 255, 255)
     BLUE = (0, 0, 255)
     RED = (255, 0, 0)
-    RED_LIGHT = (255, 150, 150)
     GREEN = (0, 220, 0)
     YELLOW = (255, 255, 0)
     ORANGE = (255, 165, 0)
 
     # Special cell
-    START_COLOR = ORANGE
-    END_COLOR = BLUE
-    BONUS_COLOR = RED
-    BONUS_PASSED = RED_LIGHT
+    START = ORANGE
+    END = BLUE
+    SPECIAL = RED
 
     # Colors for algorithms
-    FRONTIER_COLOR = GREEN
-    PATH_COLOR = YELLOW
+    FRONTIER = GREEN
+    PATH = YELLOW
 
 # Window size
 WIN_WIDTH = 400
