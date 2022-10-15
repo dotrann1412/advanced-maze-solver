@@ -23,15 +23,15 @@ def renderMap(graph, start, end, block_size=20):
             elif graph[y][x] == MazeObject.START:
                 color = Colors.GREEN
             elif graph[y][x] == MazeObject.BONUS:
-                color = Colors.BONUS_COLOR
+                color = Colors.SPECIAL
             # add for intermediate_points, teleport_points
             # ...
             else:
                 color = Colors.WHITE
             drawGrid(x, y, block_size, color)
 
-    drawGrid(start[1], start[0], color=Colors.START_COLOR)
-    drawGrid(end[1], end[0], color=Colors.END_COLOR)
+    drawGrid(start[1], start[0], color=Colors.START)
+    drawGrid(end[1], end[0], color=Colors.END)
     pygame.display.update()
 
     # write frame to MP4 output
@@ -60,17 +60,17 @@ def set_color(x, y, color, sleep_time=30):
         ANIMATE.write(frame)
 
 def set_frontier_color(x, y, sleep_time):
-	color = Colors.FRONTIER_COLOR
+	color = Colors.FRONTIER
 	cur_color = get_color(x, y)
 	if cur_color != Colors.WHITE:
 		color = darker_color(cur_color)
 	set_color(x, y, color, sleep_time)
 
-def set_path_color(path, sleep_time):
+def set_path_color(path, sleep_time, special_points=[]):
 	for point in path[1:-1]:
-		color = Colors.PATH_COLOR
+		color = Colors.PATH
 		cur_color = get_color(point[1], point[0])
-		if cur_color == Colors.PATH_COLOR or cur_color == Colors.BONUS_COLOR:
+		if cur_color == Colors.PATH or cur_color == Colors.SPECIAL or point in special_points:
 			color = darker_color(cur_color)
 		set_color(point[1], point[0], color, sleep_time)
 
@@ -103,6 +103,7 @@ def visualize(algorithm, mode, graph, start, end,
     algorithm(graph, start, end, mode, bonus_points, inter_points, teleport_points, hf=hf)
     if ANIMATE is not None:
         ANIMATE.release()
+        print('released')
 
     # Wait 2 seconds before closing
     pygame.time.wait(1000)
