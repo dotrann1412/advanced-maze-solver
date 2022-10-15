@@ -1,11 +1,10 @@
 # Maze object
-class MazeObject():
+class MazeObject:
     START = 'S'
     WALL = 'x'
     BONUS = '+'
     EMPTY = ' '
     INTER = '>'
-    TELE = 'o'
 
 # Colors
 class Colors():

@@ -1,5 +1,6 @@
 from algorithms.algorithms_utils import *
 from constants import *
+from utils import manhattan_distance
 
 def __normal_bfs(graph, starting_point, ending_point, callback):
 	size = [len(graph), len(graph[0])]
@@ -28,12 +29,12 @@ def __normal_bfs(graph, starting_point, ending_point, callback):
 			if next_step_x < 0 or next_step_x >= size[0] or next_step_y < 0 or next_step_y >= size[1]:
 				continue
 
-			if isExit(graph[next_step_x][next_step_y]):
+			if (next_step_x, next_step_y) == ending_point:
 				parrent[next_step_x][next_step_y] = current
 				found = True
 				break
 
-			if isEmptyCell(graph[next_step_x][next_step_y]) and not parrent[next_step_x][next_step_y]:
+			if graph[next_step_x][next_step_y] == MazeObject.EMPTY and not parrent[next_step_x][next_step_y]:
 				parrent[next_step_x][next_step_y] = current
 				frontier.append([next_step_x, next_step_y])
 
@@ -62,16 +63,32 @@ def __normal_bfs(graph, starting_point, ending_point, callback):
 	return answer
 
 def __bfs_with_bonus_point(graph, starting_point, ending_point, bonus_points, callback):
-	size = grapthSize(graph)
+	# bfs is a uniform cost search --> this mode is not really available
+	return __normal_bfs(graph, starting_point, ending_point, callback)
 
-def __bfs_intermediate_point(graph, starting_point, ending_point, intermediate_points, callback):
-	size = grapthSize(graph)
+def __bfs_intermediate_point(graph, starting_point, ending_point, intermediate_points: list, callback):
+	def choose(_starting_point, destinations):
+		good = destinations[0]
+		for point in destinations[1:]:
+			if manhattan_distance(good, _starting_point) > manhattan_distance(good, point):
+				good = point
+		return good
+
+	current_position = starting_point
+	
+	path = []
+	while len(intermediate_points) != 0:
+		destination = choose(current_position, intermediate_points)
+		intermediate_points.remove(destination)
+		path += __normal_bfs(graph, current_position, destination, callback)
+		current_position = destination
+
+	path += __normal_bfs(graph, current_position, ending_point, callback)
+	return path
 
 def __bfs_with_teleport_point(graph, starting_point, ending_point, teleport_points, callback):
-	size = grapthSize(graph)
+	size = [len(graph), len(graph[0])]
 	frontier = []
-
-	ignore_teleport = False
 
 	if starting_point[0] < 0 or starting_point[0] >= size[0] or starting_point[1] < 0 or starting_point[1] >= size[1]:
 		return None
@@ -80,10 +97,10 @@ def __bfs_with_teleport_point(graph, starting_point, ending_point, teleport_poin
 	
 	frontier.append(starting_point)
 	parrent[starting_point[0]][starting_point[1]] = starting_point
-
+	
 	found = False
 
-	while len(frontier) != 0 and not found:
+	while not frontier.empty() != 0 and not found:
 		current = frontier[0]
 		frontier.pop(0)
 
@@ -91,24 +108,31 @@ def __bfs_with_teleport_point(graph, starting_point, ending_point, teleport_poin
 			callback(current[1], current[0], Colors.FRONTIER_COLOR)
 
 		for element in direction:
-			next_step_x, next_step_y = current[0] + element[0], current[1] + element[1]
-			if next_step_x < 0 or next_step_x >= size[0] or next_step_y < 0 or next_step_y >= size[1]:
+			next_x, next_y = current[0] + element[0], current[1] + element[1]
+			
+			if isInGraph(graph, (next_x, next_y)) or graph[next_x][next_y] == MazeObject.EMPTY:
 				continue
 
-			if isExit(graph[next_step_x][next_step_y]):
-				parrent[next_step_x][next_step_y] = current
+			if graph[next_x][next_y] == ending_point:
+				parrent[next_x][next_y] = current
 				found = True
 				break
 
-			if not ignore_teleport and isTeleportCell(graph[next_step_x][next_step_y]):
-				for teleport in teleport_points:
-					parrent[teleport[0]][teleport[1]] = current if teleport == [next_step_x, next_step_y] else [next_step_x, next_step_y]
-					frontier.append(teleport)
-				ignore_teleport = True
+			if (next_x, next_y) in teleport_points:
+				destination_x, destination_y = teleport_points[(next_x, next_y)]
 
-			if isEmptyCell(graph[next_step_x][next_step_y]) and not parrent[next_step_x][next_step_y]:
-				parrent[next_step_x][next_step_y] = current
-				frontier.append([next_step_x, next_step_y])
+				if graph[destination_x][destination_y] == ending_point:
+					parrent[destination_x][destination_y] = current
+					found = True
+					break
+
+				if not parrent[destination_x][destination_y]:
+					parrent[destination_x][destination_y] = current
+					frontier.append([destination_x, destination_y])
+
+			if  not parrent[next_x][next_y]:
+				parrent[next_x][next_y] = current
+				frontier.append([next_x, next_y])
 
 	if not ending_point or not parrent[ending_point[0]][ending_point[1]]:
 		return None
@@ -125,11 +149,13 @@ def __bfs_with_teleport_point(graph, starting_point, ending_point, teleport_poin
 		limit -= 1
 		if limit == 0:
 			raise Exception("Infinite loop!")
-	
+
 	answer.append(starting_point)
-	answer = answer[::-1] 
+	answer = answer[::-1]
+
 	for point in answer:
 		callback(point[1], point[0], Colors.PATH_COLOR)
+
 	return answer
 
 
@@ -139,7 +165,7 @@ def bfs(graph, starting_point, ending_point, mode, bonus_points, intermediate_po
 		return None
 
 	if mode == AlgorithmsMode.NORMAL:
-		return __normal_bfs(graph, call_back)
+		return __normal_bfs(graph, starting_point, ending_point, call_back)
 
 	if mode == AlgorithmsMode.BONUS_POINT:
 		return __bfs_with_bonus_point(graph, starting_point, ending_point, bonus_points, call_back)
