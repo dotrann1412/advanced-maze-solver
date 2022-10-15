@@ -37,7 +37,7 @@ def set_color(x, y, color, sleep_time=30):
     pygame.display.update()
     pygame.time.wait(sleep_time)
 
-def visualize(algorithm, graph, start, end, 
+def visualize(algorithm, mode, graph, start, end, 
     bonus_points=[], inter_points=[], teleport_points=[], 
     block_size=20, hf=manhattan_distance
 ):
@@ -52,15 +52,6 @@ def visualize(algorithm, graph, start, end,
 
     # Render maze
     renderMap(graph, start, end, block_size)
-
-    # Specify mode of graph
-    mode = AlgorithmsMode.NORMAL
-    if len(bonus_points) > 0:
-        mode = AlgorithmsMode.BONUS_POINT
-    elif len(inter_points) > 0:
-        mode = AlgorithmsMode.INTERMEDIATE_POINT
-    elif len(teleport_points) > 0:
-        mode = AlgorithmsMode.TELEPORT_POINT
 
     algorithm(graph, start, end, mode, bonus_points, inter_points, teleport_points, set_color, hf=hf)
 
