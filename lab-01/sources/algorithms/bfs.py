@@ -57,7 +57,7 @@ def __normal_bfs(graph, starting_point, ending_point, callback):
 	answer.append(starting_point)
 	answer = answer[::-1]
 
-	for point in answer:
+	for point in answer[1:-1]:
 		callback(point[1], point[0], Colors.PATH_COLOR)
 
 	return answer

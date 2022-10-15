@@ -13,7 +13,7 @@ def __normal_dfs(graph, starting_point, ending_point, callback):
 			return True
 
 		if current_position != starting_point:
-			callback(current_position[1], current_position[0], Colors.PATH_COLOR)
+			callback(current_position[1], current_position[0], Colors.FRONTIER_COLOR)
 		
 		visited[current_position[0]][current_position[1]] = True
 
@@ -27,8 +27,6 @@ def __normal_dfs(graph, starting_point, ending_point, callback):
 			if __process((next_x, next_y), depth + 1):
 				path.append((next_x, next_y))
 				return True
-
-		callback(current_position[1], current_position[0], Colors.WHITE)
 		
 		return False
 
@@ -36,6 +34,9 @@ def __normal_dfs(graph, starting_point, ending_point, callback):
 
 	if not found:
 		return None
+
+	for point in path[1:]:
+		callback(point[1], point[0], Colors.PATH_COLOR)
 	
 	return path[::-1]
 
@@ -76,7 +77,7 @@ def __dfs_with_teleport_point(graph, starting_point, ending_point, teleport_poin
 			return True
 
 		if current_position != starting_point:
-			callback(current_position[1], current_position[0], Colors.PATH_COLOR)
+			callback(current_position[1], current_position[0], Colors.FRONTIER_COLOR)
 
 		visited[current_position[0]][current_position[1]] = True
 
@@ -97,7 +98,6 @@ def __dfs_with_teleport_point(graph, starting_point, ending_point, teleport_poin
 				path.append((next_x, next_y))
 				return True
 
-		callback(current_position[1], current_position[0], Colors.WHITE)
 		
 		return False
 
@@ -105,6 +105,9 @@ def __dfs_with_teleport_point(graph, starting_point, ending_point, teleport_poin
 
 	if not found:
 		return None
+
+	for point in path[1:]:
+		callback(point[1], point[0], Colors.PATH_COLOR)
 
 	return path[::-1]
 
