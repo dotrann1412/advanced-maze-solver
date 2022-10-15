@@ -2,60 +2,18 @@ from numpy import empty
 from algorithms.algorithms_utils import direction, valid_graph, AlgorithmsMode
 from constants import *
 from utils import euclidean_distance, manhattan_distance
-
-
-class PriorityQueue(object):
-    '''
-    type must be in ['big', 'small']
-    '''
-    def __init__(self, heuristic, goal, type='big'):
-        assert(len(goal) == 2)
-        assert(heuristic(goal, goal) == 0)
-        assert(type in ['big', 'small'])
-        self.queue = []
-        self.heuristic = heuristic
-        self.goal = goal
-        self.type = type
-
-    def __str__(self) -> str:
-        return ' '.join([str(element) for element in self.queue]) if not self.empty() else 'empty'
-
-    def size(self) -> int:
-        return len(self.queue)
-
-    def empty(self):
-        return self.size() <= 0
-
-    def push(self, element):
-        self.queue.append(element)
-
-    def pop(self):
-        try:
-            arg = 0
-            for i in range(1, len(self.queue)):
-                if self.compare()(self.heuristic(self.queue[i], self.goal), self.heuristic(self.queue[arg], self.goal)):
-                    arg = i
-            item = self.queue[arg]
-            del self.queue[arg]
-            return item
-        except:
-            print('Priority queue is empty!')
-            return None
-
-    def compare(self):
-        if self.type == 'big':
-            return lambda a, b: a > b
-        else:  # small
-            return lambda a, b: a < b
+from queue import PriorityQueue
 
 
 def gbfs(matrix, start, end, callback, heuristic):
+    def h(point):
+        return heuristic(point, end)
+
     terminated = [-1, -1]
     dim = [len(matrix), len(matrix[0])]
 
-    priority_queue = PriorityQueue(heuristic=heuristic, goal=end, type='small')
+    priority_queue = PriorityQueue()
     print("[DEBUG] Priority queue created...")
-
 
     if start[0] < 0 or start[0] >= dim[0] or start[1] < 0 or start[1] >= dim[1]:
         print("[DEBUG] Invalid starting point...")
@@ -65,15 +23,15 @@ def gbfs(matrix, start, end, callback, heuristic):
 
     parent = [[None for __ in range(dim[1])] for _ in range(dim[0])]
 
-    priority_queue.push(start)
+    priority_queue.put([h(start), start])
     parent[start[0]][start[1]] = terminated
 
     found = False
 
     print("[DEBUG] Go into loop...")
 
-    while priority_queue.size() != 0 and not found:
-        current = priority_queue.pop()
+    while not priority_queue.empty() and not found:
+        _, current = priority_queue.get()
         if current == end:
             pass
         
@@ -90,7 +48,7 @@ def gbfs(matrix, start, end, callback, heuristic):
             
             if (matrix[next_step[0]][next_step[1]] == ' ') and not parent[next_step[0]][next_step[1]]:
                 parent[next_step[0]][next_step[1]] = current
-                priority_queue.push(next_step)
+                priority_queue.put([h(next_step), next_step])
         
         if current != start:
             callback(current[1], current[0], FRONTIER_COLOR, sleep_time=30)
