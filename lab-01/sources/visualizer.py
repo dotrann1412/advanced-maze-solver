@@ -105,5 +105,5 @@ def visualize(algorithm, mode, graph, start, end,
         ANIMATE.release()
 
     # Wait 2 seconds before closing
-    pygame.time.wait(2000)
+    pygame.time.wait(1000)
 
