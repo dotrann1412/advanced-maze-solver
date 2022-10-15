@@ -71,19 +71,4 @@ def gbfs(matrix, start, end, callback, heuristic):
     return answer[::-1]
 
 
-if __name__ == "__main__":
-    # priority_queue = PriorityQueue(heuristic=manhattan_distance, goal=[5, 5], type='small')
-    priority_queue = PriorityQueue(heuristic=euclidean_distance, goal=[5, 5], type='small')
-    priority_queue.push([3, 4])
-    priority_queue.push([2, 1])
-    priority_queue.push([3, -3])
-    priority_queue.push([5, 1])
-    priority_queue.push([2, 2])
-    priority_queue.push([8, 15])
-
-    print(priority_queue)
-
-    while not priority_queue.empty():
-        print(priority_queue.pop())
-
 
