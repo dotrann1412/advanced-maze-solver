@@ -33,15 +33,13 @@ if __name__ == "__main__":
                         choices=HeuristicMapping.keys(),
                         type=str, default='MANHATTAN')
     parser.add_argument("-i", "--input", help="Maze input file",
-                        type=str, required=True)
-    parser.add_argument("-o", "--output-directoy",
+                        type=str, default=None)
+    parser.add_argument("-o", "--output",
                         help="Folder to save visualization output video and statistical information",
                         type=str, default=None)
 
     args = parser.parse_args()
 
-    input_file = '../input-samples/maze_map.txt'  # str
-    output_file = '../output-samples/maze_map.mp4'  # str
 
     algorithm = None  # function
     mode = None  # enum
@@ -58,6 +56,9 @@ if __name__ == "__main__":
 
     if args.heuristic_function:
         heuristic = HeuristicMapping[args.heuristic_function]
+    
+    if args.output:
+        output_file = args.output
 
     matrix, start, end, bonus_points, inter_points, teleport_points = read_file(
         input_file, mode)
@@ -70,5 +71,6 @@ if __name__ == "__main__":
     visualize(
         algorithm, mode, matrix, start, end,
         bonus_points, inter_points, teleport_points,
-        hf=heuristic
+        hf=heuristic,
+        output_path=output_file
     )
