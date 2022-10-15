@@ -15,5 +15,3 @@ x x      xxxx     x
 x xxxxxxxx x  xxxxx
 x      xx    xxxxxx
 xxxxxxxxxxxxxxxxxxx
-0
-0

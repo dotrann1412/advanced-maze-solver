@@ -24,5 +24,3 @@ x xxxx xxxx xxx x xxx xxx    xx    xx    xx xx x xx
 x xxxx    x     x xxx xxx xx xxxxxxxx xx xx xx   xx
 x      xx xxxxxxxexxx     xx          xx    xxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-0
-0
