@@ -72,7 +72,8 @@ def __dfs_intermediate_point(graph, starting_point, ending_point, intermediate_p
 
 def __dfs_with_teleport_point(graph, starting_point, ending_point, teleport_points):
 	size = grapthSize(graph)
-	
+	sleep_time = calcSleepTime(size)
+
 	if starting_point[0] < 0 or starting_point[0] >= size[0] or starting_point[1] < 0 or starting_point[1] >= size[1]:
 		return None
 
@@ -84,7 +85,7 @@ def __dfs_with_teleport_point(graph, starting_point, ending_point, teleport_poin
 			return True
 
 		if current_position != starting_point:
-			set_frontier_color(current_position[1], current_position[0])
+			set_frontier_color(current_position[1], current_position[0], sleep_time)
 
 		visited[current_position[0]][current_position[1]] = True
 
@@ -115,7 +116,11 @@ def __dfs_with_teleport_point(graph, starting_point, ending_point, teleport_poin
 
 	path = path[::-1]
 
-	set_path_color(path)
+	special_points = {}
+	for teleport_point in teleport_points:
+		special_points[teleport_point] = True
+		special_points[teleport_points[teleport_point]] = True
+	set_path_color(path, sleep_time, special_points)
 
 	return path
 

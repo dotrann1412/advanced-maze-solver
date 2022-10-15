@@ -136,14 +136,14 @@ def __aStarWithBonusPoint(graph, start, end, bonus_points, hf):
 			bonus_dict[point][1] = True    
 
 	# reset color of start and end
-	set_color(start[1], start[0], color=Colors.START_COLOR, sleep_time=0)
-	set_color(end[1], end[0], color=Colors.END_COLOR, sleep_time=0)
+	set_color(start[1], start[0], color=Colors.START, sleep_time=0)
+	set_color(end[1], end[0], color=Colors.END, sleep_time=0)
 
 	# draw bonus points again
 	for bonus in bonus_dict:
-		set_color(bonus[1], bonus[0], Colors.BONUS_COLOR, 0)
+		set_color(bonus[1], bonus[0], Colors.SPECIAL, 0)
 
-	set_path_color(answer, sleep_time)
+	set_path_color(answer, sleep_time, bonus_dict)
 	
 	print(answer)
 	print(cost)
@@ -217,7 +217,11 @@ def __aStarWithTeleportPoint(graph, start, end, teleport_points, hf):
 	answer.append(start)
 	answer = answer[::-1]
 
-	set_path_color(answer, sleep_time)
+	special_points = {}
+	for teleport_point in teleport_points:
+		special_points[teleport_point] = True
+		special_points[teleport_points[teleport_point]] = True
+	set_path_color(answer, sleep_time, special_points)
 	
 	return answer
 

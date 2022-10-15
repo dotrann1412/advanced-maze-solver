@@ -142,10 +142,12 @@ def __ucs_with_bonus_point(graph, starting_point, ending_point, bonus_points):
 		path = path_to_bonus[magican] + path[1:]
 		magican = path[0]
 	
+	special_points = {}
 	for bonus in bonus_points:
-		set_color(bonus[1], bonus[0], Colors.BONUS_COLOR, 0)
+		set_color(bonus[1], bonus[0], Colors.SPECIAL, 0)
+		special_points[(bonus[0], bonus[1])] = bonus[2]
 
-	set_path_color(path, sleep_time)
+	set_path_color(path, sleep_time, special_points)
 	
 	print(path)
 
@@ -229,9 +231,11 @@ def __ucs_with_teleport_point(graph, starting_point, ending_point, teleport_poin
 	
 	path = __trace_back(parent, starting_point, ending_point, limit = size[0] * size[1])
 
-	# for point in path[1:-1]:
-	# 	callback(point[1], point[0], Colors.PATH_COLOR)
-	set_path_color(path, sleep_time)
+	special_points = {}
+	for teleport_point in teleport_points:
+		special_points[teleport_point] = True
+		special_points[teleport_points[teleport_point]] = True
+	set_path_color(path, sleep_time, special_points)
 
 	return path
 

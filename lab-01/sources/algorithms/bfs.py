@@ -158,7 +158,12 @@ def __bfs_with_teleport_point(graph, starting_point, ending_point, teleport_poin
 	answer.append(starting_point)
 	answer = answer[::-1]
 
-	set_path_color(answer, sleep_time)
+	special_points = {}
+	for teleport_point in teleport_points:
+		special_points[teleport_point] = True
+		special_points[teleport_points[teleport_point]] = True
+
+	set_path_color(answer, sleep_time, special_points)
 
 	return answer
 
