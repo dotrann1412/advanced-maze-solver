@@ -1,4 +1,3 @@
-from numpy import empty
 from algorithms.algorithms_utils import *
 from constants import *
 from utils import euclidean_distance, manhattan_distance
@@ -16,10 +15,12 @@ from queue import PriorityQueue
         list of points from start to end
 '''
 def __normalGbfs(graph, start, end, callback, hf):
+    def h(point):
+        return heuristic(point, end)
     terminated = [-1, -1]
     dim = grapthSize(graph)
 
-    priority_queue = PriorityQueue() # PriorityQueue(heuristic=hf, goal=end, type='small')
+    priority_queue = PriorityQueue()
 
     if not isInGraph(graph, start):
         print("[DEBUG] Invalid starting point...")
@@ -27,12 +28,12 @@ def __normalGbfs(graph, start, end, callback, hf):
 
     parent = [[None for __ in range(dim[1])] for _ in range(dim[0])]
 
-    priority_queue.put((hf(start, end), start))
+    priority_queue.put((h(start), start))
     parent[start[0]][start[1]] = terminated
 
     found = False
     while not priority_queue.empty() and not found:
-        hf_value, current_pos = priority_queue.get()
+        _h, current_pos = priority_queue.get()
         
         for element in direction:
             next_step_x, next_step_y = current_pos[0] + element[0], current_pos[1] + element[1]
@@ -46,7 +47,7 @@ def __normalGbfs(graph, start, end, callback, hf):
                 break
             
             parent[next_step_x][next_step_y] = current_pos
-            priority_queue.put((hf((next_step_x, next_step_y), end) ,(next_step_x, next_step_y )))
+            priority_queue.put((h((next_step_x, next_step_y)) ,(next_step_x, next_step_y )))
         
         if current_pos != start:
             callback(current_pos[1], current_pos[0], Colors.FRONTIER_COLOR, sleep_time=0)
