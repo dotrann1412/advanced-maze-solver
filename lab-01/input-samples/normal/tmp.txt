@@ -12,5 +12,3 @@ xxxxxxxxx  x x  xx   x
 x          x x Sx x  x
 xxxxx x  x x x     x x
 xxxxxxxxxxxxxxxxxxxxxx
-0
-0

@@ -25,12 +25,15 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
 
     parser.add_argument("-a", "--algorithms", help="Algorithm to run",
-                        choices=AlgorithmsMapping.keys(), type=str)
+                        choices=AlgorithmsMapping.keys(), type=str, required=True)
+    parser.add_argument("-m", "--mode", help="Running mode",
+                        choices=[AlgorithmsMode.NORMAL.name, AlgorithmsMode.TELEPORT_POINT.name, AlgorithmsMode.BONUS_POINT.name, AlgorithmsMode.INTERMEDIATE_POINT.name],
+                        type=str, required=True)
     parser.add_argument("-hf", "--heuristic-function", help="Heuristic function",
                         choices=HeuristicMapping.keys(),
                         type=str, default='MANHATTAN')
     parser.add_argument("-i", "--input", help="Maze input file",
-                        type=str, default=None)
+                        type=str, required=True)
     parser.add_argument("-o", "--output",
                         help="Folder to save visualization output video and statistical information",
                         type=str, default=None)
@@ -39,10 +42,16 @@ if __name__ == "__main__":
 
 
     algorithm = None  # function
+    mode = None  # enum
     heuristic = None
+    input_file = None
+    output_file = None
 
     if args.algorithms:
         algorithm = AlgorithmsMapping[args.algorithms]
+
+    if args.mode:
+        mode = AlgorithmsMode[args.mode]
 
     if args.input:
         input_file = args.input
@@ -53,7 +62,8 @@ if __name__ == "__main__":
     if args.output:
         output_file = args.output
 
-    matrix, start, end, bonus_points, inter_points, teleport_points = read_file(input_file)
+    matrix, start, end, bonus_points, inter_points, teleport_points = read_file(
+        input_file, mode)
 
     print(f'The height of the matrix: {len(matrix)}')
     print(f'The width of the matrix: {len(matrix[0])}')
@@ -61,7 +71,7 @@ if __name__ == "__main__":
     print(f'Ending point (x, y) = {end[0], end[1]}')
 
     visualize(
-        algorithm, matrix, start, end,
+        algorithm, mode, matrix, start, end,
         bonus_points, inter_points, teleport_points,
         hf=heuristic,
         output_path=output_file

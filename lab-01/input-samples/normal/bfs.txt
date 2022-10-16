@@ -12,7 +12,6 @@ xxxxxx  x xxx xxxxx
 x   xxx   xxx xxxxx
 x x xxx xxxxx xxxxx
 x x      xxxx     x
-x xxxxxxxxxx  xxxxx
+x xxxxxxxx x  xxxxx
+x      xx    xxxxxx
 xxxxxxxxxxxxxxxxxxx
-0
-0

@@ -1,9 +1,11 @@
 from algorithms.algorithms_utils import *
 from constants import *
 from utils import manhattan_distance
+from visualizer import set_path_color, set_frontier_color
 
-def __normal_bfs(graph, starting_point, ending_point, callback):
+def __normal_bfs(graph, starting_point, ending_point):
 	size = [len(graph), len(graph[0])]
+	sleep_time = calcSleepTime(size)
 	frontier = []
 
 	if starting_point[0] < 0 or starting_point[0] >= size[0] or starting_point[1] < 0 or starting_point[1] >= size[1]:
@@ -21,7 +23,7 @@ def __normal_bfs(graph, starting_point, ending_point, callback):
 		frontier.pop(0)
 
 		if current != starting_point:
-			callback(current[1], current[0], Colors.FRONTIER_COLOR)
+			set_frontier_color(current[1], current[0], sleep_time)
 
 		for element in direction:
 			next_x, next_y = current[0] + element[0], current[1] + element[1]
@@ -56,16 +58,17 @@ def __normal_bfs(graph, starting_point, ending_point, callback):
 	answer.append(starting_point)
 	answer = answer[::-1]
 
-	for point in answer[1:-1]:
-		callback(point[1], point[0], Colors.PATH_COLOR)
+	set_path_color(answer, sleep_time)
 
 	return answer
 
-def __bfs_with_bonus_point(graph, starting_point, ending_point, bonus_points, callback):
-	# bfs is a uniform cost search --> this mode is not really available
-	return __normal_bfs(graph, starting_point, ending_point, callback)
 
-def __bfs_intermediate_point(graph, starting_point, ending_point, intermediate_points: list, callback):
+def __bfs_with_bonus_point(graph, starting_point, ending_point, bonus_points):
+	# bfs is a uniform cost search --> this mode is not really available
+	return __normal_bfs(graph, starting_point, ending_point)
+
+
+def __bfs_intermediate_point(graph, starting_point, ending_point, intermediate_points: list):
 	def pick_next_bonus(_starting_point, destinations):
 		good = destinations[0]
 		for point in destinations[1:]:
@@ -79,14 +82,17 @@ def __bfs_intermediate_point(graph, starting_point, ending_point, intermediate_p
 	while len(intermediate_points) != 0:
 		destination = pick_next_bonus(current_position, intermediate_points)
 		intermediate_points.remove(destination)
-		path += __normal_bfs(graph, current_position, destination, callback)
+		path += __normal_bfs(graph, current_position, destination)
 		current_position = destination
 
-	path += __normal_bfs(graph, current_position, ending_point, callback)
+	path += __normal_bfs(graph, current_position, ending_point)
+
 	return path
 
-def __bfs_with_teleport_point(graph, starting_point, ending_point, teleport_points, callback):
+
+def __bfs_with_teleport_point(graph, starting_point, ending_point, teleport_points):
 	size = [len(graph), len(graph[0])]
+	sleep_time = calcSleepTime(size)
 	frontier = []
 
 	if starting_point[0] < 0 or starting_point[0] >= size[0] or starting_point[1] < 0 or starting_point[1] >= size[1]:
@@ -104,8 +110,8 @@ def __bfs_with_teleport_point(graph, starting_point, ending_point, teleport_poin
 		frontier.pop(0)
 
 		if current != starting_point:
-			callback(current[1], current[0], Colors.FRONTIER_COLOR)
-
+			set_frontier_color(current[1], current[0], sleep_time)
+			
 		for element in direction:
 			next_x, next_y = current[0] + element[0], current[1] + element[1]
 			
@@ -152,21 +158,29 @@ def __bfs_with_teleport_point(graph, starting_point, ending_point, teleport_poin
 	answer.append(starting_point)
 	answer = answer[::-1]
 
-	for point in answer[1:-1]:
-		callback(point[1], point[0], Colors.PATH_COLOR)
+	special_points = {}
+	for teleport_point in teleport_points:
+		special_points[teleport_point] = True
+		special_points[teleport_points[teleport_point]] = True
+
+	set_path_color(answer, sleep_time, special_points)
 
 	return answer
 
 
-def bfs(graph, starting_point, ending_point, mode, bonus_points, intermediate_points, teleport_points, call_back, hf=None):
+def bfs(graph, starting_point, ending_point, mode, bonus_points, intermediate_points, teleport_points, hf=None):
+	
+	if not isValidGraph(graph):
+		return None
+
 	if mode == AlgorithmsMode.NORMAL:
-		return __normal_bfs(graph, starting_point, ending_point, call_back)
+		return __normal_bfs(graph, starting_point, ending_point)
 
 	if mode == AlgorithmsMode.BONUS_POINT:
-		return __bfs_with_bonus_point(graph, starting_point, ending_point, bonus_points, call_back)
+		return __bfs_with_bonus_point(graph, starting_point, ending_point, bonus_points)
 
 	if mode == AlgorithmsMode.INTERMEDIATE_POINT:
-		return __bfs_intermediate_point(graph, starting_point, ending_point, intermediate_points, call_back)
+		return __bfs_intermediate_point(graph, starting_point, ending_point, intermediate_points)
 
 	if mode == AlgorithmsMode.TELEPORT_POINT:
-		return __bfs_with_teleport_point(graph, starting_point, ending_point, teleport_points, call_back)
+		return __bfs_with_teleport_point(graph, starting_point, ending_point, teleport_points)
