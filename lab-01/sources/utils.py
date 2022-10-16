@@ -8,7 +8,7 @@ def read_file(file_name: str = 'maze.txt', mode: Enum = AlgorithmsMode.NORMAL) -
     bonus_points = []
     inter_points = []
     teleport_points = {}
-    matrix = None
+    graph = None
     start, end = (-1, -1), (-1, -1)
 
     try:
@@ -28,15 +28,15 @@ def read_file(file_name: str = 'maze.txt', mode: Enum = AlgorithmsMode.NORMAL) -
                     teleport_points[(x2, y2)] = (x1, y1)
 
             text = fp.read()
-            matrix = [list(i) for i in text.splitlines()]
+            graph = [list(i) for i in text.splitlines()]
 
-        for i in range(len(matrix)):
-            for j in range(len(matrix[0])):
-                if matrix[i][j] == MazeObject.START:
+        for i in range(len(graph)):
+            for j in range(len(graph[0])):
+                if graph[i][j] == MazeObject.START:
                     start = (i, j)
 
-                elif matrix[i][j] == MazeObject.EMPTY:
-                    if (i == 0) or (i == len(matrix)-1) or (j == 0) or (j == len(matrix[0])-1):
+                elif graph[i][j] == MazeObject.EMPTY:
+                    if (i == 0) or (i == len(graph)-1) or (j == 0) or (j == len(graph[0])-1):
                         end = (i, j)
 
     except Exception as err:
@@ -44,18 +44,18 @@ def read_file(file_name: str = 'maze.txt', mode: Enum = AlgorithmsMode.NORMAL) -
         print(f'\t-----> Here: {err}')
         return None, None, None, None, None, None
 
-    return matrix, start, end, bonus_points, inter_points, teleport_points
+    return graph, start, end, bonus_points, inter_points, teleport_points
 
 def euclidean_distance(first_node, second_node):
-    x_dif = first_node[0] - second_node[0]
-    y_dif = first_node[1] - second_node[1]
-    return sqrt(x_dif**2 + y_dif**2)
+    dx = first_node[0] - second_node[0]
+    dy = first_node[1] - second_node[1]
+    return sqrt(dx**2 + dy**2)
 
 
 def manhattan_distance(first_node, second_node):
-    x_dif = first_node[0] - second_node[0]
-    y_dif = first_node[1] - second_node[1]
-    return abs(x_dif) + abs(y_dif)
+    dx = first_node[0] - second_node[0]
+    dy = first_node[1] - second_node[1]
+    return abs(dx) + abs(dy)
 
 def darker_color(color, factor=60):
     # set the color to a darker shade
