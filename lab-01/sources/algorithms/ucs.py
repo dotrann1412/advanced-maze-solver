@@ -192,7 +192,7 @@ def __ucs_with_teleport_point(graph, starting_point, ending_point, teleport_poin
 		current_cost, current_point = frontier.get()
 
 		if cost[current_point[0]][current_point[1]] != current_cost:
-			continue # this is a outdate state in frontier
+			continue # this is a outdated state in frontier
 
 		if current_point != starting_point:
 			set_frontier_color(current_point[1], current_point[0], sleep_time)
