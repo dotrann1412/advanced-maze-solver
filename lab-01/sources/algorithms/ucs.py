@@ -8,7 +8,7 @@ def __trace_back(parent, starting_point, ending_point, limit = INF):
 	path = []
 	pointer = ending_point
 
-	while pointer != starting_point and pointer != parent[parent[pointer[0]][pointer[1]][0]][parent[pointer[0]][pointer[1]][1]]:
+	while pointer != starting_point:
 		path.append(pointer)
 		print('[DEBUG]',pointer)
 		pointer = parent[pointer[0]][pointer[1]]
@@ -72,10 +72,6 @@ def __ucs_with_bonus_point(graph, starting_point, ending_point, bonus_points):
 	size = grapthSize(graph)
 	sleep_time = calcSleepTime(size)
 
-	bonus_dict = {}
-	for x, y, bonus in bonus_points:
-		bonus_dict[(x, y)] = bonus
-
 	frontier.put((0, starting_point))
 	parent = [[None for _ in range(size[1])] for __ in range(size[0])]
 	cost = [[INF for _ in range(size[1])] for __ in range(size[0])]
@@ -84,7 +80,7 @@ def __ucs_with_bonus_point(graph, starting_point, ending_point, bonus_points):
 	cost[starting_point[0]][starting_point[1]] = 0
 
 	path_to_bonus = {}
-
+	special_points = [starting_point, ending_point] + list(bonus_points.keys())
 	def __trace_back_bonus(point):
 		pointer = point
 		path = [point]
@@ -109,8 +105,8 @@ def __ucs_with_bonus_point(graph, starting_point, ending_point, bonus_points):
 
 		# if current_point != starting_point and current_point not in path_to_bonus and current_point not in bonus_dict and current_point != ending_point:
 		# 	set_frontier_color(current_point[1], current_point[0], sleep_time)
-		if current_point != starting_point:
-			set_frontier_color(current_point[1], current_point[0], sleep_time)
+		if current_point not in special_points:
+			set_frontier_color(current_point[1], current_point[0], sleep_time // 5)
 
 		if current_cost != cost[current_point[0]][current_point[1]]:
 			continue
@@ -121,7 +117,7 @@ def __ucs_with_bonus_point(graph, starting_point, ending_point, bonus_points):
 			if not isInGraph(graph, (next_x, next_y)) or graph[next_x][next_y] == MazeObject.WALL:
 				continue
 
-			bonus = bonus_dict.pop((next_x, next_y), 0)
+			bonus = bonus_points.pop((next_x, next_y), 0)
 
 			if cost[next_x][next_y] > current_cost + 1 + bonus:
 				cost[next_x][next_y] = current_cost + 1 + bonus
@@ -142,10 +138,6 @@ def __ucs_with_bonus_point(graph, starting_point, ending_point, bonus_points):
 		path = path_to_bonus[magican] + path[1:]
 		magican = path[0]
 	
-	special_points = {}
-	for bonus in bonus_points:
-		set_color(bonus[1], bonus[0], Colors.SPECIAL, 0)
-		special_points[(bonus[0], bonus[1])] = bonus[2]
 
 	set_path_color(path, sleep_time, special_points)
 	
@@ -178,35 +170,35 @@ def __ucs_with_teleport_point(graph, starting_point, ending_point, teleport_poin
 	size = grapthSize(graph)
 	sleep_time = calcSleepTime(size)
 
-	parent = [[None for __ in size[1]] for _ in size[0]]
-	cost = [[INF for __ in size[1]] for _ in size[0]]
+	parent = [[None for __ in range(size[1])] for _ in range(size[0])]
+	cost = [[INF for __ in range(size[1])] for _ in range(size[0])]
 
-	frontier.put([0, starting_point])
+	frontier.put((0, starting_point))
 	cost[starting_point[0]][starting_point[1]] = 0
 	parent[starting_point[0]][starting_point[1]] = starting_point
-
-	closed_bonus_point = []
+	special_points = set([starting_point, ending_point] + list(teleport_points.keys()))
 
 	found = False
 	while not frontier.empty() and not found:
 		current_cost, current_point = frontier.get()
 
 		if cost[current_point[0]][current_point[1]] != current_cost:
-			continue # this is a outdated state in frontier
+			continue # this is an outdated state in frontier
 
-		if current_point != starting_point:
-			set_frontier_color(current_point[1], current_point[0], sleep_time)
+		if current_point not in special_points:
+			set_frontier_color(current_point[1], current_point[0], sleep_time // 5)
 		
 		for dir in direction:
 			next_x, next_y = current_point[0] + dir[0], current_point[1] + dir[1]
 			
-			if isInGraph(graph, (next_x, next_y)) or graph[next_x][next_y] == MazeObject.WALL:
+			if not isInGraph(graph, (next_x, next_y)) or graph[next_x][next_y] == MazeObject.WALL:
 				continue
 
-			# this mode is an infomed cost mode 
+			# this mode is an informed cost mode 
 			#	 --> we can terminate the process in the first time meet the destination
-			if (destination_x, destination_y) == ending_point:
+			if (next_x, next_y) == ending_point:
 				found = True
+				parent[next_x][next_y] = current_point
 				break
 
 			if (next_x, next_y) in teleport_points:
@@ -214,27 +206,24 @@ def __ucs_with_teleport_point(graph, starting_point, ending_point, teleport_poin
 
 				if (destination_x, destination_y) == ending_point:
 					found = True
+					parent[destination_x][destination_y] = current_point
 					break
 
 				if cost[destination_x][destination_y] > current_cost + 1:
 					cost[destination_x][destination_y] = current_cost + 1
 					parent[destination_x][destination_y] = current_point
-					frontier.put(cost[destination_x][destination_y], (next_x, next_y))
+					frontier.put((current_cost + 1, (destination_x, destination_y)))
 			
 			if cost[next_x][next_y] > current_cost + 1:
 				cost[next_x][next_y] = current_cost + 1
 				parent[next_x][next_y] = current_point
-				frontier.put(cost[next_x][next_y] , (next_x, next_y))
+				frontier.put((current_cost + 1 , (next_x, next_y)))
 
 	if not found:
 		return None
 	
 	path = __trace_back(parent, starting_point, ending_point, limit = size[0] * size[1])
 
-	special_points = {}
-	for teleport_point in teleport_points:
-		special_points[teleport_point] = True
-		special_points[teleport_points[teleport_point]] = True
 	set_path_color(path, sleep_time, special_points)
 
 	return path
