@@ -2,6 +2,7 @@ from algorithms.algorithms_utils import *
 from queue import PriorityQueue
 from constants import *
 from utils import manhattan_distance
+from visualizer import set_path_color, set_frontier_color, set_color
 
 def __trace_back(parent, starting_point, ending_point, limit = INF):
 	path = []
@@ -18,10 +19,11 @@ def __trace_back(parent, starting_point, ending_point, limit = INF):
 	
 	return path[::-1]
 
-def __normal_ucs(graph, starting_point, ending_point, callback):
+def __normal_ucs(graph, starting_point, ending_point):
 	frontier = PriorityQueue()
 	size = grapthSize(graph)
-	
+	sleep_time = calcSleepTime(size)
+
 	parent = [[None for __ in range(size[1])] for _ in range(size[0])]
 	cost = [[INF for __ in range(size[1])] for _ in range(size[0])]
 
@@ -37,7 +39,7 @@ def __normal_ucs(graph, starting_point, ending_point, callback):
 			continue
 		
 		if current_point != starting_point:
-			callback(current_point[1], current_point[0], Colors.FRONTIER_COLOR)
+			set_frontier_color(current_point[1], current_point[0], sleep_time)
 
 		for dir in direction:
 			next_x, next_y = current_point[0] + dir[0], current_point[1] + dir[1]
@@ -60,18 +62,15 @@ def __normal_ucs(graph, starting_point, ending_point, callback):
 	
 	path = [starting_point] + __trace_back(parent, starting_point, ending_point, limit = size[0] * size[1])
 
-	
+	set_path_color(path, sleep_time)
 
-	for point in path[1:-1]:
-		callback(point[1], point[0], Colors.PATH_COLOR)
-	
-	
 	return path
 
-def __ucs_with_bonus_point(graph, starting_point, ending_point, bonus_points, callback):
+def __ucs_with_bonus_point(graph, starting_point, ending_point, bonus_points):
 	frontier = PriorityQueue()
 	
 	size = grapthSize(graph)
+	sleep_time = calcSleepTime(size)
 
 	bonus_dict = {}
 	for x, y, bonus in bonus_points:
@@ -108,8 +107,10 @@ def __ucs_with_bonus_point(graph, starting_point, ending_point, bonus_points, ca
 	while not frontier.empty():
 		current_cost, current_point = frontier.get()
 
-		if current_point != starting_point and current_point not in path_to_bonus and current_point not in bonus_dict and current_point != ending_point:
-			callback(current_point[1], current_point[0], Colors.FRONTIER_COLOR)
+		# if current_point != starting_point and current_point not in path_to_bonus and current_point not in bonus_dict and current_point != ending_point:
+		# 	set_frontier_color(current_point[1], current_point[0], sleep_time)
+		if current_point != starting_point:
+			set_frontier_color(current_point[1], current_point[0], sleep_time)
 
 		if current_cost != cost[current_point[0]][current_point[1]]:
 			continue
@@ -138,18 +139,21 @@ def __ucs_with_bonus_point(graph, starting_point, ending_point, bonus_points, ca
 	magican = path[0]
 
 	while magican != starting_point:
-		path = path_to_bonus[magican] + path
+		path = path_to_bonus[magican] + path[1:]
 		magican = path[0]
 	
-	for point in path[1:-1]:
-		if point not in path_to_bonus:
-			callback(point[1], point[0], Colors.PATH_COLOR, 10)
+	special_points = {}
+	for bonus in bonus_points:
+		set_color(bonus[1], bonus[0], Colors.SPECIAL, 0)
+		special_points[(bonus[0], bonus[1])] = bonus[2]
+
+	set_path_color(path, sleep_time, special_points)
 	
 	print(path)
 
 	return path
 
-def __ucs_intermediate_point(graph, starting_point, ending_point, intermediate_points, callback):
+def __ucs_intermediate_point(graph, starting_point, ending_point, intermediate_points):
 	def choose(_starting_point, destinations):
 		good = destinations[0]
 		for point in destinations[1:]:
@@ -163,16 +167,17 @@ def __ucs_intermediate_point(graph, starting_point, ending_point, intermediate_p
 	while len(intermediate_points) != 0:
 		destination = choose(current_position, intermediate_points)
 		intermediate_points.remove(destination)
-		path += __normal_ucs(graph, current_position, destination, callback)
+		path += __normal_ucs(graph, current_position, destination)
 		current_position = destination
 
-	path += __normal_ucs(graph, current_position, ending_point, callback)
+	path += __normal_ucs(graph, current_position, ending_point)
 	return path
 
-def __ucs_with_teleport_point(graph, starting_point, ending_point, teleport_points, callback):
+def __ucs_with_teleport_point(graph, starting_point, ending_point, teleport_points):
 	frontier = PriorityQueue()
 	size = grapthSize(graph)
-	
+	sleep_time = calcSleepTime(size)
+
 	parent = [[None for __ in size[1]] for _ in size[0]]
 	cost = [[INF for __ in size[1]] for _ in size[0]]
 
@@ -190,7 +195,7 @@ def __ucs_with_teleport_point(graph, starting_point, ending_point, teleport_poin
 			continue # this is a outdated state in frontier
 
 		if current_point != starting_point:
-			callback(current_point[1], current_point[0], Colors.FRONTIER_COLOR)
+			set_frontier_color(current_point[1], current_point[0], sleep_time)
 		
 		for dir in direction:
 			next_x, next_y = current_point[0] + dir[0], current_point[1] + dir[1]
@@ -226,32 +231,35 @@ def __ucs_with_teleport_point(graph, starting_point, ending_point, teleport_poin
 	
 	path = __trace_back(parent, starting_point, ending_point, limit = size[0] * size[1])
 
-	for point in path[1:-1]:
-		callback(point[1], point[0], Colors.PATH_COLOR)
+	special_points = {}
+	for teleport_point in teleport_points:
+		special_points[teleport_point] = True
+		special_points[teleport_points[teleport_point]] = True
+	set_path_color(path, sleep_time, special_points)
 
 	return path
 
-def ucs(graph, starting_point, ending_point, mode, bonus_points, intermediate_points, teleport_points, call_back, hf=None):
+def ucs(graph, starting_point, ending_point, mode, bonus_points, intermediate_points, teleport_points, hf=None):
 	from datetime import datetime
 	
 	if mode == AlgorithmsMode.NORMAL:
 		print('[*][UCS] Normal mode')
-		return __normal_ucs(graph, starting_point, ending_point, call_back)
+		return __normal_ucs(graph, starting_point, ending_point)
 
 	if mode == AlgorithmsMode.BONUS_POINT:
 		print('[*][UCS] Bonus mode')
 		starting_time_point = datetime.now()
-		path = __ucs_with_bonus_point(graph, starting_point, ending_point, bonus_points, call_back)
+		path = __ucs_with_bonus_point(graph, starting_point, ending_point, bonus_points)
 		print('[*] Time duration: ', datetime.now() - starting_time_point, ' second(s)')
 		return path
 
 
 	if mode == AlgorithmsMode.INTERMEDIATE_POINT:
 		print('[*][UCS] Intermediate mode')
-		return __ucs_intermediate_point(graph, starting_point, ending_point, intermediate_points, call_back)
+		return __ucs_intermediate_point(graph, starting_point, ending_point, intermediate_points)
 
 	
 	
 	if mode == AlgorithmsMode.TELEPORT_POINT:
 		print('[*][UCS] Teleport mode')
-		return __ucs_with_teleport_point(graph, starting_point, ending_point, teleport_points, call_back)
+		return __ucs_with_teleport_point(graph, starting_point, ending_point, teleport_points)
