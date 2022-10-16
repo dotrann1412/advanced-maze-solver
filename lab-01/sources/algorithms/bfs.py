@@ -5,7 +5,7 @@ from visualizer import set_path_color, set_frontier_color
 
 def __normal_bfs(graph, starting_point, ending_point):
 	size = [len(graph), len(graph[0])]
-	sleep_time = calcSleepTime(size)
+	sleep_time = calc_sleep_time(size)
 	frontier = []
 
 	if starting_point[0] < 0 or starting_point[0] >= size[0] or starting_point[1] < 0 or starting_point[1] >= size[1]:
@@ -28,7 +28,7 @@ def __normal_bfs(graph, starting_point, ending_point):
 		for element in direction:
 			next_x, next_y = current[0] + element[0], current[1] + element[1]
 			
-			if not isInGraph(graph, (next_x, next_y)) or parent[next_x][next_y] or graph[next_x][next_y] == MazeObject.WALL:
+			if not is_in_graph(graph, (next_x, next_y)) or parent[next_x][next_y] or graph[next_x][next_y] == MazeObject.WALL:
 				continue
 
 			if (next_x, next_y) == ending_point:
@@ -92,7 +92,7 @@ def __bfs_intermediate_point(graph, starting_point, ending_point, intermediate_p
 
 def __bfs_with_teleport_point(graph, starting_point, ending_point, teleport_points):
 	size = [len(graph), len(graph[0])]
-	sleep_time = calcSleepTime(size)
+	sleep_time = calc_sleep_time(size)
 	frontier = []
 
 	if starting_point[0] < 0 or starting_point[0] >= size[0] or starting_point[1] < 0 or starting_point[1] >= size[1]:
@@ -115,7 +115,7 @@ def __bfs_with_teleport_point(graph, starting_point, ending_point, teleport_poin
 		for element in direction:
 			next_x, next_y = current[0] + element[0], current[1] + element[1]
 			
-			if isInGraph(graph, (next_x, next_y)) or graph[next_x][next_y] == MazeObject.EMPTY:
+			if is_in_graph(graph, (next_x, next_y)) or graph[next_x][next_y] == MazeObject.EMPTY:
 				continue
 
 			if graph[next_x][next_y] == ending_point:
@@ -170,7 +170,7 @@ def __bfs_with_teleport_point(graph, starting_point, ending_point, teleport_poin
 
 def bfs(graph, starting_point, ending_point, mode, bonus_points, intermediate_points, teleport_points, hf=None):
 	
-	if not isValidGraph(graph):
+	if not is_valid_graph(graph):
 		return None
 
 	if mode == AlgorithmsMode.NORMAL:

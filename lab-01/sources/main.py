@@ -10,7 +10,7 @@ from algorithms.algorithms_utils import AlgorithmsMode
 
 if __name__ == "__main__":
     AlgorithmsMapping = {
-        'A_STAR': a_star.aStar,
+        'A_STAR': a_star.a_star,
         'BFS': bfs.bfs,
         'DFS': dfs.dfs,
         'UCS': ucs.ucs,

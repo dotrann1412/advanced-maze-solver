@@ -2,19 +2,19 @@ from algorithms.algorithms_utils import *
 from constants import *
 from utils import manhattan_distance
 from queue import PriorityQueue
-from visualizer import set_path_color, set_frontier_color
+from visualizer import set_path_color, set_frontier_color, set_color
 
 
-def __normalGbfs(graph, start, end, heuristic):
+def __normal_gbfs(graph, start, end, hf):
     def h(point):
         return hf(point, end)
     terminated = [-1, -1]
-    dim = grapthSize(graph)
-    sleep_time = calcSleepTime(dim)
+    dim = graph_size(graph)
+    sleep_time = calc_sleep_time(dim)
 
     priority_queue = PriorityQueue()
 
-    if not isInGraph(graph, start):
+    if not is_in_graph(graph, start):
         print("[DEBUG] Invalid starting point...")
         return None
 
@@ -31,7 +31,7 @@ def __normalGbfs(graph, start, end, heuristic):
         for element in direction:
             next_step_x, next_step_y = current_pos[0] + element[0], current_pos[1] + element[1]
 
-            if not isInGraph(graph, (next_step_x, next_step_y)) or graph[next_step_x][next_step_y] == MazeObject.WALL or parent[next_step_x][next_step_y]:
+            if not is_in_graph(graph, (next_step_x, next_step_y)) or graph[next_step_x][next_step_y] == MazeObject.WALL or parent[next_step_x][next_step_y]:
                 continue
         
             if (next_step_x, next_step_y)  == end:
@@ -43,7 +43,7 @@ def __normalGbfs(graph, start, end, heuristic):
             priority_queue.put((h((next_step_x, next_step_y)) ,(next_step_x, next_step_y )))
         
         if current_pos != start:
-            set_frontier_color(current[1], current[0], sleep_time)
+            set_frontier_color(current_pos[1], current_pos[0], sleep_time)
 
     if not end or not parent[end[0]][end[1]]:
         return None
@@ -63,19 +63,20 @@ def __normalGbfs(graph, start, end, heuristic):
 
     return answer
 
-def __gbfsWithBonusPoint(graph, start, end, bonus_points, hf):
+def __gbfs_with_bonus_point(graph, start, end, bonus_points, hf):
     pass
 
-def __gbfsIntermediatePoint(graph, start, end, intermediate_points, hf):
+def __gbfs_with_intermediate_point(graph, start, end, intermediate_points, hf):
     pass
 
-def __gbfsWithTeleportPoint(graph, start, end, teleport_points, hf):
+def __gbfs_with_teleport_point(graph, start, end, teleport_points, hf):
     terminated = [-1, -1]
-    size = grapthSize(graph)
+    size = graph_size(graph)
+    sleep_time = calc_sleep_time(graph_size(graph))
 
     priority_queue = PriorityQueue()
 
-    if not isInGraph(graph, start):
+    if not is_in_graph(graph, start):
         print("[DEBUG] Invalid starting point...")
         return None
 
@@ -94,7 +95,7 @@ def __gbfsWithTeleportPoint(graph, start, end, teleport_points, hf):
         for element in direction:
             next_step_x, next_step_y = current_pos[0] + element[0], current_pos[1] + element[1]
 
-            if not isInGraph(graph, (next_step_x, next_step_y)) or graph[next_step_x][next_step_y] == MazeObject.WALL or parent[next_step_x][next_step_y]:
+            if not is_in_graph(graph, (next_step_x, next_step_y)) or graph[next_step_x][next_step_y] == MazeObject.WALL or parent[next_step_x][next_step_y]:
                 continue
         
             if (next_step_x, next_step_y)  == end:
@@ -112,7 +113,7 @@ def __gbfsWithTeleportPoint(graph, start, end, teleport_points, hf):
             priority_queue.put((hf((next_step_x, next_step_y), end) ,(next_step_x, next_step_y )))
         
         if current_pos != start:
-            callback(current_pos[1], current_pos[0], Colors.FRONTIER_COLOR, sleep_time=0)
+            set_color(current_pos[1], current_pos[0], Colors.FRONTIER_COLOR, sleep_time)
 
     if not end or not parent[end[0]][end[1]]:
         print("[DEBUG] Unreachable...")
@@ -131,18 +132,18 @@ def __gbfsWithTeleportPoint(graph, start, end, teleport_points, hf):
     return answer[::-1]
 
 def gbfs(graph, start, end, mode, bonus_points, intermediate_points, teleport_points, hf=manhattan_distance):
-    if not isValidGraph(graph):
+    if not is_valid_graph(graph):
         return None
 
     if mode == AlgorithmsMode.NORMAL:
-        return __normalGbfs(graph, start, end, hf)
+        return __normal_gbfs(graph, start, end, hf)
 
     if mode == AlgorithmsMode.BONUS_POINT:
-        return __gbfsWithBonusPoint(graph, start, end, bonus_points, hf)
+        return __gbfs_with_bonus_point(graph, start, end, bonus_points, hf)
 
     if mode == AlgorithmsMode.INTERMEDIATE_POINT:
-        return __gbfsIntermediatePoint(graph, start, end, intermediate_points, hf)
+        return __gbfs_with_intermediate_point(graph, start, end, intermediate_points, hf)
 
     if mode == AlgorithmsMode.TELEPORT_POINT:
-        return __gbfsWithTeleportPoint(graph, start, end, teleport_points, hf)
+        return __gbfs_with_teleport_point(graph, start, end, teleport_points, hf)
 
