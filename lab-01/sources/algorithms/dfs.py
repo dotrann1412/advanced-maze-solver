@@ -77,6 +77,7 @@ def __dfs_with_teleport_point(graph, starting_point, ending_point, teleport_poin
 	if starting_point[0] < 0 or starting_point[0] >= size[0] or starting_point[1] < 0 or starting_point[1] >= size[1]:
 		return None
 
+	special_points = set([starting_point, ending_point] + list(teleport_points.keys()))
 	visited = [[False for __ in range(size[1])] for _ in range(size[0])]
 	path = []
 
@@ -84,8 +85,8 @@ def __dfs_with_teleport_point(graph, starting_point, ending_point, teleport_poin
 		if current_position == ending_point:
 			return True
 
-		if current_position != starting_point:
-			set_frontier_color(current_position[1], current_position[0], sleep_time)
+		if current_position not in special_points:
+			set_frontier_color(current_position[1], current_position[0], sleep_time // 5)
 
 		visited[current_position[0]][current_position[1]] = True
 
@@ -97,9 +98,9 @@ def __dfs_with_teleport_point(graph, starting_point, ending_point, teleport_poin
 				continue
 
 			if (next_x, next_y) in teleport_points:
-				destination_x, destination_y = teleport_points[(next_x, next_y)]
-				if not visited[destination_x][destination_y] and __process(*teleport_points[next_x, next_y]):
-					path.append((destination_x, destination_y))
+				dest_x, dest_y = teleport_points[(next_x, next_y)]
+				if not visited[dest_x][dest_y] and __process((dest_x, dest_y)):
+					path.append((dest_x, dest_y))
 					return True
 
 			if __process((next_x, next_y)):
@@ -116,10 +117,6 @@ def __dfs_with_teleport_point(graph, starting_point, ending_point, teleport_poin
 
 	path = path[::-1]
 
-	special_points = {}
-	for teleport_point in teleport_points:
-		special_points[teleport_point] = True
-		special_points[teleport_points[teleport_point]] = True
 	set_path_color(path, sleep_time, special_points)
 
 	return path
