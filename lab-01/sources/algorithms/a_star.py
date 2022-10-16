@@ -78,7 +78,7 @@ def __aStarWithBonusPointRecur(graph, start, end, bonus_points, hf):
 		return hf(p1, p2)
 
 	def calcHBonus(start, bonus, end):
-		return 3 * h(start, bonus[:2]) + +  h(bonus[:2], end) + bonus[2]
+		return 3 * h(start, bonus[:2]) + h(bonus[:2], end) + bonus[2]
 
 	hBonusArr = sorted([[calcHBonus(start, bonus, end), bonus] for bonus in bonus_points])
 	hStart = h(start)
@@ -122,7 +122,7 @@ def __aStarWithBonusPoint(graph, start, end, bonus_points, hf):
 
 	answer = []
 
-	# answer = __aStarWithBonusPointRecur(graph, start, end, bonus_points, hf)
+	answer = __aStarWithBonusPointRecur(graph, start, end, bonus_points, hf)
 
 	bonus_dict = {}
 	for bonus in bonus_points:
@@ -162,12 +162,24 @@ def __aStarIntermediatePoint(graph, start, end, intermediate_points, hf):
 	
 	return answer
 
-def __aStarWithTeleportPoint(graph, start, end, teleport_points, hf):
-	def h(point):
-		return hf(point, end)
+def __aStarWithTeleportPoint(graph, start, end, teleport_points: dict, hf):
+	
 
 	dim = [len(graph), len(graph[0])]
 	sleep_time = calcSleepTime(dim)
+
+	special_points = [end] + list(teleport_points.keys())
+
+	def __extra_heuristic(point):
+		val = INF
+		for p in special_points:
+			val = min(val, hf(p, end) + hf(point, p))
+			if p in teleport_points:
+				val = min(val, hf(teleport_points[p], end), hf(point, p))
+		return val
+
+	def h(point):
+		return __extra_heuristic(point)
 
 	parent = [[None for __ in range(dim[1])] for _ in range(dim[0])]
 	g = [[float('inf') for __ in range(dim[1])] for _ in range(dim[0])]
@@ -200,10 +212,10 @@ def __aStarWithTeleportPoint(graph, start, end, teleport_points, hf):
 
 			if (child[0], child[1]) in teleport_points:
 				dest_x, dest_y = teleport_points[(child[0], child[1])]
-				if g[dest_x, dest_y] > g[point[0]][point[1]] + 1:
-					g[dest_x, dest_y] = g[point[0]][point[1]] + 1
-					parent[dest_x, dest_y] = point
-					pq.put([g[dest_x, dest_y] + h((dest_x, dest_y)), h((dest_x, dest_y)), (dest_x, dest_y)])
+				if g[dest_x][dest_y] > g[point[0]][point[1]] + 1:
+					g[dest_x][dest_y] = g[point[0]][point[1]] + 1
+					parent[dest_x][dest_y] = point
+					pq.put([g[dest_x][dest_y] + h((dest_x, dest_y)), h((dest_x, dest_y)), (dest_x, dest_y)])
 		
 	if not found:
 		return None
