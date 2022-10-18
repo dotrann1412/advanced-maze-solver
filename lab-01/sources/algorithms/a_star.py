@@ -4,7 +4,9 @@ from constants import *
 from queue import PriorityQueue
 from visualizer import set_path_color, set_frontier_color, set_color
 
-'''
+
+def __normal_a_star(graph, start, end, hf, draw_path=True):
+	'''
 	A* algorithm for normal maze
 	Heuristic function: Manhattan distance between current point and end point
 
@@ -17,13 +19,12 @@ from visualizer import set_path_color, set_frontier_color, set_color
 
 	Returns:
 		list of points from start to end
-'''
-def __normalAStar(graph, start, end, hf, drawPath=True):
+	'''
 	def h(point):
 		return hf(point, end)
 
 	dim = [len(graph), len(graph[0])]
-	sleep_time = calcSleepTime(dim)
+	sleep_time = calc_sleep_time(dim)
 
 	parent = [[None for __ in range(dim[1])] for _ in range(dim[0])]
 	g = [[float('inf') for __ in range(dim[1])] for _ in range(dim[0])]
@@ -46,7 +47,7 @@ def __normalAStar(graph, start, end, hf, drawPath=True):
 
 		for d in direction:
 			child = (point[0] + d[0], point[1] + d[1])
-			if not isInGraph(graph, child) or graph[child[0]][child[1]] == MazeObject.WALL:
+			if not is_in_graph(graph, child) or graph[child[0]][child[1]] == MazeObject.WALL:
 				continue
 
 			if g[child[0]][child[1]] > g[point[0]][point[1]] + 1:
@@ -67,31 +68,34 @@ def __normalAStar(graph, start, end, hf, drawPath=True):
 
 	answer = answer[::-1]
 
-	if drawPath:
+	if draw_path:
 		set_path_color(answer, sleep_time)
 		
 	return answer
 
 
-def __aStarWithBonusPointRecur(graph, start, end, bonus_points, hf):
+def __a_star_with_bonus_point_recur(graph, start, end, bonus_points, hf):
 	def h(p1, p2=end):
 		return hf(p1, p2)
 
-	def calcHBonus(start, bonus, end):
-		return 3 * h(start, bonus[:2]) + h(bonus[:2], end) + bonus[2]
+	def calc_h_bonus(start, bonus, end):
+		'''
+		Heuristic in a map with bonus points.
+		'''
+		return 3 * h(start, bonus[:2]) + +  h(bonus[:2], end) + bonus[2]
 
-	hBonusArr = sorted([[calcHBonus(start, bonus, end), bonus] for bonus in bonus_points])
-	hStart = h(start)
+	h_bonus_arr = sorted([[calc_h_bonus(start, bonus, end), bonus] for bonus in bonus_points])
+	h_start = h(start)
 
 	bonus_to_be_removed = []
-	for hBonusItem in hBonusArr:
-		hBonus, bonus = hBonusItem
+	for h_bonus_item in h_bonus_arr:
+		h_bonus, bonus = h_bonus_item
 		
-		if hBonus >= hStart:
+		if h_bonus >= h_start:
 			break
 
 		# go to the "best" bonus point (if possible)
-		part1 = __normalAStar(graph, start, bonus[:2], hf, drawPath=False)
+		part1 = __normal_a_star(graph, start, bonus[:2], hf, draw_path=False)
 		if part1 is None:
 			bonus_to_be_removed.append(bonus)
 			continue
@@ -107,22 +111,22 @@ def __aStarWithBonusPointRecur(graph, start, end, bonus_points, hf):
 					next_bonus_points.remove(bonus_point)
 			
 		# go from the "best" bonus point to end
-		part2 = __aStarWithBonusPointRecur(graph, bonus[:2], end, next_bonus_points, hf)
+		part2 = __a_star_with_bonus_point_recur(graph, bonus[:2], end, next_bonus_points, hf)
 		if part2 is None:
 			continue
 
 		return part1[:-1] + part2
 	
 	# if we can't go to any bonus point to get profit, just go to end directly
-	return __normalAStar(graph, start, end, hf, drawPath=False)
+	return __normal_a_star(graph, start, end, hf, draw_path=False)
 
-def __aStarWithBonusPoint(graph, start, end, bonus_points, hf):
+def __a_star_with_bonus_point(graph, start, end, bonus_points, hf):
 	dim = [len(graph), len(graph[0])]
-	sleep_time = calcSleepTime(dim)
+	sleep_time = calc_sleep_time(dim)
 
 	answer = []
 
-	answer = __aStarWithBonusPointRecur(graph, start, end, bonus_points, hf)
+	answer = __a_star_with_bonus_point_recur(graph, start, end, bonus_points, hf)
 
 	bonus_dict = {}
 	for bonus in bonus_points:
@@ -150,23 +154,24 @@ def __aStarWithBonusPoint(graph, start, end, bonus_points, hf):
 	return answer, cost
 		
 
-def __aStarIntermediatePoint(graph, start, end, intermediate_points, hf):
+def __a_star_intermediate_point(graph, start, end, intermediate_points, hf):
 	bonus_points = []
 	for point in intermediate_points:
 		bonus_points.append([point[0], point[1], -INF])
 	
-	answer, cost = __aStarWithBonusPoint(graph, start, end, bonus_points, hf)
+	answer, cost = __a_star_with_bonus_point(graph, start, end, bonus_points, hf)
 	for point in intermediate_points:
 		if point not in answer:
 			return None
 	
 	return answer
 
-def __aStarWithTeleportPoint(graph, start, end, teleport_points: dict, hf):
-	
+def __a_star_with_teleport_point(graph, start, end, teleport_points, hf):
+	def h(point):
+		return hf(point, end)
 
 	dim = [len(graph), len(graph[0])]
-	sleep_time = calcSleepTime(dim)
+	sleep_time = calc_sleep_time(dim)
 
 	special_points = [end] + list(teleport_points.keys())
 
@@ -202,7 +207,7 @@ def __aStarWithTeleportPoint(graph, start, end, teleport_points: dict, hf):
 
 		for d in direction:
 			child = (point[0] + d[0], point[1] + d[1])
-			if not isInGraph(graph, child) or graph[child[0]][child[1]] == MazeObject.WALL:
+			if not is_in_graph(graph, child) or graph[child[0]][child[1]] == MazeObject.WALL:
 				continue
 
 			if g[child[0]][child[1]] > g[point[0]][point[1]] + 1:
@@ -238,18 +243,18 @@ def __aStarWithTeleportPoint(graph, start, end, teleport_points: dict, hf):
 	return answer
 
 
-def aStar(graph, start, end, mode, bonus_points, intermediate_points, teleport_points, hf=manhattan_distance):
-	if not isValidGraph(graph):
+def a_star(graph, start, end, mode, bonus_points, intermediate_points, teleport_points, hf=manhattan_distance):
+	if not is_valid_graph(graph):
 		return None
 
 	if mode == AlgorithmsMode.NORMAL:
-		return __normalAStar(graph, start, end, hf)
+		return __normal_a_star(graph, start, end, hf)
 
 	if mode == AlgorithmsMode.BONUS_POINT:
-		return __aStarWithBonusPoint(graph, start, end, bonus_points, hf)
+		return __a_star_with_bonus_point(graph, start, end, bonus_points, hf)
 
 	if mode == AlgorithmsMode.INTERMEDIATE_POINT:
-		return __aStarIntermediatePoint(graph, start, end, intermediate_points, hf)
+		return __a_star_intermediate_point(graph, start, end, intermediate_points, hf)
 
 	if mode == AlgorithmsMode.TELEPORT_POINT:
-		return __aStarWithTeleportPoint(graph, start, end, teleport_points, hf)
+		return __a_star_with_teleport_point(graph, start, end, teleport_points, hf)

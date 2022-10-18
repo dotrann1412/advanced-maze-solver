@@ -25,10 +25,6 @@ class Colors():
     FRONTIER = GREEN
     PATH = YELLOW
 
-# Window size
-WIN_WIDTH = 400
-WIN_HEIGHT = 300
-
 # Algorithms
 class Algorithms():
     BFS = 'bfs'

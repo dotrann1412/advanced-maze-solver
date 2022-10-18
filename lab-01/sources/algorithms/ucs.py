@@ -21,8 +21,8 @@ def __trace_back(parent, starting_point, ending_point, limit = INF):
 
 def __normal_ucs(graph, starting_point, ending_point):
 	frontier = PriorityQueue()
-	size = grapthSize(graph)
-	sleep_time = calcSleepTime(size)
+	size = graph_size(graph)
+	sleep_time = calc_sleep_time(size)
 
 	parent = [[None for __ in range(size[1])] for _ in range(size[0])]
 	cost = [[INF for __ in range(size[1])] for _ in range(size[0])]
@@ -44,7 +44,7 @@ def __normal_ucs(graph, starting_point, ending_point):
 		for dir in direction:
 			next_x, next_y = current_point[0] + dir[0], current_point[1] + dir[1]
 
-			if not isInGraph(graph, (next_x, next_y)) or graph[next_x][next_y] == MazeObject.WALL:
+			if not is_in_graph(graph, (next_x, next_y)) or graph[next_x][next_y] == MazeObject.WALL:
 				continue
 
 			if (next_x, next_y) == ending_point:
@@ -69,8 +69,8 @@ def __normal_ucs(graph, starting_point, ending_point):
 def __ucs_with_bonus_point(graph, starting_point, ending_point, bonus_points):
 	frontier = PriorityQueue()
 	
-	size = grapthSize(graph)
-	sleep_time = calcSleepTime(size)
+	size = graph_size(graph)
+	sleep_time = calc_sleep_time(size)
 
 	frontier.put((0, starting_point))
 	parent = [[None for _ in range(size[1])] for __ in range(size[0])]
@@ -114,7 +114,7 @@ def __ucs_with_bonus_point(graph, starting_point, ending_point, bonus_points):
 		for d in direction:
 			next_x, next_y = current_point[0] + d[0], current_point[1] + d[1]
 
-			if not isInGraph(graph, (next_x, next_y)) or graph[next_x][next_y] == MazeObject.WALL:
+			if not is_in_graph(graph, (next_x, next_y)) or graph[next_x][next_y] == MazeObject.WALL:
 				continue
 
 			bonus = bonus_points.pop((next_x, next_y), 0)
@@ -167,8 +167,8 @@ def __ucs_intermediate_point(graph, starting_point, ending_point, intermediate_p
 
 def __ucs_with_teleport_point(graph, starting_point, ending_point, teleport_points):
 	frontier = PriorityQueue()
-	size = grapthSize(graph)
-	sleep_time = calcSleepTime(size)
+	size = graph_size(graph)
+	sleep_time = calc_sleep_time(size)
 
 	parent = [[None for __ in range(size[1])] for _ in range(size[0])]
 	cost = [[INF for __ in range(size[1])] for _ in range(size[0])]
@@ -191,7 +191,7 @@ def __ucs_with_teleport_point(graph, starting_point, ending_point, teleport_poin
 		for dir in direction:
 			next_x, next_y = current_point[0] + dir[0], current_point[1] + dir[1]
 			
-			if not isInGraph(graph, (next_x, next_y)) or graph[next_x][next_y] == MazeObject.WALL:
+			if is_in_graph(graph, (next_x, next_y)) or graph[next_x][next_y] == MazeObject.WALL:
 				continue
 
 			# this mode is an informed cost mode 

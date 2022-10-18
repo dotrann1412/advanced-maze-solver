@@ -4,8 +4,8 @@ from utils import manhattan_distance
 from visualizer import set_path_color, set_frontier_color, set_color
 
 def __normal_dfs(graph, starting_point, ending_point):
-	size = grapthSize(graph)
-	sleep_time = calcSleepTime(size)
+	size = graph_size(graph)
+	sleep_time = calc_sleep_time(size)
 
 	visited = [[False for __ in range(size[1])] for _ in range(size[0])]
 	path = []
@@ -22,7 +22,7 @@ def __normal_dfs(graph, starting_point, ending_point):
 		for element in direction:
 			next_x, next_y = current_position[0] + element[0], current_position[1] + element[1]
 
-			if not isInGraph(graph, [next_x, next_y]) or graph[next_x][next_y] == MazeObject.WALL \
+			if not is_in_graph(graph, [next_x, next_y]) or graph[next_x][next_y] == MazeObject.WALL \
 				or visited[next_x][next_y]:
 				continue
 
@@ -71,8 +71,8 @@ def __dfs_intermediate_point(graph, starting_point, ending_point, intermediate_p
 
 
 def __dfs_with_teleport_point(graph, starting_point, ending_point, teleport_points):
-	size = grapthSize(graph)
-	sleep_time = calcSleepTime(size)
+	size = graph_size(graph)
+	sleep_time = calc_sleep_time(size)
 
 	if starting_point[0] < 0 or starting_point[0] >= size[0] or starting_point[1] < 0 or starting_point[1] >= size[1]:
 		return None
@@ -93,7 +93,7 @@ def __dfs_with_teleport_point(graph, starting_point, ending_point, teleport_poin
 		for element in direction:
 			next_x, next_y = current_position[0] + element[0], current_position[1] + element[1]
 
-			if not isInGraph(graph, [next_x, next_y]) or graph[next_x][next_y] == MazeObject.WALL \
+			if not is_in_graph(graph, [next_x, next_y]) or graph[next_x][next_y] == MazeObject.WALL \
 				or visited[next_x][next_y]:
 				continue
 

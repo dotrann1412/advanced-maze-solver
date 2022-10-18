@@ -29,25 +29,23 @@ valid_character = {
 	'*': 'Starting point',
 	'x': 'Blocker',
 	'+': 'Bonus cell',
-	'?': 'Way out', # not defined yet
-	'>': 'Intermediate point',
 	'o': 'Teleport' # not defined yet
 }
 
-def grapthSize(graph):
+def graph_size(graph):
 	return len(graph), len(graph[0])
 
-def isEmptyCell(ch):
+def is_empty_cell(ch):
 	return ch != 'x'
 
-def isExit(ch):
+def is_exit(ch):
 	return ch == '?'
 
-def isTeleportCell(ch):
+def is_teleport_cell(ch):
 	return ch == 'o'
 
-def detectStartingPoint(graph):
-	dim = grapthSize(graph)
+def detect_starting_point(graph):
+	dim = graph_size(graph)
 	for i in range(dim[0]):
 		for j in range(dim[1]):
 			if graph[i][j] == '*':
@@ -55,8 +53,8 @@ def detectStartingPoint(graph):
 
 	return None
 
-def detectEndingPoint(graph):
-	dim = grapthSize(graph)
+def detect_ending_point(graph):
+	dim = graph_size(graph)
 	for i in range(dim[0]):
 		for j in range(dim[1]):
 			if graph[i][j] == '?':
@@ -64,9 +62,9 @@ def detectEndingPoint(graph):
 
 	return None
 
-def detectTeleportList(graph):
+def detect_teleport_list(graph):
 	teleport_list = []
-	dim = grapthSize(graph)
+	dim = graph_size(graph)
 	for i in range(dim[0]):
 		for j in range(dim[1]):
 			if graph[i][j] == 'o':
@@ -74,7 +72,7 @@ def detectTeleportList(graph):
 
 	return teleport_list
 
-def isValidGraph(graph):
+def is_valid_graph(graph):
 	if not len(graph) or not len(graph[0]):
 		return False
 	for line in graph[1:]:
@@ -82,8 +80,8 @@ def isValidGraph(graph):
 			return False
 	return True
 
-def isInGraph(matrix, point):
+def is_in_graph(matrix, point):
 	return point[0] >= 0 and point[0] < len(matrix) and point[1] >= 0 and point[1] < len(matrix[0])
 
-def calcSleepTime(dim):
+def calc_sleep_time(dim):
 	return min(max(15000 // dim[0] // dim[1], 15), 30)

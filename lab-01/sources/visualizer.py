@@ -1,5 +1,4 @@
 import pygame
-import sys
 from pygame.locals import *
 from constants import *
 
@@ -11,13 +10,21 @@ from PIL import Image
 import numpy as np
 
 
-def drawGrid(x, y, block_size=20, color=Colors.WHITE, border=Colors.WHITE):
+def draw_grid(x, y, block_size=20, color=Colors.WHITE, border=Colors.WHITE):
 	rect = pygame.Rect(x * block_size, y * block_size, block_size, block_size)
 	pygame.draw.rect(SCREEN, color, rect, block_size//2)
 	pygame.draw.rect(SCREEN, border, rect, 1)
 
+# write frame to MP4 output
+def write_frame():
+	if ANIMATE is not None:
+		current_frame_str = pygame.image.tostring(SCREEN, "RGB")
+		current_frame_dat = Image.frombytes(
+			'RGB', (WIN_WIDTH, WIN_HEIGHT), bytes(current_frame_str), 'raw')
+		frame = cv2.cvtColor(np.array(current_frame_dat), cv2.COLOR_BGR2RGB)
+		ANIMATE.write(frame)
 
-def renderMap(graph, start, end, block_size=20):
+def render_map(graph, start, end, block_size=20):
 	for y in range(len(graph)):
 		for x in range(len(graph[0])):
 			if graph[y][x] == MazeObject.WALL:
@@ -30,20 +37,12 @@ def renderMap(graph, start, end, block_size=20):
 			# ...
 			else:
 				color = Colors.WHITE
-			drawGrid(x, y, block_size, color)
+			draw_grid(x, y, block_size, color)
 
-	drawGrid(start[1], start[0], color=Colors.START)
-	drawGrid(end[1], end[0], color=Colors.END)
+	draw_grid(start[1], start[0], color=Colors.START)
+	draw_grid(end[1], end[0], color=Colors.END)
 	pygame.display.update()
-
-	# write frame to MP4 output
-	if ANIMATE is not None:
-		current_frame_str = pygame.image.tostring(SCREEN, "RGB")
-		current_frame_dat = Image.frombytes(
-			'RGB', (WIN_WIDTH, WIN_HEIGHT), bytes(current_frame_str), 'raw')
-		frame = cv2.cvtColor(np.array(current_frame_dat), cv2.COLOR_BGR2RGB)
-		ANIMATE.write(frame)
-
+	write_frame()
 
 def get_color(x, y, block_size=20,):
 	global SCREEN
@@ -51,19 +50,11 @@ def get_color(x, y, block_size=20,):
 
 # function to set color at cell (x, y) in grid
 
-
 def set_color(x, y, color, sleep_time=30):
-	drawGrid(x, y, color=color)
+	draw_grid(x, y, color=color)
 	pygame.display.update()
 	pygame.time.wait(sleep_time)
-
-	# write frame to MP4 output
-	if ANIMATE is not None:
-		current_frame_str = pygame.image.tostring(SCREEN, "RGB")
-		current_frame_dat = Image.frombytes(
-			'RGB', (WIN_WIDTH, WIN_HEIGHT), bytes(current_frame_str), 'raw')
-		frame = cv2.cvtColor(np.array(current_frame_dat), cv2.COLOR_BGR2RGB)
-		ANIMATE.write(frame)
+	write_frame()
 
 
 def set_frontier_color(x, y, sleep_time):
@@ -93,13 +84,12 @@ def visualize(algorithm, mode, graph, start, end,
 			  block_size=20, hf=manhattan_distance,
 			  output_path=None
 			  ):
-	global SCREEN, CLOCK
+	global SCREEN, CLOCK, WIN_WIDTH, WIN_HEIGHT
 	pygame.init()
-	global WIN_WIDTH, WIN_HEIGHT
 	WIN_HEIGHT = block_size * len(graph)
 	WIN_WIDTH = block_size * len(graph[0])
 	SCREEN = pygame.display.set_mode((WIN_WIDTH, WIN_HEIGHT))
-	pygame.display.set_caption('Hello World!')
+	pygame.display.set_caption('Hello folks👋, we are US-er!')
 	CLOCK = pygame.time.Clock()
 	CLOCK.tick(60)
 
@@ -113,7 +103,7 @@ def visualize(algorithm, mode, graph, start, end,
 		ANIMATE = None
 
 	# Render maze
-	renderMap(graph, start, end, block_size)
+	render_map(graph, start, end, block_size)
 
 	algorithm(graph, start, end, mode, bonus_points,
 			  inter_points, teleport_points, hf=hf)
