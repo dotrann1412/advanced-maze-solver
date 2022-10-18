@@ -174,7 +174,7 @@ def __gbfs_with_teleport_point(graph, start, end, teleport_points: dict, heurist
 		for p in special_points:
 			val = min(val, heuristic(p, end) + heuristic(point, p))
 			if p in teleport_points:
-				val = min(val, heuristic(teleport_points[p], end), heuristic(point, p))
+				val = min(val, heuristic(teleport_points[p], end) + heuristic(point, p))
 		return val
 
 	if not is_in_graph(graph, start):

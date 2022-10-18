@@ -296,7 +296,7 @@ def __a_star_with_teleport_point(graph, start, end, teleport_points, hf):
 		for p in special_points:
 			val = min(val, hf(p, end) + hf(point, p))
 			if p in teleport_points:
-				val = min(val, hf(teleport_points[p], end), hf(point, p))
+				val = min(val, hf(teleport_points[p], end) + hf(point, p))
 		return val
 
 	def h(point):
