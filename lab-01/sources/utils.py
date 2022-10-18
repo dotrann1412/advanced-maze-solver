@@ -5,8 +5,8 @@ from constants import *
 from algorithms.algorithms_utils import AlgorithmsMode
 
 def read_file(file_name: str = 'maze.txt', mode: Enum = AlgorithmsMode.NORMAL) -> list:
-    bonus_points = []
-    inter_points = []
+    bonus_points = {}
+    inter_points = {}
     teleport_points = {}
     graph = None
     start, end = (-1, -1), (-1, -1)
@@ -18,10 +18,10 @@ def read_file(file_name: str = 'maze.txt', mode: Enum = AlgorithmsMode.NORMAL) -
             for i in range(n_special_points):
                 if mode == AlgorithmsMode.BONUS_POINT:
                     x, y, reward = map(int, fp.readline().split())
-                    bonus_points.append((x, y, reward))
+                    bonus_points[(x, y)] = reward
                 elif mode == AlgorithmsMode.INTERMEDIATE_POINT:
                     x, y = map(int, fp.readline().split())
-                    inter_points.append((x, y))
+                    inter_points[(x, y)] = True
                 elif mode == AlgorithmsMode.TELEPORT_POINT:
                     x1, y1, x2, y2 = map(int, fp.readline().split())
                     teleport_points[(x1, y1)] = (x2, y2)
@@ -46,6 +46,7 @@ def read_file(file_name: str = 'maze.txt', mode: Enum = AlgorithmsMode.NORMAL) -
 
     return graph, start, end, bonus_points, inter_points, teleport_points
 
+
 def euclidean_distance(first_node, second_node):
     dx = first_node[0] - second_node[0]
     dy = first_node[1] - second_node[1]
@@ -57,7 +58,7 @@ def manhattan_distance(first_node, second_node):
     dy = first_node[1] - second_node[1]
     return abs(dx) + abs(dy)
 
-def darker_color(color, factor=60):
+def darker_color(color, factor=40):
     # set the color to a darker shade
-    color = [max(0, i - factor) for i in color]
+    color = [max(60, i - factor) for i in color]
     return tuple(color)

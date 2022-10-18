@@ -1,7 +1,7 @@
 from algorithms.algorithms_utils import *
 from constants import *
 from utils import manhattan_distance
-from visualizer import set_path_color, set_frontier_color, set_color
+from visualizer import set_path_color, set_frontier_color
 
 def __normal_dfs(graph, starting_point, ending_point):
 	size = graph_size(graph)
@@ -50,6 +50,8 @@ def __dfs_with_bonus_point(graph, starting_point, ending_point, bonus_points):
 
 
 def __dfs_intermediate_point(graph, starting_point, ending_point, intermediate_points):
+	intermediate_list = list(intermediate_points.keys())
+
 	def choose(_starting_point, destinations):
 		good = destinations[0]
 		for point in destinations[1:]:
@@ -60,9 +62,9 @@ def __dfs_intermediate_point(graph, starting_point, ending_point, intermediate_p
 	current_position = starting_point
 	
 	path = []
-	while len(intermediate_points) != 0:
-		destination = choose(current_position, intermediate_points)
-		intermediate_points.remove(destination)
+	while len(intermediate_list) != 0:
+		destination = choose(current_position, intermediate_list)
+		intermediate_list.remove(destination)
 		path += __normal_dfs(graph, current_position, destination)
 		current_position = destination
 

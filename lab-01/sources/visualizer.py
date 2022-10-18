@@ -31,10 +31,8 @@ def render_map(graph, start, end, block_size=20):
 				color = Colors.BLACK
 			elif graph[y][x] == MazeObject.START:
 				color = Colors.GREEN
-			elif graph[y][x] == MazeObject.BONUS:
+			elif graph[y][x] == MazeObject.SPECIAL:
 				color = Colors.SPECIAL
-			# add for intermediate_points, teleport_points
-			# ...
 			else:
 				color = Colors.WHITE
 			draw_grid(x, y, block_size, color)
@@ -48,7 +46,6 @@ def get_color(x, y, block_size=20,):
 	global SCREEN
 	return SCREEN.get_at((x * block_size + block_size // 2, y * block_size + block_size // 2))
 
-# function to set color at cell (x, y) in grid
 
 def set_color(x, y, color, sleep_time=30):
 	draw_grid(x, y, color=color)
@@ -80,7 +77,7 @@ def set_path_color(path, sleep_time, special_points={}):
 
 
 def visualize(algorithm, mode, graph, start, end,
-			  bonus_points=[], inter_points=[], teleport_points=[],
+			  bonus_points={}, inter_points={}, teleport_points={},
 			  block_size=20, hf=manhattan_distance,
 			  output_path=None
 			  ):
@@ -109,7 +106,6 @@ def visualize(algorithm, mode, graph, start, end,
 			  inter_points, teleport_points, hf=hf)
 	if ANIMATE is not None:
 		ANIMATE.release()
-		print('released')
 
 	# Wait 2 seconds before closing
 	pygame.time.wait(1000)

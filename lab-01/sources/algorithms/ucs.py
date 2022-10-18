@@ -72,9 +72,7 @@ def __ucs_with_bonus_point(graph, starting_point, ending_point, bonus_points):
 	size = graph_size(graph)
 	sleep_time = calc_sleep_time(size)
 
-	bonus_dict = {}
-	for x, y, bonus in bonus_points:
-		bonus_dict[(x, y)] = bonus
+	bonus_points_cp = bonus_points.copy()
 
 	frontier.put((0, starting_point))
 	parent = [[None for _ in range(size[1])] for __ in range(size[0])]
@@ -107,8 +105,6 @@ def __ucs_with_bonus_point(graph, starting_point, ending_point, bonus_points):
 	while not frontier.empty():
 		current_cost, current_point = frontier.get()
 
-		# if current_point != starting_point and current_point not in path_to_bonus and current_point not in bonus_dict and current_point != ending_point:
-		# 	set_frontier_color(current_point[1], current_point[0], sleep_time)
 		if current_point != starting_point:
 			set_frontier_color(current_point[1], current_point[0], sleep_time)
 
@@ -121,7 +117,7 @@ def __ucs_with_bonus_point(graph, starting_point, ending_point, bonus_points):
 			if not is_in_graph(graph, (next_x, next_y)) or graph[next_x][next_y] == MazeObject.WALL:
 				continue
 
-			bonus = bonus_dict.pop((next_x, next_y), 0)
+			bonus = bonus_points_cp.pop((next_x, next_y), 0)
 
 			if cost[next_x][next_y] > current_cost + 1 + bonus:
 				cost[next_x][next_y] = current_cost + 1 + bonus
@@ -142,12 +138,10 @@ def __ucs_with_bonus_point(graph, starting_point, ending_point, bonus_points):
 		path = path_to_bonus[magican] + path[1:]
 		magican = path[0]
 	
-	special_points = {}
 	for bonus in bonus_points:
 		set_color(bonus[1], bonus[0], Colors.SPECIAL, 0)
-		special_points[(bonus[0], bonus[1])] = bonus[2]
 
-	set_path_color(path, sleep_time, special_points)
+	set_path_color(path, sleep_time, bonus_points)
 	
 	print(path)
 
@@ -181,7 +175,7 @@ def __ucs_with_teleport_point(graph, starting_point, ending_point, teleport_poin
 	parent = [[None for __ in size[1]] for _ in size[0]]
 	cost = [[INF for __ in size[1]] for _ in size[0]]
 
-	frontier.put([0, starting_point])
+	frontier.put([0, starting_point])   
 	cost[starting_point[0]][starting_point[1]] = 0
 	parent[starting_point[0]][starting_point[1]] = starting_point
 

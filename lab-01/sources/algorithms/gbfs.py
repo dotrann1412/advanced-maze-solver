@@ -2,7 +2,7 @@ from algorithms.algorithms_utils import *
 from constants import *
 from utils import manhattan_distance
 from queue import PriorityQueue
-from visualizer import set_path_color, set_frontier_color, set_color
+from visualizer import set_path_color, set_frontier_color
 
 
 def __normal_gbfs(graph, start, end, hf):

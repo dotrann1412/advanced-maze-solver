@@ -2,9 +2,8 @@
 class MazeObject:
     START = 'S'
     WALL = 'x'
-    BONUS = '+'
+    SPECIAL = '+'
     EMPTY = ' '
-    INTER = '>'
 
 # Colors
 class Colors():
