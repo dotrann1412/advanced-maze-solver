@@ -5,7 +5,7 @@ from constants import *
 from algorithms.algorithms_utils import AlgorithmsMode
 
 def read_file(file_name: str = 'maze.txt', mode: Enum = AlgorithmsMode.NORMAL) -> list:
-    bonus_points = []
+    bonus_points = {}
     inter_points = []
     teleport_points = {}
     graph = None
@@ -18,7 +18,7 @@ def read_file(file_name: str = 'maze.txt', mode: Enum = AlgorithmsMode.NORMAL) -
             for i in range(n_special_points):
                 if mode == AlgorithmsMode.BONUS_POINT:
                     x, y, reward = map(int, fp.readline().split())
-                    bonus_points.append((x, y, reward))
+                    bonus_points[(x, y)] = reward
                 elif mode == AlgorithmsMode.INTERMEDIATE_POINT:
                     x, y = map(int, fp.readline().split())
                     inter_points.append((x, y))

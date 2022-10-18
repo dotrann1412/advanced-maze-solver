@@ -107,9 +107,8 @@ def visualize(algorithm, mode, graph, start, end,
 
 	algorithm(graph, start, end, mode, bonus_points,
 			  inter_points, teleport_points, hf=hf)
+	
 	if ANIMATE is not None:
 		ANIMATE.release()
-		print('released')
-
-	# Wait 2 seconds before closing
+	
 	pygame.time.wait(1000)
