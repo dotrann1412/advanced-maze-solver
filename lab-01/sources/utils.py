@@ -58,7 +58,7 @@ def manhattan_distance(first_node, second_node):
     dy = first_node[1] - second_node[1]
     return abs(dx) + abs(dy)
 
-def darker_color(color, factor=40):
+def darker_color(color, factor=50):
     # set the color to a darker shade
     color = [max(60, i - factor) for i in color]
     return tuple(color)
