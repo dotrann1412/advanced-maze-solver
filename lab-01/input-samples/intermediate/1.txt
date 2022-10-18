@@ -5,16 +5,16 @@
 12 18
 6 4
 xxxxxxxxxxxxxxxxxxxxxxxx
-x   x   xx xx      +   x
-x     x     xxx xxxxxxxx
-xxx   +xx   xxx xxx xxxx
-  x   x x xx    xxx  xxx
-x   x      xx +xx  x xxx
-xx x+xx x      xx  x xxx
-xx   xxxx  x x  xx   xxx
-x          x x  x x  xxx
-xxxxx x  x x       x xxx
-xSxxx  xxxxxxxx xxxx  xx
-x x    xxx xx   xxx  xxx
-x   xxxxxx    x   +x xxx
+x   x   xx xxxx    +x  x
+x     x     x   xxx x xx
+xxx   +xx   x x xxx xxxx
+  x   x x xx     xx    x
+x   x      xx +x   x xxx
+xx x+xx x      xx  x x x
+xx   xx x  x x  xx     x
+x  x       x x  x x  x x
+xxxxx x xx x       x xxx
+xSxxx      xxxx  xxx  xx
+x x    x   xx    xx  xxx
+x   xxxxxx    x   +  xxx
 xxxxxxxxxxxxxxxxxxxxxxxx
