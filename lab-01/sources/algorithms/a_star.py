@@ -289,6 +289,19 @@ def __a_star_with_teleport_point(graph, start, end, teleport_points, hf):
 	dim = [len(graph), len(graph[0])]
 	sleep_time = calc_sleep_time(dim)
 
+	special_points = [end] + list(teleport_points.keys())
+
+	def __extra_heuristic(point):
+		val = INF
+		for p in special_points:
+			val = min(val, hf(p, end) + hf(point, p))
+			if p in teleport_points:
+				val = min(val, hf(teleport_points[p], end), hf(point, p))
+		return val
+
+	def h(point):
+		return __extra_heuristic(point)
+
 	parent = [[None for __ in range(dim[1])] for _ in range(dim[0])]
 	g = [[float('inf') for __ in range(dim[1])] for _ in range(dim[0])]
 	g[start[0]][start[1]] = 0
@@ -323,9 +336,8 @@ def __a_star_with_teleport_point(graph, start, end, teleport_points, hf):
 				if g[dest_x][dest_y] > g[point[0]][point[1]] + 1:
 					g[dest_x][dest_y] = g[point[0]][point[1]] + 1
 					parent[dest_x][dest_y] = point
-					pq.put([g[dest_x][dest_y] + h((dest_x, dest_y)),
-							h((dest_x, dest_y)), (dest_x, dest_y)])
-
+					pq.put([g[dest_x][dest_y] + h((dest_x, dest_y)), h((dest_x, dest_y)), (dest_x, dest_y)])
+		
 	if not found:
 		return None
 
