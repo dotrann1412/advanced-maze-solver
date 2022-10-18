@@ -37,7 +37,7 @@ def __normal_bfs(graph, starting_point, ending_point):
 				break
 
 			parent[next_x][next_y] = current
-			frontier.append([next_x, next_y])
+			frontier.append((next_x, next_y))
 
 	if not ending_point or not parent[ending_point[0]][ending_point[1]]:
 		return None
@@ -59,7 +59,7 @@ def __normal_bfs(graph, starting_point, ending_point):
 	answer = answer[::-1]
 
 	set_path_color(answer, sleep_time)
-
+	
 	return answer
 
 
