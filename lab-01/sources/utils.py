@@ -16,13 +16,13 @@ def read_file(file_name: str = 'maze.txt', mode: Enum = AlgorithmsMode.NORMAL) -
             n_special_points = int(fp.readline())
 
             for i in range(n_special_points):
-                if mode == AlgorithmsMode.BONUS_POINT:
+                if mode == AlgorithmsMode.BONUS:
                     x, y, reward = map(int, fp.readline().split())
                     bonus_points[(x, y)] = reward
-                elif mode == AlgorithmsMode.INTERMEDIATE_POINT:
+                elif mode == AlgorithmsMode.INTERMEDIATE:
                     x, y = map(int, fp.readline().split())
                     inter_points[(x, y)] = True
-                elif mode == AlgorithmsMode.TELEPORT_POINT:
+                elif mode == AlgorithmsMode.TELEPORT:
                     x1, y1, x2, y2 = map(int, fp.readline().split())
                     teleport_points[(x1, y1)] = (x2, y2)
                     teleport_points[(x2, y2)] = (x1, y1)
@@ -58,7 +58,7 @@ def manhattan_distance(first_node, second_node):
     dy = first_node[1] - second_node[1]
     return abs(dx) + abs(dy)
 
-def darker_color(color, factor=50):
+def darker_color(color):
     # set the color to a darker shade
-    color = [max(60, i - factor) for i in color]
+    color = [max(int(i * 0.2), int(i * 0.75)) for i in color]
     return tuple(color)

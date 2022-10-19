@@ -1,3 +1,8 @@
+# Grid
+class Grid:
+    BLOCK_SIZE = 24
+    FONT_SIZE = 10
+
 # Maze object
 class MazeObject:
     START = 'S'
@@ -13,7 +18,7 @@ class Colors():
     RED = (255, 0, 0)
     GREEN = (0, 220, 0)
     YELLOW = (255, 255, 0)
-    ORANGE = (255, 165, 0)
+    ORANGE = (255, 130, 0)
 
     # Special cell
     START = ORANGE
