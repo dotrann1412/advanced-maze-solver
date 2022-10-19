@@ -113,8 +113,9 @@ def visualize(algorithm, mode, graph, start, end,
 	# Render maze
 	render_map(graph, start, end)
 
-	algorithm(graph, start, end, mode, bonus_points,
-			  inter_points, teleport_points, hf=hf)
+	cost = algorithm(graph, start, end, mode, bonus_points,
+					 inter_points, teleport_points, hf=hf)
+	# TODO: something with cost (write to file,...)
 
 	# set text at bonus point's cells
 	for point in bonus_points:
@@ -134,10 +135,4 @@ def visualize(algorithm, mode, graph, start, end,
 		ANIMATE.release()
 
 	# Wait 2 seconds before closing
-	# pygame.time.wait(1000)
-
-	while True:
-		for event in pygame.event.get():
-			if event.type == pygame.QUIT:
-				pygame.quit()
-				return
+	pygame.time.wait(1000)

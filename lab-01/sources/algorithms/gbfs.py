@@ -3,19 +3,18 @@ from constants import *
 from utils import manhattan_distance
 from queue import PriorityQueue
 from visualizer import set_path_color, set_frontier_color
-
+import copy
+from datetime import datetime
 
 def __normal_gbfs(graph, start, end, hf):
     def h(point):
         return hf(point, end)
     terminated = [-1, -1]
     dim = graph_size(graph)
-    sleep_time = calc_sleep_time(dim)
 
     priority_queue = PriorityQueue()
 
     if not is_in_graph(graph, start):
-        print("[DEBUG] Invalid starting point...")
         return None
 
     parent = [[None for __ in range(dim[1])] for _ in range(dim[0])]
@@ -29,7 +28,7 @@ def __normal_gbfs(graph, start, end, hf):
         _h, current = priority_queue.get()
 
         if current != start and current:
-            set_frontier_color(current[1], current[0], sleep_time // 10)
+            set_frontier_color(current[1], current[0])
 
         for element in direction:
             next_step_x, next_step_y = current[0] + element[0], current[1] + element[1]
@@ -46,7 +45,7 @@ def __normal_gbfs(graph, start, end, hf):
             priority_queue.put((h((next_step_x, next_step_y)) ,(next_step_x, next_step_y )))
         
         if current != start:
-            set_frontier_color(current[1], current[0], sleep_time)
+            set_frontier_color(current[1], current[0])
 
     if not end or not parent[end[0]][end[1]]:
         return None
@@ -61,11 +60,10 @@ def __normal_gbfs(graph, start, end, hf):
     
     answer = answer[::-1]
 
-    set_path_color(answer, sleep_time, [start, end])
+    set_path_color(answer, [start, end])
 
-    return answer
+    return len(answer) - 1
 
-import copy
 
 def __gbfs_with_bonus_point(graph, start, end, bonus_points, heuristic):
 	size = graph_size(graph)
@@ -86,8 +84,6 @@ def __gbfs_with_bonus_point(graph, start, end, bonus_points, heuristic):
 	parent[start[0]][start[1]] = parent
 	cost[start[0]][start[1]] = 0
 
-	found = False
-	sleep_time = calc_sleep_time(size)
 	path_to_bonus = {}
 	
 	def __trace_back_bonus(point):
@@ -113,7 +109,7 @@ def __gbfs_with_bonus_point(graph, start, end, bonus_points, heuristic):
 		_hf, current = frontier.get()
 
 		if current not in special_points:
-			set_frontier_color(current[1], current[0], sleep_time // 5)
+			set_frontier_color(current[1], current[0])
 
 		for d in direction:
 			next_x, next_y = current[0] + d[0], current[1] + d[1]
@@ -122,7 +118,6 @@ def __gbfs_with_bonus_point(graph, start, end, bonus_points, heuristic):
 				continue
 
 			if (next_x, next_y) == end:
-				found = True
 				parent[next_x][next_y] = current
 				cost[next_x][next_y] = cost[current[0]][current[1]] + 1
 				break 
@@ -137,13 +132,10 @@ def __gbfs_with_bonus_point(graph, start, end, bonus_points, heuristic):
 					bonus_points.pop((next_x, next_y))
 					special_points.remove((next_x, next_y))
 					path_to_bonus[(next_x, next_y)] = __trace_back_bonus((next_x, next_y))
-					print(f'[*] Take bonus {(next_x, next_y)}' )
-
 
 	if parent[end[0]][end[1]] == None:
 		return None
 
-	print('[*] Cost: ', cost[end[0]][end[1]])
 	path = __trace_back_bonus(end)
 	magican = path[0]
 
@@ -151,20 +143,18 @@ def __gbfs_with_bonus_point(graph, start, end, bonus_points, heuristic):
 		path = path_to_bonus[magican] + path[1:]
 		magican = path[0]
 	
-
-	set_path_color(path, sleep_time, special_points)
+	set_path_color(path, special_points_for_rendering)
 	
-	print(path)
+	return len(path) - 1
 
-	return path
 
 def __gbfs_with_intermediate_point(graph, start, end, intermediate_points, hf):
     pass
 
+
 def __gbfs_with_teleport_point(graph, start, end, teleport_points: dict, heuristic):
 	terminated = [-1, -1]
 	size = graph_size(graph)
-	sleep_time = calc_sleep_time(size)
 
 	priority_queue = PriorityQueue()
 	special_points = [end] + list(teleport_points.keys())
@@ -178,7 +168,6 @@ def __gbfs_with_teleport_point(graph, start, end, teleport_points: dict, heurist
 		return val
 
 	if not is_in_graph(graph, start):
-		print("[DEBUG] Invalid starting point...")
 		return None
 
 	parent = [[None for __ in range(size[1])] for _ in range(size[0])]
@@ -191,7 +180,7 @@ def __gbfs_with_teleport_point(graph, start, end, teleport_points: dict, heurist
 		hf, current = priority_queue.get()
 		
 		if current != start and current not in teleport_points:
-			set_frontier_color(current[1], current[0], sleep_time)
+			set_frontier_color(current[1], current[0])
 		
 		for d in direction:
 			next_x, next_y = current[0] + d[0], current[1] + d[1]
@@ -226,22 +215,39 @@ def __gbfs_with_teleport_point(graph, start, end, teleport_points: dict, heurist
 	answer.append(start)
 	answer = answer[::-1]
 
-	set_path_color(answer, sleep_time)
+	set_path_color(answer)
 
-	return answer
+	return len(answer) - 1
+    
 
 def gbfs(graph, start, end, mode, bonus_points, intermediate_points, teleport_points, hf=manhattan_distance):
-    if not is_valid_graph(graph):
-        return None
+	if mode == AlgorithmsMode.NORMAL:
+		starting_time_point = datetime.now()
+		cost = __normal_gbfs(graph, start, end, hf)
+		ending_time_point = datetime.now()
+		print('[*][GBFS] Normal mode')
+	
+	elif mode == AlgorithmsMode.BONUS:
+		starting_time_point = datetime.now()
+		cost = __gbfs_with_bonus_point(graph, start, end, bonus_points, hf)
+		ending_time_point = datetime.now()
+		print('[*][GBFS] Bonus mode')
 
-    if mode == AlgorithmsMode.NORMAL:
-        return __normal_gbfs(graph, start, end, hf)
+	elif mode == AlgorithmsMode.INTERMEDIATE:
+		starting_time_point = datetime.now()
+		cost = __gbfs_with_intermediate_point(graph, start, end, intermediate_points, hf)
+		ending_time_point = datetime.now()
+		print('[*][GBFS] Intermediate mode')
 
-    if mode == AlgorithmsMode.BONUS_POINT:
-        return __gbfs_with_bonus_point(graph, start, end, bonus_points, hf)
+	elif mode == AlgorithmsMode.TELEPORT:
+		starting_time_point = datetime.now()
+		cost = __gbfs_with_teleport_point(graph, start, end, teleport_points, hf)
+		ending_time_point = datetime.now()
+		print('[*][GBFS] Teleport mode')
+	
+	else:
+		print('[*][GBFS] Unknown mode')
+		return None
 
-    if mode == AlgorithmsMode.INTERMEDIATE_POINT:
-        return __gbfs_with_intermediate_point(graph, start, end, intermediate_points, hf)
-
-    if mode == AlgorithmsMode.TELEPORT_POINT:
-        return __gbfs_with_teleport_point(graph, start, end, teleport_points, hf)
+	print(f'\tCost = {cost}, Time = {ending_time_point - starting_time_point}')
+	return cost
