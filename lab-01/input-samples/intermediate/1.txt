@@ -1,20 +1,20 @@
 5
+1 19
 3 6
 5 14
-1 19
-12 18
 6 4
+12 10
 xxxxxxxxxxxxxxxxxxxxxxxx
-x   x   xx xxxx    +x  x
-x     x     x   xxx x xx
-xxx   +xx   x x xxx xxxx
-  x   x x xx     xx    x
+x  xx   xx xxxx    +x  x
+x   x x x   x   xxx x xx
+xxx x + x   x x xxx   xx
+x x   x x xx     xx    x
 x   x      xx +x   x xxx
-xx x+xx x      xx  x x x
-xx   xx x  x x  xx     x
-x  x       x x  x x  x x
-xxxxx x xx x       x xxx
-xSxxx      xxxx  xxx  xx
-x x    x   xx    xx  xxx
-x   xxxxxx    x   +  xxx
+xx x+xx x  x   xx  x xSx
+     xx x    x  xx     x
+x  x         x  x x  x x
+xx    x xx x       x xxx
+x xxx      x  x x xx  xx
+x x    x   xxxx xxx  xxx
+x   xx xxx+          xxx
 xxxxxxxxxxxxxxxxxxxxxxxx
