@@ -18,7 +18,7 @@ def draw_grid(x, y, color=Colors.WHITE, block_size=Grid.BLOCK_SIZE, border=Color
 
 def write_text(text, x, y, color, block_size=Grid.BLOCK_SIZE, font_size=Grid.FONT_SIZE):
 	font = pygame.font.SysFont('Comic Sans MS', font_size)
-	content = font.render(text, False, color)
+	content = font.render(text, True, color)
 	SCREEN.blit(content,
 				(x * block_size + block_size // 2 - len(text) * font_size // 4,
 				y * block_size + block_size // 5))
@@ -96,7 +96,9 @@ def visualize(algorithm, mode, graph, start, end,
 	pygame.init()
 	WIN_HEIGHT = Grid.BLOCK_SIZE * len(graph)
 	WIN_WIDTH = Grid.BLOCK_SIZE * len(graph[0])
-	SCREEN = pygame.display.set_mode((WIN_WIDTH, WIN_HEIGHT))
+	# SCREEN = pygame.display.set_mode((WIN_WIDTH, WIN_HEIGHT))
+	SCREEN = pygame.display.set_mode((WIN_WIDTH, WIN_HEIGHT), flags=pygame.HIDDEN)
+
 	pygame.display.set_caption('Hello folks👋, we are US-er!')
 	CLOCK = pygame.time.Clock()
 	CLOCK.tick(60)
@@ -133,6 +135,3 @@ def visualize(algorithm, mode, graph, start, end,
 
 	if ANIMATE is not None:
 		ANIMATE.release()
-
-	# Wait 2 seconds before closing
-	pygame.time.wait(1000)
