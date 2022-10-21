@@ -48,6 +48,8 @@ else
     $runner -m pip install -r ./env-requirements.txt > /dev/null 
 fi
 
+set -e
+
 echo Running Level 1 'for' with 5 algorithms.
 $runner main.py -a BFS -m NORMAL -i ../input-samples/normal -o $output_dir
 $runner main.py -a DFS -m NORMAL -i ../input-samples/normal -o $output_dir
