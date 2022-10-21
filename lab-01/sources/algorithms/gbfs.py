@@ -184,9 +184,9 @@ def __gbfs_with_teleport_point(graph, start, end, teleport_points: dict, heurist
 		for d in direction:
 			next_x, next_y = current[0] + d[0], current[1] + d[1]
 
-			if not is_in_graph(graph, (next_x, next_y)) or graph[next_x][next_y] == MazeObject.WALL or parent[next_x][next_y]:
+			if not is_in_graph(graph, (next_x, next_y)) or graph[next_x][next_y] == MazeObject.WALL or parent[next_x][next_y] is not None:
 				continue
-		
+
 			if (next_x, next_y) == end:
 				parent[end[0]][end[1]] = current
 				found = True
