@@ -3,6 +3,7 @@ from enum import Enum
 from math import sqrt
 from constants import *
 from algorithms.algorithms_utils import AlgorithmsMode
+import os
 
 def read_file(file_name: str = 'maze.txt', mode: Enum = AlgorithmsMode.NORMAL) -> list:
     bonus_points = {}
@@ -61,3 +62,11 @@ def darker_color(color, factor=60):
     # set the color to a darker shade
     color = [max(0, i - factor) for i in color]
     return tuple(color)
+
+def mkdir_plus(dir):
+    dir = dir.replace('\\', '/').split('/')
+    tmp = ''
+    for d in dir:
+        tmp = os.path.join(tmp, d)
+        if not os.path.exists(tmp):
+            os.mkdir(tmp)
