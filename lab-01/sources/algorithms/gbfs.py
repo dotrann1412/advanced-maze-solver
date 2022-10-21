@@ -151,12 +151,14 @@ def __gbfs_with_bonus_point(graph, start, end, bonus_points, heuristic):
 def __gbfs_with_intermediate_point(graph, start, end, intermediate_points, hf):
 	pass
 
+import copy
 def __gbfs_with_teleport_point(graph, start, end, teleport_points: dict, heuristic):
 	terminated = [-1, -1]
 	size = graph_size(graph)
 
 	priority_queue = PriorityQueue()
 	special_points = [end] + list(teleport_points.keys())
+	special_points_for_rendering = copy.deepcopy(special_points)
 
 	def __extra_heuristic(point):
 		val = INF
@@ -214,7 +216,7 @@ def __gbfs_with_teleport_point(graph, start, end, teleport_points: dict, heurist
 	answer.append(start)
 	answer = answer[::-1]
 
-	set_path_color(answer)
+	set_path_color(answer, special_points_for_rendering)
 
 	return len(answer) - 1
 	
