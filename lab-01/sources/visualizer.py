@@ -132,6 +132,7 @@ def visualize(algorithm, mode, graph, start, end,
 					fp.write('NO')
 				else:
 					fp.write('YES\n')
+					fp.write(str(output))
 		except Exception as err:
 			print(err)
 	

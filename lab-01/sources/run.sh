@@ -43,9 +43,9 @@ then
     echo If any problem occurs during demo 'time' try to install pip by this command: "apt install python3-pip" \(Run with administrator permission 'if' needed\)!
 else
     echo Upgrading pip...
-    # $runner -m pip install --upgrade pip > /dev/null 
+    $runner -m pip install --upgrade pip > /dev/null 
     echo Installing requirements...
-    # $runner -m pip install -r ./env-requirements.txt > /dev/null 
+    $runner -m pip install -r ./env-requirements.txt > /dev/null 
 fi
 
 echo Running NORMAL mode 'for' 5 algorithms, ouput will be written to $output_dir. Enjoy!
