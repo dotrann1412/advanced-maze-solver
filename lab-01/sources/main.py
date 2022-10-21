@@ -81,7 +81,7 @@ if __name__ == "__main__":
             mode
         )
 
-        dest = os.path.join(output_dir, f'level_{mode.value}', f'map_{os.path.splitext(file)[0]}', algoname)
+        dest = os.path.join(output_dir, f'level_{mode.value}' if mode.value != 'advance' else 'advance_level', f'map_{os.path.splitext(file)[0]}', algoname)
         mkdir_plus(dest)
 
         try:
