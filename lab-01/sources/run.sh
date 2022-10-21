@@ -43,31 +43,31 @@ then
     echo If any problem occurs during demo 'time' try to install pip by this command: "apt install python3-pip" \(Run with administrator permission 'if' needed\)!
 else
     echo Upgrading pip...
-    $runner -m pip install --upgrade pip > /dev/null 
+    # $runner -m pip install --upgrade pip > /dev/null 
     echo Installing requirements...
-    $runner -m pip install -r ./env-requirements.txt > /dev/null 
+    # $runner -m pip install -r ./env-requirements.txt > /dev/null 
 fi
 
-echo Running NORMAL mode 'for' 5 algorithms. Ouput will be written 'in' $output_dir. Enjoy!
+echo Running NORMAL mode 'for' 5 algorithms, ouput will be written to $output_dir. Enjoy!
 
-$runner main.py -a BFS -m NORMAL -i ../input-samples/normal -o $output_dir>/dev/null 
-$runner main.py -a DFS -m NORMAL -i ../input-samples/normal -o $output_dir>/dev/null 
-$runner main.py -a UCS -m NORMAL -i ../input-samples/normal -o $output_dir>/dev/null 
-$runner main.py -a A_STAR -m NORMAL -i ../input-samples/normal -o $output_dir>/dev/null 
-$runner main.py -a GBFS -m NORMAL -i ../input-samples/normal -o $output_dir>/dev/null 
+$runner main.py -a BFS -m NORMAL -i ../input-samples/normal -o $output_dir
+$runner main.py -a DFS -m NORMAL -i ../input-samples/normal -o $output_dir
+$runner main.py -a UCS -m NORMAL -i ../input-samples/normal -o $output_dir
+$runner main.py -a A_STAR -m NORMAL -i ../input-samples/normal -o $output_dir
+$runner main.py -a GBFS -m NORMAL -i ../input-samples/normal -o $output_dir
 
-$runner main.py -a A_STAR -m BONUS_POINT -i ../input-samples/bonus -o $output_dir>/dev/null 
-$runner main.py -a A_STAR -m BONUS_POINT -i ../input-samples/bonus -o $output_dir>/dev/null 
-$runner main.py -a A_STAR -m BONUS_POINT -i ../input-samples/bonus -o $output_dir>/dev/null 
+$runner main.py -a A_STAR -m BONUS -i ../input-samples/bonus -o $output_dir
+$runner main.py -a A_STAR -m BONUS -i ../input-samples/bonus -o $output_dir
+$runner main.py -a A_STAR -m BONUS -i ../input-samples/bonus -o $output_dir
 
-$runner main.py -a A_STAR -m INTERMEDIATE_POINT -i ../input-samples/inter -o $output_dir>/dev/null 
-$runner main.py -a A_STAR -m INTERMEDIATE_POINT -i ../input-samples/inter -o $output_dir>/dev/null 
-$runner main.py -a A_STAR -m INTERMEDIATE_POINT -i ../input-samples/inter -o $output_dir>/dev/null 
+$runner main.py -a A_STAR -m INTERMEDIATE -i ../input-samples/intermediate -o $output_dir
+$runner main.py -a A_STAR -m INTERMEDIATE -i ../input-samples/intermediate -o $output_dir
+$runner main.py -a A_STAR -m INTERMEDIATE -i ../input-samples/intermediate -o $output_dir
 
-$runner main.py -a A_STAR -m TELEPORT_POINT -i ../input-samples/teleport -o $output_dir>/dev/null 
-$runner main.py -a A_STAR -m TELEPORT_POINT -i ../input-samples/teleport -o $output_dir>/dev/null 
-$runner main.py -a A_STAR -m TELEPORT_POINT -i ../input-samples/teleport -o $output_dir>/dev/null 
+$runner main.py -a A_STAR -m TELEPORT -i ../input-samples/teleport -o $output_dir
+$runner main.py -a A_STAR -m TELEPORT -i ../input-samples/teleport -o $output_dir
+$runner main.py -a A_STAR -m TELEPORT -i ../input-samples/teleport -o $output_dir
 
-$runner main.py -a GBFS -m TELEPORT_POINT -i ../input-samples/teleport -o $output_dir>/dev/null 
-$runner main.py -a GBFS -m TELEPORT_POINT -i ../input-samples/teleport -o $output_dir>/dev/null 
-$runner main.py -a GBFS -m TELEPORT_POINT -i ../input-samples/teleport -o $output_dir>/dev/null 
+$runner main.py -a GBFS -m TELEPORT -i ../input-samples/teleport -o $output_dir
+$runner main.py -a GBFS -m TELEPORT -i ../input-samples/teleport -o $output_dir
+$runner main.py -a GBFS -m TELEPORT -i ../input-samples/teleport -o $output_dir
