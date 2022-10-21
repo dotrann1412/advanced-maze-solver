@@ -54,8 +54,12 @@ echo Running Level 1 'for' with 5 algorithms.
 $runner main.py -a BFS -m NORMAL -i ../input-samples/normal -o $output_dir
 $runner main.py -a DFS -m NORMAL -i ../input-samples/normal -o $output_dir
 $runner main.py -a UCS -m NORMAL -i ../input-samples/normal -o $output_dir
-$runner main.py -a A_STAR -m NORMAL -i ../input-samples/normal -o $output_dir
-$runner main.py -a GBFS -m NORMAL -i ../input-samples/normal -o $output_dir
+
+$runner main.py -a A_STAR -m NORMAL -i ../input-samples/normal -o $output_dir -m 1
+$runner main.py -a GBFS -m NORMAL -i ../input-samples/normal -o $output_dir -m 1
+
+$runner main.py -a A_STAR -m NORMAL -i ../input-samples/normal -o $output_dir -m 2
+$runner main.py -a GBFS -m NORMAL -i ../input-samples/normal -o $output_dir -m 2
 
 echo Running Level 2 with A* algorithm.
 $runner main.py -a A_STAR -m BONUS -i ../input-samples/bonus -o $output_dir
