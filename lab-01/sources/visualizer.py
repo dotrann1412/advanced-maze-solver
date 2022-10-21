@@ -118,7 +118,6 @@ def visualize(algorithm, mode, graph, start, end,
 		video_fileout = os.path.join(output_path, f'{algo_name}{f"_{extra_info}" if extra_info is not None else ""}.mp4')
 		ANIMATE = cv2.VideoWriter(
 			video_fileout, fourcc, fps, (WIN_WIDTH, WIN_HEIGHT))
-
 	else:
 		ANIMATE = None
 
@@ -127,7 +126,19 @@ def visualize(algorithm, mode, graph, start, end,
 
 	output = algorithm(graph, start, end, mode, bonus_points,
 			  inter_points, teleport_points, hf=hf)
- 
+
+	for point in bonus_points:
+		write_text(str(bonus_points[point]), point[1], point[0], Colors.WHITE)
+
+	teleport_id_dict = {}
+	teleport_id = 1
+	for point in teleport_points:
+		if point not in teleport_id_dict:
+			teleport_id_dict[point] = teleport_id
+			teleport_id_dict[teleport_points[point]] = teleport_id
+			teleport_id += 1
+		write_text(str(teleport_id_dict[point]), point[1], point[0], Colors.WHITE)
+
 	if output_path is not None:
 		algo_name = output_path.replace('\\', '/').split('/')[-1]
 		result_fileout = os.path.join(output_path, f'{algo_name}{f"_{extra_info}" if extra_info is not None else ""}.txt')
