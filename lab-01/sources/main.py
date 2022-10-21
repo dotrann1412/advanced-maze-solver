@@ -1,8 +1,8 @@
 from constants import *
 from visualizer import visualize
-from utils import read_file
+from utils import mkdir_plus, read_file
 import argparse
-import sys
+import sys, os, stat
 from utils import euclidean_distance, manhattan_distance
 
 from algorithms import a_star, bfs, dfs, ucs, gbfs
@@ -45,7 +45,7 @@ if __name__ == "__main__":
     mode = None  # enum
     heuristic = None
     input_file = None
-    output_file = None
+    output_dir = None
 
     if args.algorithms:
         algorithm = AlgorithmsMapping[args.algorithms]
@@ -58,21 +58,40 @@ if __name__ == "__main__":
 
     if args.heuristic_function:
         heuristic = HeuristicMapping[args.heuristic_function]
-    
+
     if args.output:
-        output_file = args.output
+        output_dir = args.output
+        if not os.path.exists(output_dir):
+            print(f'[*][ERROR] Folder not found! {output_dir}')
+            exit(1)
+        elif os.path.isfile(output_dir):
+            print(f'[*][WARNING] {output_dir} may not be a directory.')
 
-    matrix, start, end, bonus_points, inter_points, teleport_points = read_file(
-        input_file, mode)
+    files = []
+    if os.path.isfile(input_file):
+        files = [input_file]
+    else:
+        files = [file for file in os.listdir(input_file) 
+                    if os.path.isfile(os.path.join(input_file, file))]
+    
+    algoname = args.algorithms.lower().replace('_', '')
 
-    print(f'The height of the matrix: {len(matrix)}')
-    print(f'The width of the matrix: {len(matrix[0])}')
-    print(f'Starting point (x, y) = {start[0], start[1]}')
-    print(f'Ending point (x, y) = {end[0], end[1]}')
+    for file in files:
+        matrix, start, end, bonus_points, inter_points, teleport_points = read_file (
+            os.path.join(input_file, file), 
+            mode
+        )
 
-    visualize(
-        algorithm, mode, matrix, start, end,
-        bonus_points, inter_points, teleport_points,
-        hf=heuristic,
-        output_path=output_file
-    )
+        dest = os.path.join(output_dir, f'level_{mode.value}', f'map_{os.path.splitext(file)[0]}', algoname)
+        mkdir_plus(dest)
+
+        try:
+            visualize(
+                algorithm, mode, matrix, start, end,
+                bonus_points, inter_points, teleport_points,
+                hf=heuristic,
+                output_path=dest
+            )
+        except BrokenPipeError:
+            continue
+        
