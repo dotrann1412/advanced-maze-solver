@@ -1,50 +1,13 @@
-level_1_output="../output/level_1"
-level_2_output="../output/level_2"
-level_3_output="../output/level_3"
-level_4_output="../output/level_4"
-
-if [[ ! -d  "../output" ]]
-then 
-    if [[ ! -L "../output" ]]
-    then
-        mkdir "../output"
-    fi
-fi
-
-
-if [[ ! -d  "$level_1_output" ]]
-then 
-    if [[ ! -L "$level_1_output" ]]
-    then
-        mkdir "$level_1_output"
-    fi
-fi
-
-if [[ ! -d  "$level_2_output" ]]
-then 
-    if [[ ! -L "$level_2_output" ]]
-    then
-        mkdir "$level_2_output"
-    fi
-fi
-
-if [[ ! -d  "$level_3_output" ]]
-then 
-    if [[ ! -L "$level_3_output" ]]
-    then
-        mkdir "$level_3_output"
-    fi
-fi
-
-if [[ ! -d  "$level_4_output" ]]
-then 
-    if [[ ! -L "$level_4_output" ]]
-    then
-        mkdir "$level_4_output"
-    fi
-fi
+#!/bin/bash
 
 runner=""
+
+output_dir="../output"
+if [[ ! -d $output_dir ]]
+then
+    mkdir $output_dir
+    chmod rw- $output_dir
+fi
 
 which python3 | grep -q "python3"
 code_1=$?
@@ -79,26 +42,32 @@ if [[ $? != 0 ]]
 then
     echo If any problem occurs during demo 'time' try to install pip by this command: "apt install python3-pip" \(Run with administrator permission 'if' needed\)!
 else
-    $runner -m pip install --upgrade pip
-    $runner -m pip install -r ./env-requirements.txt
+    echo Upgrading pip...
+    $runner -m pip install --upgrade pip > /dev/null 
+    echo Installing requirements...
+    $runner -m pip install -r ./env-requirements.txt > /dev/null 
 fi
 
-exit 0
+echo Running NORMAL mode 'for' 5 algorithms. Ouput will be written 'in' $output_dir. Enjoy!
 
-$runner main.py -a BFS -i ../input-samples/normal/bfs.txt -o ../output/level_1/bfs_lv1.mp4 -m NORMAL \ # lv 1 bfs
-| $runner main.py -a DFS -i ../input-samples/normal/dfs.txt -o ../output/level_1/dfs_lv1.mp4 -m NORMAL \ # lv 1 dfs
-| $runner main.py -a UCS -i ../input-samples/normal/ucs.txt -o ../output/level_1/ucs_lv1.mp4 -m NORMAL \ # lv 1 ucs
-| $runner main.py -a GBFS -i ../input-samples/normal/gbfs.txt -o ../output/level_1/gbfs_lv1.mp4 -m NORMAL \ # lv 1 gbfs
-| $runner main.py -a A_STAR -i ../input-samples/normal/a_star.txt -o ../output/level_1/a_star_lv1.mp4 -m NORMAL \ # lv 1 a*
-| $runner main.py -a A_STAR -i ../input-samples/bonus/1.txt -o ../output/level_2/lv2_map_1_a_star.mp4 -m BONUS \ # lv 2 map 1
-| $runner main.py -a A_STAR -i ../input-samples/bonus/2.txt -o ../output/level_2/lv2_map_2_a_star.mp4 -m BONUS \ # lv 2 map 2
-| $runner main.py -a A_STAR -i ../input-samples/bonus/3.txt -o ../output/level_2/lv2_map_3_a_star.mp4 -m BONUS \ # lv 2 map 3
-| $runner main.py -a A_STAR -i ../input-samples/inter/1.txt -o ../output/level_3/lv3_map_1_a_star.mp4 -m INTERMEDIATE \ # lv 3 map 1
-| $runner main.py -a A_STAR -i ../input-samples/inter/2.txt -o ../output/level_3/lv3_map_2_a_star.mp4 -m INTERMEDIATE \ # lv 3 map 2
-| $runner main.py -a A_STAR -i ../input-samples/inter/3.txt -o ../output/level_3/lv3_map_3_a_star.mp4 -m INTERMEDIATE \ # lv 3 map 3
-| $runner main.py -a A_STAR -i ../input-samples/tele/1.txt -o ../output/level_4/lv4_map_1_a_star.mp4 -m TELEPORT \ # lv 4 map 1 _ a*
-| $runner main.py -a A_STAR -i ../input-samples/tele/2.txt -o ../output/level_4/lv4_map_2_a_star.mp4 -m TELEPORT \ # lv 4 map 2 _ a*
-| $runner main.py -a A_STAR -i ../input-samples/tele/3.txt -o ../output/level_4/lv4_map_3_a_star.mp4 -m TELEPORT \ # lv 4 map 3 _ a*
-| $runner main.py -a GBFS -i ../input-samples/tele/1.txt -o ../output/level_4/lv4_map_1_gbfs.mp4 -m TELEPORT \ # lv 4 map 1 _ gbfs
-| $runner main.py -a GBFS -i ../input-samples/tele/2.txt -o ../output/level_4/lv4_map_2_gbfs.mp4 -m TELEPORT \ # lv 4 map 2 _ gbfs
-| $runner main.py -a GBFS -i ../input-samples/tele/3.txt -o ../output/level_4/lv4_map_3_gbfs.mp4 -m TELEPORT \ # lv 4 map 3 _ gbfs
+$runner main.py -a BFS -m NORMAL -i ../input-samples/normal -o $output_dir>/dev/null 
+$runner main.py -a DFS -m NORMAL -i ../input-samples/normal -o $output_dir>/dev/null 
+$runner main.py -a UCS -m NORMAL -i ../input-samples/normal -o $output_dir>/dev/null 
+$runner main.py -a A_STAR -m NORMAL -i ../input-samples/normal -o $output_dir>/dev/null 
+$runner main.py -a GBFS -m NORMAL -i ../input-samples/normal -o $output_dir>/dev/null 
+
+$runner main.py -a A_STAR -m BONUS_POINT -i ../input-samples/bonus -o $output_dir>/dev/null 
+$runner main.py -a A_STAR -m BONUS_POINT -i ../input-samples/bonus -o $output_dir>/dev/null 
+$runner main.py -a A_STAR -m BONUS_POINT -i ../input-samples/bonus -o $output_dir>/dev/null 
+
+$runner main.py -a A_STAR -m INTERMEDIATE_POINT -i ../input-samples/inter -o $output_dir>/dev/null 
+$runner main.py -a A_STAR -m INTERMEDIATE_POINT -i ../input-samples/inter -o $output_dir>/dev/null 
+$runner main.py -a A_STAR -m INTERMEDIATE_POINT -i ../input-samples/inter -o $output_dir>/dev/null 
+
+$runner main.py -a A_STAR -m TELEPORT_POINT -i ../input-samples/teleport -o $output_dir>/dev/null 
+$runner main.py -a A_STAR -m TELEPORT_POINT -i ../input-samples/teleport -o $output_dir>/dev/null 
+$runner main.py -a A_STAR -m TELEPORT_POINT -i ../input-samples/teleport -o $output_dir>/dev/null 
+
+$runner main.py -a GBFS -m TELEPORT_POINT -i ../input-samples/teleport -o $output_dir>/dev/null 
+$runner main.py -a GBFS -m TELEPORT_POINT -i ../input-samples/teleport -o $output_dir>/dev/null 
+$runner main.py -a GBFS -m TELEPORT_POINT -i ../input-samples/teleport -o $output_dir>/dev/null 
