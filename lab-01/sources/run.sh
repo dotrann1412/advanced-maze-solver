@@ -48,26 +48,31 @@ else
     $runner -m pip install -r ./env-requirements.txt > /dev/null 
 fi
 
-echo Running NORMAL mode 'for' 5 algorithms, ouput will be written to $output_dir. Enjoy!
-
+echo Running Level 1 'for' with 5 algorithms.
 $runner main.py -a BFS -m NORMAL -i ../input-samples/normal -o $output_dir
 $runner main.py -a DFS -m NORMAL -i ../input-samples/normal -o $output_dir
 $runner main.py -a UCS -m NORMAL -i ../input-samples/normal -o $output_dir
 $runner main.py -a A_STAR -m NORMAL -i ../input-samples/normal -o $output_dir
 $runner main.py -a GBFS -m NORMAL -i ../input-samples/normal -o $output_dir
 
+echo Running Level 2 with A* algorithm.
 $runner main.py -a A_STAR -m BONUS -i ../input-samples/bonus -o $output_dir
 $runner main.py -a A_STAR -m BONUS -i ../input-samples/bonus -o $output_dir
 $runner main.py -a A_STAR -m BONUS -i ../input-samples/bonus -o $output_dir
 
+echo Running Level 3 with A* algorithm.
 $runner main.py -a A_STAR -m INTERMEDIATE -i ../input-samples/intermediate -o $output_dir
 $runner main.py -a A_STAR -m INTERMEDIATE -i ../input-samples/intermediate -o $output_dir
 $runner main.py -a A_STAR -m INTERMEDIATE -i ../input-samples/intermediate -o $output_dir
 
+echo Running advance level with A* algorithm.
 $runner main.py -a A_STAR -m TELEPORT -i ../input-samples/teleport -o $output_dir
 $runner main.py -a A_STAR -m TELEPORT -i ../input-samples/teleport -o $output_dir
 $runner main.py -a A_STAR -m TELEPORT -i ../input-samples/teleport -o $output_dir
 
+echo Running advance level with GBFS algorithm.
 $runner main.py -a GBFS -m TELEPORT -i ../input-samples/teleport -o $output_dir
 $runner main.py -a GBFS -m TELEPORT -i ../input-samples/teleport -o $output_dir
 $runner main.py -a GBFS -m TELEPORT -i ../input-samples/teleport -o $output_dir
+
+echo All 'Done'! Let\'s check $output_dir.
