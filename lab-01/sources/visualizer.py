@@ -10,10 +10,21 @@ from PIL import Image
 import numpy as np
 
 
-def draw_grid(x, y, block_size=20, color=Colors.WHITE, border=Colors.WHITE):
+def draw_grid(x, y, color=Colors.WHITE, block_size=Grid.BLOCK_SIZE, border=Colors.WHITE):
 	rect = pygame.Rect(x * block_size, y * block_size, block_size, block_size)
-	pygame.draw.rect(SCREEN, color, rect, block_size//2)
+	pygame.draw.rect(SCREEN, color, rect, block_size // 2)
 	pygame.draw.rect(SCREEN, border, rect, 1)
+
+
+def write_text(text, x, y, color, block_size=Grid.BLOCK_SIZE, font_size=Grid.FONT_SIZE):
+	font = pygame.font.SysFont('Comic Sans MS', font_size)
+	content = font.render(text, True, color)
+	SCREEN.blit(content,
+				(x * block_size + block_size // 2 - len(text) * font_size // 4,
+				y * block_size + block_size // 5))
+	pygame.display.update()
+	write_frame()
+
 
 # write frame to MP4 output
 def write_frame():
@@ -24,48 +35,47 @@ def write_frame():
 		frame = cv2.cvtColor(np.array(current_frame_dat), cv2.COLOR_BGR2RGB)
 		ANIMATE.write(frame)
 
-def render_map(graph, start, end, block_size=20):
+
+def render_map(graph, start, end):
 	for y in range(len(graph)):
 		for x in range(len(graph[0])):
 			if graph[y][x] == MazeObject.WALL:
 				color = Colors.BLACK
 			elif graph[y][x] == MazeObject.START:
 				color = Colors.GREEN
-			elif graph[y][x] == MazeObject.BONUS:
+			elif graph[y][x] == MazeObject.SPECIAL:
 				color = Colors.SPECIAL
-			# add for intermediate_points, teleport_points
-			# ...
 			else:
 				color = Colors.WHITE
-			draw_grid(x, y, block_size, color)
+			draw_grid(x, y, color)
 
 	draw_grid(start[1], start[0], color=Colors.START)
 	draw_grid(end[1], end[0], color=Colors.END)
 	pygame.display.update()
 	write_frame()
 
-def get_color(x, y, block_size=20,):
+
+def get_color(x, y):
 	global SCREEN
-	return SCREEN.get_at((x * block_size + block_size // 2, y * block_size + block_size // 2))
+	return SCREEN.get_at((x * Grid.BLOCK_SIZE + Grid.BLOCK_SIZE // 2, y * Grid.BLOCK_SIZE + Grid.BLOCK_SIZE // 2))
 
-# function to set color at cell (x, y) in grid
 
-def set_color(x, y, color, sleep_time=30):
+def set_color(x, y, color, sleep_time=1):
 	draw_grid(x, y, color=color)
 	pygame.display.update()
 	pygame.time.wait(sleep_time)
 	write_frame()
 
 
-def set_frontier_color(x, y, sleep_time):
+def set_frontier_color(x, y):
 	color = Colors.FRONTIER
 	cur_color = get_color(x, y)
 	if cur_color != Colors.WHITE:
 		color = darker_color(cur_color)
-	set_color(x, y, color, sleep_time)
+	set_color(x, y, color)
 
 
-def set_path_color(path, sleep_time, special_points={}):
+def set_path_color(path, special_points={}):
 	passed = {}
 	for point in path:
 		passed[point] = False
@@ -76,19 +86,19 @@ def set_path_color(path, sleep_time, special_points={}):
 		if cur_color == Colors.PATH or cur_color == Colors.SPECIAL or point in special_points or passed[point]:
 			color = darker_color(cur_color)
 		passed[point] = True
-		set_color(point[1], point[0], color, sleep_time)
+		set_color(point[1], point[0], color)
 
 
 def visualize(algorithm, mode, graph, start, end,
-			  bonus_points=[], inter_points=[], teleport_points=[],
-			  block_size=20, hf=manhattan_distance,
-			  output_path=None
-			  ):
+			  bonus_points={}, inter_points={}, teleport_points={},
+			  hf=manhattan_distance, output_path=None):
 	global SCREEN, CLOCK, WIN_WIDTH, WIN_HEIGHT
 	pygame.init()
-	WIN_HEIGHT = block_size * len(graph)
-	WIN_WIDTH = block_size * len(graph[0])
-	SCREEN = pygame.display.set_mode((WIN_WIDTH, WIN_HEIGHT))
+	WIN_HEIGHT = Grid.BLOCK_SIZE * len(graph)
+	WIN_WIDTH = Grid.BLOCK_SIZE * len(graph[0])
+	# SCREEN = pygame.display.set_mode((WIN_WIDTH, WIN_HEIGHT))
+	SCREEN = pygame.display.set_mode((WIN_WIDTH, WIN_HEIGHT), flags=pygame.HIDDEN)
+
 	pygame.display.set_caption('Hello folks👋, we are US-er!')
 	CLOCK = pygame.time.Clock()
 	CLOCK.tick(60)
@@ -103,12 +113,25 @@ def visualize(algorithm, mode, graph, start, end,
 		ANIMATE = None
 
 	# Render maze
-	render_map(graph, start, end, block_size)
+	render_map(graph, start, end)
 
-	algorithm(graph, start, end, mode, bonus_points,
-			  inter_points, teleport_points, hf=hf)
-	
+	cost = algorithm(graph, start, end, mode, bonus_points,
+					 inter_points, teleport_points, hf=hf)
+	# TODO: something with cost (write to file,...)
+
+	# set text at bonus point's cells
+	for point in bonus_points:
+		write_text(str(bonus_points[point]), point[1], point[0], Colors.WHITE)
+
+	# set text at teleport point's cells
+	teleport_id_dict = {}
+	teleport_id = 1
+	for point in teleport_points:
+		if point not in teleport_id_dict:
+			teleport_id_dict[point] = teleport_id
+			teleport_id_dict[teleport_points[point]] = teleport_id
+			teleport_id += 1
+		write_text(str(teleport_id_dict[point]), point[1], point[0], Colors.WHITE)
+
 	if ANIMATE is not None:
 		ANIMATE.release()
-	
-	pygame.time.wait(1000)

@@ -27,7 +27,7 @@ if __name__ == "__main__":
     parser.add_argument("-a", "--algorithms", help="Algorithm to run",
                         choices=AlgorithmsMapping.keys(), type=str, required=True)
     parser.add_argument("-m", "--mode", help="Running mode",
-                        choices=[AlgorithmsMode.NORMAL.name, AlgorithmsMode.TELEPORT_POINT.name, AlgorithmsMode.BONUS_POINT.name, AlgorithmsMode.INTERMEDIATE_POINT.name],
+                        choices=[AlgorithmsMode.NORMAL.name, AlgorithmsMode.TELEPORT.name, AlgorithmsMode.BONUS.name, AlgorithmsMode.INTERMEDIATE.name],
                         type=str, required=True)
     parser.add_argument("-hf", "--heuristic-function", help="Heuristic function",
                         choices=HeuristicMapping.keys(),
@@ -39,7 +39,6 @@ if __name__ == "__main__":
                         type=str, default=None)
 
     args = parser.parse_args()
-
 
     algorithm = None  # function
     mode = None  # enum
@@ -65,14 +64,16 @@ if __name__ == "__main__":
     matrix, start, end, bonus_points, inter_points, teleport_points = read_file(
         input_file, mode)
 
-    print(f'The height of the matrix: {len(matrix)}')
-    print(f'The width of the matrix: {len(matrix[0])}')
-    print(f'Starting point (x, y) = {start[0], start[1]}')
-    print(f'Ending point (x, y) = {end[0], end[1]}')
+    print()
+    print(f'Solving maze {input_file}')
+    print(f'\tSize of maze: {(len(matrix), len(matrix[0]))}')
+    print(f'\tStarting point (x, y) = {start[0], start[1]}')
+    print(f'\tEnding point (x, y) = {end[0], end[1]}')
 
     visualize(
         algorithm, mode, matrix, start, end,
         bonus_points, inter_points, teleport_points,
-        hf=heuristic,
-        output_path=output_file
+        hf=heuristic, output_path=output_file
     )
+
+    print('---------------------------------------------------------')
