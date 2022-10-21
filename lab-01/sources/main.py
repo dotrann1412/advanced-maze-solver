@@ -27,7 +27,7 @@ if __name__ == "__main__":
     parser.add_argument("-a", "--algorithms", help="Algorithm to run",
                         choices=AlgorithmsMapping.keys(), type=str, required=True)
     parser.add_argument("-m", "--mode", help="Running mode",
-                        choices=[AlgorithmsMode.NORMAL.name, AlgorithmsMode.TELEPORT_POINT.name, AlgorithmsMode.BONUS_POINT.name, AlgorithmsMode.INTERMEDIATE_POINT.name],
+                        choices=[AlgorithmsMode.NORMAL.name, AlgorithmsMode.TELEPORT.name, AlgorithmsMode.BONUS.name, AlgorithmsMode.INTERMEDIATE.name],
                         type=str, required=True)
     parser.add_argument("-hf", "--heuristic-function", help="Heuristic function",
                         choices=HeuristicMapping.keys(),
@@ -39,7 +39,6 @@ if __name__ == "__main__":
                         type=str, default=None)
 
     args = parser.parse_args()
-
 
     algorithm = None  # function
     mode = None  # enum
@@ -94,4 +93,3 @@ if __name__ == "__main__":
             )
         except BrokenPipeError:
             continue
-        
