@@ -10,7 +10,6 @@ def __trace_back(parent, starting_point, ending_point, limit = INF):
 
 	while pointer != starting_point:
 		path.append(pointer)
-		print('[DEBUG]',pointer)
 		pointer = parent[pointer[0]][pointer[1]]
 
 		limit -= 1
@@ -129,8 +128,7 @@ def __ucs_with_bonus_point(graph, starting_point, ending_point, bonus_points):
 
 	if parent[ending_point[0]][ending_point[1]] == None:
 		return None
-
-	print('[*] Cost: ', cost[ending_point[0]][ending_point[1]])
+ 
 	path = __trace_back_bonus(ending_point)
 	magican = path[0]
 
@@ -140,9 +138,6 @@ def __ucs_with_bonus_point(graph, starting_point, ending_point, bonus_points):
 	
 
 	set_path_color(path, sleep_time, special_points)
-	
-	print(path)
-
 	return path
 
 def __ucs_intermediate_point(graph, starting_point, ending_point, intermediate_points):
@@ -159,10 +154,19 @@ def __ucs_intermediate_point(graph, starting_point, ending_point, intermediate_p
 	while len(intermediate_points) != 0:
 		destination = choose(current_position, intermediate_points)
 		intermediate_points.remove(destination)
-		path += __normal_ucs(graph, current_position, destination)
+		normal_path = __normal_ucs(graph, current_position, destination)
+
+		if not normal_path:
+			return None
+
+		path += normal_path
 		current_position = destination
 
-	path += __normal_ucs(graph, current_position, ending_point)
+	normal_path = __normal_ucs(graph, current_position, ending_point)
+	if not normal_path:
+		return None
+
+	path += normal_path
 	return path
 
 def __ucs_with_teleport_point(graph, starting_point, ending_point, teleport_points):
@@ -232,23 +236,13 @@ def ucs(graph, starting_point, ending_point, mode, bonus_points, intermediate_po
 	from datetime import datetime
 	
 	if mode == AlgorithmsMode.NORMAL:
-		print('[*][UCS] Normal mode')
 		return __normal_ucs(graph, starting_point, ending_point)
 
 	if mode == AlgorithmsMode.BONUS_POINT:
-		print('[*][UCS] Bonus mode')
-		starting_time_point = datetime.now()
-		path = __ucs_with_bonus_point(graph, starting_point, ending_point, bonus_points)
-		print('[*] Time duration: ', datetime.now() - starting_time_point, ' second(s)')
-		return path
-
+		return __ucs_with_bonus_point(graph, starting_point, ending_point, bonus_points)
 
 	if mode == AlgorithmsMode.INTERMEDIATE_POINT:
-		print('[*][UCS] Intermediate mode')
 		return __ucs_intermediate_point(graph, starting_point, ending_point, intermediate_points)
-
-	
 	
 	if mode == AlgorithmsMode.TELEPORT_POINT:
-		print('[*][UCS] Teleport mode')
 		return __ucs_with_teleport_point(graph, starting_point, ending_point, teleport_points)

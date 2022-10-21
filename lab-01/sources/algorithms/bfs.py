@@ -37,7 +37,7 @@ def __normal_bfs(graph, starting_point, ending_point):
 				break
 
 			parent[next_x][next_y] = current
-			frontier.append([next_x, next_y])
+			frontier.append((next_x, next_y))
 
 	if not ending_point or not parent[ending_point[0]][ending_point[1]]:
 		return None
@@ -172,7 +172,5 @@ def bfs(graph, starting_point, ending_point, mode, bonus_points, intermediate_po
 	if mode == AlgorithmsMode.INTERMEDIATE_POINT:
 		return __bfs_intermediate_point(graph, starting_point, ending_point, intermediate_points)
 
-	print(type(teleport_points))
-	print(teleport_points)
 	if mode == AlgorithmsMode.TELEPORT_POINT:
 		return __bfs_with_teleport_point(graph, starting_point, ending_point, teleport_points)

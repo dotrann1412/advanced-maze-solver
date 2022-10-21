@@ -63,10 +63,16 @@ def __dfs_intermediate_point(graph, starting_point, ending_point, intermediate_p
 	while len(intermediate_points) != 0:
 		destination = choose(current_position, intermediate_points)
 		intermediate_points.remove(destination)
-		path += __normal_dfs(graph, current_position, destination)
+		normal_path = __normal_dfs(graph, current_position, destination)
+		if not normal_path:
+			return None
+		path += normal_path
 		current_position = destination
 
-	path += __normal_dfs(graph, current_position, ending_point)
+	normal_path = __normal_dfs(graph, current_position, ending_point)
+	if not normal_path:
+		return None
+	path += normal_path
 	return path
 
 
