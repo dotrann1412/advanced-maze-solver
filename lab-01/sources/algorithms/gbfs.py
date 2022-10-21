@@ -6,64 +6,63 @@ from visualizer import set_path_color, set_frontier_color, set_color
 
 
 def __normal_gbfs(graph, start, end, hf):
-    def h(point):
-        return hf(point, end)
-    terminated = [-1, -1]
-    dim = graph_size(graph)
-    sleep_time = calc_sleep_time(dim)
+	def h(point):
+		return hf(point, end)
+	terminated = [-1, -1]
+	dim = graph_size(graph)
+	sleep_time = calc_sleep_time(dim)
 
-    priority_queue = PriorityQueue()
+	priority_queue = PriorityQueue()
 
-    if not is_in_graph(graph, start):
-        print("[DEBUG] Invalid starting point...")
-        return None
+	if not is_in_graph(graph, start):
+		return None
 
-    parent = [[None for __ in range(dim[1])] for _ in range(dim[0])]
+	parent = [[None for __ in range(dim[1])] for _ in range(dim[0])]
 
-    priority_queue.put((h(start), start))
-    parent[start[0]][start[1]] = terminated
+	priority_queue.put((h(start), start))
+	parent[start[0]][start[1]] = terminated
 
-    found = False
-    
-    while not priority_queue.empty() and not found:
-        _h, current = priority_queue.get()
+	found = False
+	
+	while not priority_queue.empty() and not found:
+		_h, current = priority_queue.get()
 
-        if current != start and current:
-            set_frontier_color(current[1], current[0], sleep_time // 10)
+		if current != start and current:
+			set_frontier_color(current[1], current[0], sleep_time // 10)
 
-        for element in direction:
-            next_step_x, next_step_y = current[0] + element[0], current[1] + element[1]
+		for element in direction:
+			next_step_x, next_step_y = current[0] + element[0], current[1] + element[1]
 
-            if not is_in_graph(graph, (next_step_x, next_step_y)) or graph[next_step_x][next_step_y] == MazeObject.WALL or parent[next_step_x][next_step_y]:
-                continue
+			if not is_in_graph(graph, (next_step_x, next_step_y)) or graph[next_step_x][next_step_y] == MazeObject.WALL or parent[next_step_x][next_step_y]:
+				continue
 
-            if (next_step_x, next_step_y)  == end:
-                parent[end[0]][end[1]] = current
-                found = True
-                break
-            
-            parent[next_step_x][next_step_y] = current
-            priority_queue.put((h((next_step_x, next_step_y)) ,(next_step_x, next_step_y )))
-        
-        if current != start:
-            set_frontier_color(current[1], current[0], sleep_time)
+			if (next_step_x, next_step_y)  == end:
+				parent[end[0]][end[1]] = current
+				found = True
+				break
+			
+			parent[next_step_x][next_step_y] = current
+			priority_queue.put((h((next_step_x, next_step_y)) ,(next_step_x, next_step_y )))
+		
+		if current != start:
+			set_frontier_color(current[1], current[0], sleep_time)
 
-    if not end or not parent[end[0]][end[1]]:
-        return None
+	if not end or not parent[end[0]][end[1]]:
+		return None
 
-    answer = []
-    pointer = end
+	answer = []
+	pointer = end
 
-    while parent[pointer[0]][pointer[1]] != terminated:
-        answer.append(pointer)
-        pointer = parent[pointer[0]][pointer[1]]
-    answer.append(start)
-    
-    answer = answer[::-1]
+	while parent[pointer[0]][pointer[1]] != terminated:
+		answer.append(pointer)
+		pointer = parent[pointer[0]][pointer[1]]
+	answer.append(start)
+	
+	answer = answer[::-1]
 
-    set_path_color(answer, sleep_time, [start, end])
+	set_path_color(answer, sleep_time, [start, end])
 
-    return answer
+	return answer
 
 import copy
 
@@ -137,13 +136,11 @@ def __gbfs_with_bonus_point(graph, start, end, bonus_points, heuristic):
 					bonus_points.pop((next_x, next_y))
 					special_points.remove((next_x, next_y))
 					path_to_bonus[(next_x, next_y)] = __trace_back_bonus((next_x, next_y))
-					print(f'[*] Take bonus {(next_x, next_y)}' )
 
 
 	if parent[end[0]][end[1]] == None:
 		return None
 
-	print('[*] Cost: ', cost[end[0]][end[1]])
 	path = __trace_back_bonus(end)
 	magican = path[0]
 
@@ -153,13 +150,11 @@ def __gbfs_with_bonus_point(graph, start, end, bonus_points, heuristic):
 	
 
 	set_path_color(path, sleep_time, special_points)
-	
-	print(path)
 
 	return path
 
 def __gbfs_with_intermediate_point(graph, start, end, intermediate_points, hf):
-    pass
+	pass
 
 def __gbfs_with_teleport_point(graph, start, end, teleport_points: dict, heuristic):
 	terminated = [-1, -1]
@@ -174,11 +169,10 @@ def __gbfs_with_teleport_point(graph, start, end, teleport_points: dict, heurist
 		for p in special_points:
 			val = min(val, heuristic(p, end) + heuristic(point, p))
 			if p in teleport_points:
-				val = min(val, heuristic(teleport_points[p], end), heuristic(point, p))
+				val = min(val, heuristic(teleport_points[p], end) + heuristic(point, p))
 		return val
 
 	if not is_in_graph(graph, start):
-		print("[DEBUG] Invalid starting point...")
 		return None
 
 	parent = [[None for __ in range(size[1])] for _ in range(size[0])]
@@ -227,21 +221,20 @@ def __gbfs_with_teleport_point(graph, start, end, teleport_points: dict, heurist
 	answer = answer[::-1]
 
 	set_path_color(answer, sleep_time)
-
 	return answer
 
 def gbfs(graph, start, end, mode, bonus_points, intermediate_points, teleport_points, hf=manhattan_distance):
-    if not is_valid_graph(graph):
-        return None
+	if not is_valid_graph(graph):
+		return None
 
-    if mode == AlgorithmsMode.NORMAL:
-        return __normal_gbfs(graph, start, end, hf)
+	if mode == AlgorithmsMode.NORMAL:
+		return __normal_gbfs(graph, start, end, hf)
 
-    if mode == AlgorithmsMode.BONUS_POINT:
-        return __gbfs_with_bonus_point(graph, start, end, bonus_points, hf)
+	if mode == AlgorithmsMode.BONUS_POINT:
+		return __gbfs_with_bonus_point(graph, start, end, bonus_points, hf)
 
-    if mode == AlgorithmsMode.INTERMEDIATE_POINT:
-        return __gbfs_with_intermediate_point(graph, start, end, intermediate_points, hf)
+	if mode == AlgorithmsMode.INTERMEDIATE_POINT:
+		return __gbfs_with_intermediate_point(graph, start, end, intermediate_points, hf)
 
-    if mode == AlgorithmsMode.TELEPORT_POINT:
-        return __gbfs_with_teleport_point(graph, start, end, teleport_points, hf)
+	if mode == AlgorithmsMode.TELEPORT_POINT:
+		return __gbfs_with_teleport_point(graph, start, end, teleport_points, hf)

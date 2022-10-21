@@ -148,9 +148,6 @@ def __a_star_with_bonus_point(graph, start, end, bonus_points, hf):
 		set_color(bonus[1], bonus[0], Colors.SPECIAL, 0)
 
 	set_path_color(answer, sleep_time, bonus_dict)
-	
-	print(answer)
-	print(cost)
 	return answer, cost
 		
 
