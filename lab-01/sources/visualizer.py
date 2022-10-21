@@ -1,3 +1,5 @@
+import os
+os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = "hide"
 import pygame
 from pygame.locals import *
 from constants import *
@@ -8,7 +10,7 @@ from utils import manhattan_distance, darker_color
 import cv2
 from PIL import Image
 import numpy as np
-import os
+
 
 
 def draw_grid(x, y, color=Colors.WHITE, block_size=Grid.BLOCK_SIZE, border=Colors.WHITE):
@@ -63,7 +65,7 @@ def get_color(x, y):
 def set_color(x, y, color, sleep_time=1):
 	draw_grid(x, y, color=color)
 	pygame.display.update()
-	pygame.time.wait(sleep_time)
+	pygame.time.wait(1)
 	write_frame()
 
 
@@ -96,9 +98,10 @@ def visualize(algorithm, mode, graph, start, end,
 	):
 	global SCREEN, CLOCK, WIN_WIDTH, WIN_HEIGHT
 	pygame.init()
-	WIN_HEIGHT = block_size * len(graph)
-	WIN_WIDTH = block_size * len(graph[0])
-	SCREEN = pygame.display.set_mode((WIN_WIDTH, WIN_HEIGHT))
+	WIN_HEIGHT = Grid.BLOCK_SIZE * len(graph)
+	WIN_WIDTH = Grid.BLOCK_SIZE * len(graph[0])
+	# SCREEN = pygame.display.set_mode((WIN_WIDTH, WIN_HEIGHT))
+	SCREEN = pygame.display.set_mode((WIN_WIDTH, WIN_HEIGHT), flags=pygame.HIDDEN)
 	pygame.display.set_caption('Hello folks👋, we are US-er!')
 	CLOCK = pygame.time.Clock()
 	CLOCK.tick(60)
@@ -116,7 +119,7 @@ def visualize(algorithm, mode, graph, start, end,
 		ANIMATE = None
 
 	# Render maze
-	render_map(graph, start, end, block_size)
+	render_map(graph, start, end)
 
 	output = algorithm(graph, start, end, mode, bonus_points,
 			  inter_points, teleport_points, hf=hf)
