@@ -78,10 +78,6 @@ if __name__ == "__main__":
     
     algoname = args.algorithms.lower().replace('_', '')
 
-
-
-
-
     for file in files:
         matrix, start, end, bonus_points, inter_points, teleport_points = read_file (
             os.path.join(input_file, file), 
