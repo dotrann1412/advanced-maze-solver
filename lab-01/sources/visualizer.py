@@ -97,7 +97,7 @@ def set_path_color(path, special_points={}):
 def visualize(algorithm, mode, graph, start, end,
 		bonus_points=[], inter_points=[], teleport_points=[],
 		block_size=20, hf=manhattan_distance,
-		output_path=None
+		output_path=None, extra_info=None
 	):
 	global SCREEN, CLOCK, WIN_WIDTH, WIN_HEIGHT
 	pygame.init()
@@ -115,8 +115,9 @@ def visualize(algorithm, mode, graph, start, end,
 	
 	if output_path is not None:
 		algo_name = output_path.replace('\\', '/').split('/')[-1]
+		video_fileout = os.path.join(output_path, f'{algo_name}{f"_{extra_info}" if extra_info is not None else ""}.mp4')
 		ANIMATE = cv2.VideoWriter(
-			os.path.join(output_path, f'{algo_name}.mp4'), fourcc, fps, (WIN_WIDTH, WIN_HEIGHT))
+			video_fileout, fourcc, fps, (WIN_WIDTH, WIN_HEIGHT))
 
 	else:
 		ANIMATE = None
@@ -129,12 +130,12 @@ def visualize(algorithm, mode, graph, start, end,
  
 	if output_path is not None:
 		algo_name = output_path.replace('\\', '/').split('/')[-1]
+		result_fileout = os.path.join(output_path, f'{algo_name}{f"_{extra_info}" if extra_info is not None else ""}.txt')
 		try:
-			with open(os.path.join(output_path, f'{algo_name}.txt'), 'w') as fp:
+			with open(result_fileout, 'w') as fp:
 				if not output:
 					fp.write('NO')
 				else:
-					fp.write('YES\n')
 					fp.write(str(output))
 		except Exception as err:
 			print(err)

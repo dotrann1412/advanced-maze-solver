@@ -18,8 +18,8 @@ if __name__ == "__main__":
     }
 
     HeuristicMapping = {
-        'EUCLIDEAN': euclidean_distance,
-        'MANHATTAN': manhattan_distance
+        '2': euclidean_distance,
+        '1': manhattan_distance
     }
 
     parser = argparse.ArgumentParser()
@@ -29,9 +29,9 @@ if __name__ == "__main__":
     parser.add_argument("-m", "--mode", help="Running mode",
                         choices=[AlgorithmsMode.NORMAL.name, AlgorithmsMode.TELEPORT.name, AlgorithmsMode.BONUS.name, AlgorithmsMode.INTERMEDIATE.name],
                         type=str, required=True)
-    parser.add_argument("-hf", "--heuristic-function", help="Heuristic function",
+    parser.add_argument("-hf", "--heuristic-function", help="Heuristic function. 1: use manhattan; 2: use euclidean.",
                         choices=HeuristicMapping.keys(),
-                        type=str, default='MANHATTAN')
+                        type=str, default='1')
     parser.add_argument("-i", "--input", help="Maze input file",
                         type=str, required=True)
     parser.add_argument("-o", "--output",
@@ -45,9 +45,12 @@ if __name__ == "__main__":
     heuristic = None
     input_file = None
     output_dir = None
+    extra_info = None
 
     if args.algorithms:
         algorithm = AlgorithmsMapping[args.algorithms]
+        if args.algorithms == 'A_STAR' or args.algorithms == 'GBFS':
+            extra_info = f'heuristic_{args.heuristic_function}'
 
     if args.mode:
         mode = AlgorithmsMode[args.mode]
@@ -75,13 +78,17 @@ if __name__ == "__main__":
     
     algoname = args.algorithms.lower().replace('_', '')
 
+
+
+
+
     for file in files:
         matrix, start, end, bonus_points, inter_points, teleport_points = read_file (
             os.path.join(input_file, file), 
             mode
         )
 
-        dest = os.path.join(output_dir, f'level_{mode.value}' if mode.value != 'advance' else 'advance_level', f'map_{os.path.splitext(file)[0]}', algoname)
+        dest = os.path.join(output_dir, f'level_{mode.value}' if mode.value != 'advance' else 'advance', f'map_{os.path.splitext(file)[0]}', algoname)
         mkdir_plus(dest)
 
         try:
@@ -89,7 +96,8 @@ if __name__ == "__main__":
                 algorithm, mode, matrix, start, end,
                 bonus_points, inter_points, teleport_points,
                 hf=heuristic,
-                output_path=dest
+                output_path=dest, 
+                extra_info=extra_info
             )
         except BrokenPipeError:
             continue
