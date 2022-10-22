@@ -2,7 +2,7 @@ import os
 os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = "hide"
 import platform
 if platform.system() == 'Linux':
-    os.environ["SDL_VIDEODRIVER"] = "dummy"
+	os.environ["SDL_VIDEODRIVER"] = "dummy"
 import pygame
 from pygame.locals import *
 from constants import *
@@ -96,14 +96,13 @@ def set_path_color(path, special_points={}):
 
 def visualize(algorithm, mode, graph, start, end,
 		bonus_points=[], inter_points=[], teleport_points=[],
-		block_size=20, hf=manhattan_distance,
-		output_path=None, extra_info=None
+		hf=manhattan_distance, output_path=None, extra_info=None
 	):
 	global SCREEN, CLOCK, WIN_WIDTH, WIN_HEIGHT
 	pygame.init()
 	WIN_HEIGHT = Grid.BLOCK_SIZE * len(graph)
 	WIN_WIDTH = Grid.BLOCK_SIZE * len(graph[0])
-	# SCREEN = pygame.display.set_mode((WIN_WIDTH, WIN_HEIGHT))
+	# SCREEN = pygame.display.set_mode((WIN_WIDTH, WIN_HEIGHT))		# Uncomment to show the window
 	SCREEN = pygame.display.set_mode((WIN_WIDTH, WIN_HEIGHT), flags=pygame.HIDDEN)
 	pygame.display.set_caption('Hello folks👋, we are US-er!')
 	CLOCK = pygame.time.Clock()
@@ -156,3 +155,10 @@ def visualize(algorithm, mode, graph, start, end,
 			ANIMATE.release()
 	except Exception as err:
 		print('[EXCEPTION] video was not released.\n', err)
+
+	# Uncomment to keep the window
+	# while True:
+	# 	for event in pygame.event.get():
+	# 		if event.type == pygame.QUIT:
+	# 			pygame.quit()
+	# 			quit()

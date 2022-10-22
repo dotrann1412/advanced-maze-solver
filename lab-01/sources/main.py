@@ -43,7 +43,7 @@ if __name__ == "__main__":
 	algorithm = None  # function
 	mode = None  # enum
 	heuristic = None
-	input_file = None
+	input_path = None
 	output_dir = None
 	extra_info = None
 
@@ -56,7 +56,7 @@ if __name__ == "__main__":
 			extra_info = f'heuristic_{args.heuristic_function}'
 
 	if args.input:
-		input_file = args.input
+		input_path = args.input.replace('\\', '/')
 
 	if args.heuristic_function:
 		heuristic = HeuristicMapping[args.heuristic_function]
@@ -70,16 +70,17 @@ if __name__ == "__main__":
 			print(f'[*][WARNING] {output_dir} may not be a directory.')
 
 	files = []
-	if os.path.isfile(input_file):
-		files = [input_file]
+	if os.path.isfile(input_path):
+		files = [input_path.split('/')[-1]]
+		input_path = os.path.dirname(input_path)
 	else:
-		files = [file for file in os.listdir(input_file) 
-					if os.path.isfile(os.path.join(input_file, file))]
+		files = [file for file in os.listdir(input_path) 
+					if os.path.isfile(os.path.join(input_path, file))]
 	
 	algoname = args.algorithms.lower().replace('_', '')
 
 	for file in files:
-		path = os.path.join(input_file, file).replace('\\', '/')
+		path = os.path.join(input_path, file).replace('\\', '/')
 		print('Processing file: ', path)
 		matrix, start, end, bonus_points, inter_points, teleport_points = read_file (
 			path, 
