@@ -153,7 +153,6 @@ def __a_star_with_bonus_point(graph, start, end, bonus_points, hf):
 	
 	return cost
 
-
 def __a_star_intermediate_point(graph, start, end, intermediate_points, hf):
 	dim = [len(graph), len(graph[0])]
 
@@ -319,10 +318,7 @@ def __a_star_with_teleport_point(graph, start, end, teleport_points, hf):
 	answer.append(start)
 	answer = answer[::-1]
 
-	special_points = {}
-	for teleport_point in teleport_points:
-		special_points[teleport_point] = True
-		special_points[teleport_points[teleport_point]] = True
+	special_points = set(list(teleport_points.keys()))
 	set_path_color(answer, special_points)
 
 	return len(answer) - 1

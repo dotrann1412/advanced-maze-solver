@@ -62,6 +62,7 @@ def __dfs_intermediate_point(graph, starting_point, ending_point, intermediate_p
 	current_position = starting_point
 	
 	path = []
+
 	while len(intermediate_list) != 0:
 		destination = choose(current_position, intermediate_list)
 		intermediate_list.remove(destination)

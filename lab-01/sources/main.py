@@ -1,8 +1,8 @@
 from constants import *
 from visualizer import visualize
-from utils import read_file
+from utils import mkdir_plus, read_file
 import argparse
-import sys
+import sys, os, stat
 from utils import euclidean_distance, manhattan_distance
 
 from algorithms import a_star, bfs, dfs, ucs, gbfs
@@ -18,8 +18,8 @@ if __name__ == "__main__":
     }
 
     HeuristicMapping = {
-        'EUCLIDEAN': euclidean_distance,
-        'MANHATTAN': manhattan_distance
+        '2': euclidean_distance,
+        '1': manhattan_distance
     }
 
     parser = argparse.ArgumentParser()
@@ -29,9 +29,9 @@ if __name__ == "__main__":
     parser.add_argument("-m", "--mode", help="Running mode",
                         choices=[AlgorithmsMode.NORMAL.name, AlgorithmsMode.TELEPORT.name, AlgorithmsMode.BONUS.name, AlgorithmsMode.INTERMEDIATE.name],
                         type=str, required=True)
-    parser.add_argument("-hf", "--heuristic-function", help="Heuristic function",
+    parser.add_argument("-hf", "--heuristic-function", help="Heuristic function. 1: use manhattan; 2: use euclidean.",
                         choices=HeuristicMapping.keys(),
-                        type=str, default='MANHATTAN')
+                        type=str, default='1')
     parser.add_argument("-i", "--input", help="Maze input file",
                         type=str, required=True)
     parser.add_argument("-o", "--output",
@@ -44,10 +44,13 @@ if __name__ == "__main__":
     mode = None  # enum
     heuristic = None
     input_file = None
-    output_file = None
+    output_dir = None
+    extra_info = None
 
     if args.algorithms:
         algorithm = AlgorithmsMapping[args.algorithms]
+        if args.algorithms == 'A_STAR' or args.algorithms == 'GBFS':
+            extra_info = f'heuristic_{args.heuristic_function}'
 
     if args.mode:
         mode = AlgorithmsMode[args.mode]
@@ -57,23 +60,40 @@ if __name__ == "__main__":
 
     if args.heuristic_function:
         heuristic = HeuristicMapping[args.heuristic_function]
-    
+
     if args.output:
-        output_file = args.output
+        output_dir = args.output
+        if not os.path.exists(output_dir):
+            print(f'[*][ERROR] Folder not found! {output_dir}')
+            exit(1)
+        elif os.path.isfile(output_dir):
+            print(f'[*][WARNING] {output_dir} may not be a directory.')
 
-    matrix, start, end, bonus_points, inter_points, teleport_points = read_file(
-        input_file, mode)
+    files = []
+    if os.path.isfile(input_file):
+        files = [input_file]
+    else:
+        files = [file for file in os.listdir(input_file) 
+                    if os.path.isfile(os.path.join(input_file, file))]
+    
+    algoname = args.algorithms.lower().replace('_', '')
 
-    print()
-    print(f'Solving maze {input_file}')
-    print(f'\tSize of maze: {(len(matrix), len(matrix[0]))}')
-    print(f'\tStarting point (x, y) = {start[0], start[1]}')
-    print(f'\tEnding point (x, y) = {end[0], end[1]}')
+    for file in files:
+        matrix, start, end, bonus_points, inter_points, teleport_points = read_file (
+            os.path.join(input_file, file), 
+            mode
+        )
 
-    visualize(
-        algorithm, mode, matrix, start, end,
-        bonus_points, inter_points, teleport_points,
-        hf=heuristic, output_path=output_file
-    )
+        dest = os.path.join(output_dir, f'level_{mode.value}' if mode.value != 'advance' else 'advance', f'map_{os.path.splitext(file)[0]}', algoname)
+        mkdir_plus(dest)
 
-    print('---------------------------------------------------------')
+        try:
+            visualize(
+                algorithm, mode, matrix, start, end,
+                bonus_points, inter_points, teleport_points,
+                hf=heuristic,
+                output_path=dest, 
+                extra_info=extra_info
+            )
+        except BrokenPipeError:
+            continue

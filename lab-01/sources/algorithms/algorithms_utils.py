@@ -1,9 +1,9 @@
 from enum import Enum
 class AlgorithmsMode(Enum):
-	NORMAL = 0
-	BONUS = 1
-	INTERMEDIATE = 2
-	TELEPORT = 3
+	NORMAL = 1
+	BONUS = 2
+	INTERMEDIATE = 3
+	TELEPORT = 'advance'
 
 INF = 1 << 31 - 1
 

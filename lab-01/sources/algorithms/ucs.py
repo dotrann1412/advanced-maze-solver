@@ -145,7 +145,6 @@ def __ucs_with_bonus_point(graph, starting_point, ending_point, bonus_points):
 	
 	return cost[ending_point[0]][ending_point[1]]
 
-
 def __ucs_intermediate_point(graph, starting_point, ending_point, intermediate_points):
 	intermediate_list = list(intermediate_points.keys())
 	
@@ -159,6 +158,7 @@ def __ucs_intermediate_point(graph, starting_point, ending_point, intermediate_p
 	current_position = starting_point
 	
 	path = []
+
 	while len(intermediate_list) != 0:
 		destination = choose(current_position, intermediate_list)
 		intermediate_list.remove(destination)
@@ -167,7 +167,6 @@ def __ucs_intermediate_point(graph, starting_point, ending_point, intermediate_p
 
 	path += __normal_ucs(graph, current_position, ending_point)
 	return len(path) - 1
-
 
 def __ucs_with_teleport_point(graph, starting_point, ending_point, teleport_points):
 	frontier = PriorityQueue()

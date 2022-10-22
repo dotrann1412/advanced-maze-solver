@@ -7,63 +7,63 @@ import copy
 from datetime import datetime
 
 def __normal_gbfs(graph, start, end, hf):
-    def h(point):
-        return hf(point, end)
-    terminated = [-1, -1]
-    dim = graph_size(graph)
+	def h(point):
+		return hf(point, end)
+	terminated = [-1, -1]
+	dim = graph_size(graph)
+	priority_queue = PriorityQueue()
 
-    priority_queue = PriorityQueue()
+	if not is_in_graph(graph, start):
+		return None
 
-    if not is_in_graph(graph, start):
-        return None
+	parent = [[None for __ in range(dim[1])] for _ in range(dim[0])]
 
-    parent = [[None for __ in range(dim[1])] for _ in range(dim[0])]
+	priority_queue.put((h(start), start))
+	parent[start[0]][start[1]] = terminated
 
-    priority_queue.put((h(start), start))
-    parent[start[0]][start[1]] = terminated
+	found = False
+	
+	while not priority_queue.empty() and not found:
+		_h, current = priority_queue.get()
 
-    found = False
-    
-    while not priority_queue.empty() and not found:
-        _h, current = priority_queue.get()
 
-        if current != start and current:
-            set_frontier_color(current[1], current[0])
+		if current != start and current:
+			set_frontier_color(current[1], current[0])
 
-        for element in direction:
-            next_step_x, next_step_y = current[0] + element[0], current[1] + element[1]
+		for element in direction:
+			next_step_x, next_step_y = current[0] + element[0], current[1] + element[1]
 
-            if not is_in_graph(graph, (next_step_x, next_step_y)) or graph[next_step_x][next_step_y] == MazeObject.WALL or parent[next_step_x][next_step_y]:
-                continue
+			if not is_in_graph(graph, (next_step_x, next_step_y)) or graph[next_step_x][next_step_y] == MazeObject.WALL or parent[next_step_x][next_step_y]:
+				continue
 
-            if (next_step_x, next_step_y)  == end:
-                parent[end[0]][end[1]] = current
-                found = True
-                break
-            
-            parent[next_step_x][next_step_y] = current
-            priority_queue.put((h((next_step_x, next_step_y)) ,(next_step_x, next_step_y )))
-        
-        if current != start:
-            set_frontier_color(current[1], current[0])
 
-    if not end or not parent[end[0]][end[1]]:
-        return None
+			if (next_step_x, next_step_y)  == end:
+				parent[end[0]][end[1]] = current
+				found = True
+				break
+			
+			parent[next_step_x][next_step_y] = current
+			priority_queue.put((h((next_step_x, next_step_y)) ,(next_step_x, next_step_y )))
+		
+		if current != start:
+			set_frontier_color(current[1], current[0])
 
-    answer = []
-    pointer = end
+	if not end or not parent[end[0]][end[1]]:
+		return None
 
-    while parent[pointer[0]][pointer[1]] != terminated:
-        answer.append(pointer)
-        pointer = parent[pointer[0]][pointer[1]]
-    answer.append(start)
-    
-    answer = answer[::-1]
+	answer = []
+	pointer = end
 
-    set_path_color(answer, [start, end])
+	while parent[pointer[0]][pointer[1]] != terminated:
+		answer.append(pointer)
+		pointer = parent[pointer[0]][pointer[1]]
+	answer.append(start)
+	
+	answer = answer[::-1]
 
-    return len(answer) - 1
+	set_path_color(answer, [start, end])
 
+	return len(answer) - 1
 
 def __gbfs_with_bonus_point(graph, start, end, bonus_points, heuristic):
 	size = graph_size(graph)
@@ -142,22 +142,23 @@ def __gbfs_with_bonus_point(graph, start, end, bonus_points, heuristic):
 	while magican != start:
 		path = path_to_bonus[magican] + path[1:]
 		magican = path[0]
-	
+
 	set_path_color(path, special_points_for_rendering)
 	
 	return len(path) - 1
 
 
 def __gbfs_with_intermediate_point(graph, start, end, intermediate_points, hf):
-    pass
+	pass
 
-
+import copy
 def __gbfs_with_teleport_point(graph, start, end, teleport_points: dict, heuristic):
 	terminated = [-1, -1]
 	size = graph_size(graph)
 
 	priority_queue = PriorityQueue()
 	special_points = [end] + list(teleport_points.keys())
+	special_points_for_rendering = copy.deepcopy(special_points)
 
 	def __extra_heuristic(point):
 		val = INF
@@ -185,9 +186,9 @@ def __gbfs_with_teleport_point(graph, start, end, teleport_points: dict, heurist
 		for d in direction:
 			next_x, next_y = current[0] + d[0], current[1] + d[1]
 
-			if not is_in_graph(graph, (next_x, next_y)) or graph[next_x][next_y] == MazeObject.WALL or parent[next_x][next_y]:
+			if not is_in_graph(graph, (next_x, next_y)) or graph[next_x][next_y] == MazeObject.WALL or parent[next_x][next_y] is not None:
 				continue
-		
+
 			if (next_x, next_y) == end:
 				parent[end[0]][end[1]] = current
 				found = True
@@ -215,10 +216,10 @@ def __gbfs_with_teleport_point(graph, start, end, teleport_points: dict, heurist
 	answer.append(start)
 	answer = answer[::-1]
 
-	set_path_color(answer)
+	set_path_color(answer, special_points_for_rendering)
 
 	return len(answer) - 1
-    
+	
 
 def gbfs(graph, start, end, mode, bonus_points, intermediate_points, teleport_points, hf=manhattan_distance):
 	if mode == AlgorithmsMode.NORMAL:
