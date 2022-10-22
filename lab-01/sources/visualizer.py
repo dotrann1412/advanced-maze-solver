@@ -123,11 +123,15 @@ def visualize(algorithm, mode, graph, start, end,
 	# Render maze
 	render_map(graph, start, end)
 
-	output = algorithm(graph, start, end, mode, bonus_points,
-			  inter_points, teleport_points, hf=hf)
+	output = algorithm(graph, start, end, mode, bonus_points, inter_points, teleport_points, hf=hf)
 
 	for point in bonus_points:
 		write_text(str(bonus_points[point]), point[1], point[0], Colors.WHITE)
+
+	inter_id = 1
+	for point in inter_points:
+		write_text(str(inter_id), point[1], point[0], Colors.WHITE)
+		inter_id += 1
 
 	teleport_id_dict = {}
 	teleport_id = 1
