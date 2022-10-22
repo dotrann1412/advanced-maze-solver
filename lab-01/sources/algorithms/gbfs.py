@@ -26,8 +26,7 @@ def __normal_gbfs(graph, start, end, hf):
 	while not priority_queue.empty() and not found:
 		_h, current = priority_queue.get()
 
-
-		if current != start and current:
+		if current != start:
 			set_frontier_color(current[1], current[0])
 
 		for element in direction:
@@ -44,9 +43,6 @@ def __normal_gbfs(graph, start, end, hf):
 			
 			parent[next_step_x][next_step_y] = current
 			priority_queue.put((h((next_step_x, next_step_y)) ,(next_step_x, next_step_y )))
-		
-		if current != start:
-			set_frontier_color(current[1], current[0])
 
 	if not end or not parent[end[0]][end[1]]:
 		return None
