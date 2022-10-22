@@ -37,6 +37,8 @@ if __name__ == "__main__":
 	parser.add_argument("-o", "--output",
 						help="Folder to save visualization output video and statistical information",
 						type=str, default=None)
+	parser.add_argument("-jsm", "--just-show-maze", help="Visualize the maze without running any algorithm",
+						type=bool, default=False)
 
 	args = parser.parse_args()
 
@@ -46,6 +48,7 @@ if __name__ == "__main__":
 	input_path = None
 	output_dir = None
 	extra_info = None
+	just_show_maze = None
 
 	if args.mode:
 		mode = AlgorithmsMode[args.mode]
@@ -69,6 +72,9 @@ if __name__ == "__main__":
 		elif os.path.isfile(output_dir):
 			print(f'[*][WARNING] {output_dir} may not be a directory.')
 
+	if args.just_show_maze:
+		just_show_maze = args.just_show_maze
+
 	files = []
 	if os.path.isfile(input_path):
 		files = [input_path.split('/')[-1]]
@@ -87,8 +93,11 @@ if __name__ == "__main__":
 			mode
 		)
 
-		dest = os.path.join(output_dir, f'level_{mode.value}' if mode.value != 'advance' else 'advance', os.path.splitext(file)[0], algoname)
-		mkdir_plus(dest)
+		if not just_show_maze and output_dir is not None:
+			dest = os.path.join(output_dir, f'level_{mode.value}' if mode.value != 'advance' else 'advance', os.path.splitext(file)[0], algoname)
+			mkdir_plus(dest)
+		else:
+			dest = None
 
 		try:
 			visualize(
@@ -96,7 +105,8 @@ if __name__ == "__main__":
 				bonus_points, inter_points, teleport_points,
 				hf=heuristic,
 				output_path=dest, 
-				extra_info=extra_info
+				extra_info=extra_info,
+				just_show_maze=just_show_maze
 			)
 		except BrokenPipeError:
 			continue
