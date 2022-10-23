@@ -21,7 +21,7 @@ jobs:
 
     - name: Test algo
       run: |
-        chmod +x ./lab-01/sources/run.sh && cd ./lab-01/sources && ./test.sh
+        chmod +x ./lab-01/sources/test.sh && cd ./lab-01/sources && ./test.sh
     - name: Archive production artifacts
       uses: actions/upload-artifact@v3
       with:
