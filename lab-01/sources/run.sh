@@ -3,10 +3,14 @@
 runner=""
 
 output_dir="../output"
-if [[ ! -d $output_dir ]]
+if [ ! -d $output_dir ];
 then
     mkdir $output_dir
-    chmod rw- $output_dir
+fi
+
+if [ ! -w $output_dir ];
+then
+    chmod +w $output_dir --recursive
 fi
 
 which python3 | grep -q "python3"
