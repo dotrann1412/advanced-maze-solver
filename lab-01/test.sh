@@ -67,7 +67,7 @@ advance_inputpath="./input/advance"
 source_root_dir="./sources"
 
 # check the existance of source folder 
-if [ -d $source_root_dir]
+if [ -d $source_root_dir];
 then
     if [[ $? != 0 ]]
     then
