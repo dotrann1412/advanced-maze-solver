@@ -77,7 +77,7 @@ $runner $source_root_dir/main.py -a A_STAR -m INTERMEDIATE -i $level_3_inputpath
 echo Running advance level with A* algorithm.
 $runner $source_root_dir/main.py -a A_STAR -m TELEPORT -i $advance_inputpath -o $output_dir
 
-echo Running advance level with GBFS algorithm.
+echo Running advance level with BFS algorithm.
 $runner $source_root_dir/main.py -a BFS -m TELEPORT -i $advance_inputpath -o $output_dir
 
 echo All 'Done'! Let\'s check $output_dir.
