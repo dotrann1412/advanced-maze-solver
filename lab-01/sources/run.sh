@@ -76,9 +76,9 @@ $runner main.py -a A_STAR -m TELEPORT -i ../input-samples/teleport -o $output_di
 $runner main.py -a A_STAR -m TELEPORT -i ../input-samples/teleport -o $output_dir
 $runner main.py -a A_STAR -m TELEPORT -i ../input-samples/teleport -o $output_dir
 
-echo Running advance level with GBFS algorithm.
-$runner main.py -a GBFS -m TELEPORT -i ../input-samples/teleport -o $output_dir
-$runner main.py -a GBFS -m TELEPORT -i ../input-samples/teleport -o $output_dir
-$runner main.py -a GBFS -m TELEPORT -i ../input-samples/teleport -o $output_dir
+echo Running advance level with BFS algorithm.
+$runner main.py -a BFS -m TELEPORT -i ../input-samples/teleport -o $output_dir
+$runner main.py -a BFS -m TELEPORT -i ../input-samples/teleport -o $output_dir
+$runner main.py -a BFS -m TELEPORT -i ../input-samples/teleport -o $output_dir
 
 echo All 'Done'! Let\'s check $output_dir.
