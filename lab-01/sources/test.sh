@@ -38,10 +38,10 @@ echo Using $python_version from $runner
 
 pip_version=$($runner -m pip --version)
 
-level_1_inputpath="../input-samples/level_1"
-level_2_inputpath="../input-samples/level_2"
-level_3_inputpath="../input-samples/level_3"
-advance_inputpath="../input-samples/advance"
+level_1_inputpath="../input/level_1"
+level_2_inputpath="../input/level_2"
+level_3_inputpath="../input/level_3"
+advance_inputpath="../input/advance"
 
 if [[ $? != 0 ]]
 then
