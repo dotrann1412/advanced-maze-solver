@@ -1,8 +1,7 @@
 import os
 os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = "hide"
-import platform
-if platform.system() == 'Linux':
-	os.environ["SDL_VIDEODRIVER"] = "dummy"
+
+
 import pygame
 from pygame.locals import *
 from constants import *
