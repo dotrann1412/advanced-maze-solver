@@ -80,6 +80,7 @@ then
     fi
 else
     echo Error! Source file not found. Let\'s check.
+    exit 1
 fi
 
 set -e
