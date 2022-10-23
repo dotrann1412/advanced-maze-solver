@@ -116,7 +116,7 @@ then
     echo Running Level 3 with A* algorithm.
     $runner $source_root_dir/main.py -a A_STAR -m INTERMEDIATE -i $level_3_inputpath -o $output_dir
 else
-    echo Warning! Level 3 input folder is missing: $level_2_inputpath
+    echo Warning! Level 3 input folder is missing: $level_3_inputpath
 fi
 
 
@@ -129,7 +129,7 @@ then
     echo Running advance level with BFS algorithm.
     $runner $source_root_dir/main.py -a BFS -m TELEPORT -i $advance_inputpath -o $output_dir
 else
-    echo Warning! Advance input folder is missing: $level_2_inputpath
+    echo Warning! Advance input folder is missing: $advance_inputpath
 fi
 
 echo All 'Done'! Let\'s check $output_dir.
