@@ -2,7 +2,7 @@ import os
 os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = "hide"
 import platform
 if platform.system() == 'Linux':
-    os.environ["SDL_VIDEODRIVER"] = "dummy"
+	os.environ["SDL_VIDEODRIVER"] = "dummy"
 import pygame
 from pygame.locals import *
 from constants import *
@@ -96,15 +96,17 @@ def set_path_color(path, special_points={}):
 
 def visualize(algorithm, mode, graph, start, end,
 		bonus_points=[], inter_points=[], teleport_points=[],
-		block_size=20, hf=manhattan_distance,
-		output_path=None, extra_info=None
+		hf=manhattan_distance, output_path=None, extra_info=None,
+		just_show_maze=False
 	):
 	global SCREEN, CLOCK, WIN_WIDTH, WIN_HEIGHT
 	pygame.init()
 	WIN_HEIGHT = Grid.BLOCK_SIZE * len(graph)
 	WIN_WIDTH = Grid.BLOCK_SIZE * len(graph[0])
-	# SCREEN = pygame.display.set_mode((WIN_WIDTH, WIN_HEIGHT))
-	SCREEN = pygame.display.set_mode((WIN_WIDTH, WIN_HEIGHT), flags=pygame.HIDDEN)
+	if just_show_maze:
+		SCREEN = pygame.display.set_mode((WIN_WIDTH, WIN_HEIGHT))
+	else:
+		SCREEN = pygame.display.set_mode((WIN_WIDTH, WIN_HEIGHT), flags=pygame.HIDDEN)
 	pygame.display.set_caption('Hello folks👋, we are US-er!')
 	CLOCK = pygame.time.Clock()
 	CLOCK.tick(60)
@@ -113,7 +115,8 @@ def visualize(algorithm, mode, graph, start, end,
 	fourcc = cv2.VideoWriter_fourcc(*"mp4v")
 	global ANIMATE
 	
-	if output_path is not None:
+	# Start window recorder
+	if not just_show_maze and output_path is not None:
 		algo_name = output_path.replace('\\', '/').split('/')[-1]
 		video_fileout = os.path.join(output_path, f'{algo_name}{f"_{extra_info}" if extra_info is not None else ""}.mp4')
 		ANIMATE = cv2.VideoWriter(
@@ -124,11 +127,18 @@ def visualize(algorithm, mode, graph, start, end,
 	# Render maze
 	render_map(graph, start, end)
 
-	output = algorithm(graph, start, end, mode, bonus_points,
-			  inter_points, teleport_points, hf=hf)
+	# Run algorithm
+	if not just_show_maze:
+		output = algorithm(graph, start, end, mode, bonus_points, inter_points, teleport_points, hf=hf)
 
+	# Re-annotate special points
 	for point in bonus_points:
 		write_text(str(bonus_points[point]), point[1], point[0], Colors.WHITE)
+
+	inter_id = 1
+	for point in inter_points:
+		write_text(str(inter_id), point[1], point[0], Colors.WHITE)
+		inter_id += 1
 
 	teleport_id_dict = {}
 	teleport_id = 1
@@ -139,7 +149,8 @@ def visualize(algorithm, mode, graph, start, end,
 			teleport_id += 1
 		write_text(str(teleport_id_dict[point]), point[1], point[0], Colors.WHITE)
 
-	if output_path is not None:
+	# Write result
+	if not just_show_maze and output_path is not None:
 		algo_name = output_path.replace('\\', '/').split('/')[-1]
 		result_fileout = os.path.join(output_path, f'{algo_name}{f"_{extra_info}" if extra_info is not None else ""}.txt')
 		try:
@@ -156,3 +167,11 @@ def visualize(algorithm, mode, graph, start, end,
 			ANIMATE.release()
 	except Exception as err:
 		print('[EXCEPTION] video was not released.\n', err)
+
+
+	if just_show_maze:
+		while True:
+			for event in pygame.event.get():
+				if event.type == pygame.QUIT:
+					pygame.quit()
+					quit()
