@@ -79,7 +79,7 @@ then
         $runner -m pip install -r $source_root_dir/env-requirements.txt > /dev/null 
     fi
 else
-    echo Error! Source file not found. Let\'s check.
+    echo Error! Source folder not found. Let\'s check.
     exit 1
 fi
 
