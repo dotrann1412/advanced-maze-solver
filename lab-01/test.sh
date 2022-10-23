@@ -64,7 +64,7 @@ level_2_inputpath="./input/level_2"
 level_3_inputpath="./input/level_3"
 advance_inputpath="./input/advance"
 
-source_root_dir="./sources"
+source_root_dir="./source"
 
 # check the existance of source folder 
 if [ -d $source_root_dir ];
