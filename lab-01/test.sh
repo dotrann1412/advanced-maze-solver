@@ -86,6 +86,7 @@ set -e
 
 # run level 1 with fully algos
 if [ -d $level_1_inputpath ]:
+then
     echo Running Level 1 'for' with 5 algorithms.
     $runner $source_root_dir/main.py -a BFS -m NORMAL -i $level_1_inputpath -o $output_dir --github-cicd true
     $runner $source_root_dir/main.py -a DFS -m NORMAL -i $level_1_inputpath -o $output_dir --github-cicd true
@@ -96,7 +97,6 @@ if [ -d $level_1_inputpath ]:
 
     $runner $source_root_dir/main.py -a A_STAR -m NORMAL -i $level_1_inputpath -o $output_dir --github-cicd true -hf 2
     $runner $source_root_dir/main.py -a GBFS -m NORMAL -i $level_1_inputpath -o $output_dir --github-cicd true -hf 2
-then
 else
     echo Warning! Level 1 input folder is missing: $level_1_inputpath
 fi
