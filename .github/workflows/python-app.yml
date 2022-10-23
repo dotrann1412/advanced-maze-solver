@@ -22,10 +22,10 @@ jobs:
     - name: Test algo
       run: |
         chmod +x ./lab-01/test.sh && cd ./lab-01 && ./test.sh
-    - name: Archive production artifacts
-      uses: actions/upload-artifact@v3
-      with:
-        name: lab-01-output
-        path: |
-          ./lab-01/output/**
+    # - name: Archive production artifacts
+    #   uses: actions/upload-artifact@v3
+    #   with:
+    #     name: lab-01-output
+    #     path: |
+    #       ./lab-01/output/**
     
