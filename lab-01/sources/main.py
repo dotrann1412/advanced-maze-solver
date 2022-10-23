@@ -39,6 +39,8 @@ if __name__ == "__main__":
 						type=str, default=None)
 	parser.add_argument("-jsm", "--just-show-maze", help="Visualize the maze without running any algorithm",
 						type=bool, default=False)
+	parser.add_argument("-cicd", "--github-cicd", help="Just run and render output video in background",
+					type=bool, default=False)
 
 	args = parser.parse_args()
 
@@ -49,6 +51,9 @@ if __name__ == "__main__":
 	output_dir = None
 	extra_info = None
 	just_show_maze = None
+
+	if args.github_cicd:
+		os.environ["SDL_VIDEODRIVER"] = "dummy"
 
 	if args.mode:
 		mode = AlgorithmsMode[args.mode]
