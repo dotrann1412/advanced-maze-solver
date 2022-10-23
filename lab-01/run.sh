@@ -67,7 +67,7 @@ advance_inputpath="./input/advance"
 source_root_dir="./sources"
 
 # check the existance of source folder 
-if [ -d $source_root_dir]
+if [ -d $source_root_dir];
 then
     if [[ $? != 0 ]]
     then
@@ -85,7 +85,7 @@ fi
 set -e
 
 # run level 1 with fully algos
-if [ -d $level_1_inputpath ]:
+if [ -d $level_1_inputpath ];   
 then
     echo Running Level 1 'for' with 5 algorithms.
     $runner $source_root_dir/main.py -a BFS -m NORMAL -i $level_1_inputpath -o $output_dir
@@ -102,7 +102,7 @@ else
 fi
 
 # run level 2 with A*
-if [ -d $level_2_inputpath ]
+if [ -d $level_2_inputpath ];
 then
     echo Running Level 2 with A* algorithm.
     $runner $source_root_dir/main.py -a A_STAR -m BONUS -i $level_2_inputpath -o $output_dir
@@ -111,7 +111,7 @@ else
 fi
 
 # run level 3 with A*
-if [ -d $level_3_inputpath ]
+if [ -d $level_3_inputpath ];
 then
     echo Running Level 3 with A* algorithm.
     $runner $source_root_dir/main.py -a A_STAR -m INTERMEDIATE -i $level_3_inputpath -o $output_dir
@@ -121,7 +121,7 @@ fi
 
 
 # run advance level with A* and BFS
-if [ -d $advance_inputpath ]
+if [ -d $advance_inputpath ];
 then
     echo Running advance level with A* algorithm.
     $runner $source_root_dir/main.py -a A_STAR -m TELEPORT -i $advance_inputpath -o $output_dir
