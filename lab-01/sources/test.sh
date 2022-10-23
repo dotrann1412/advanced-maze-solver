@@ -2,7 +2,7 @@
 
 runner=""
 
-output_dir="../output"
+output_dir="./output"
 if [[ ! -d $output_dir ]]
 then
     mkdir $output_dir
@@ -38,10 +38,11 @@ echo Using $python_version from $runner
 
 pip_version=$($runner -m pip --version)
 
-level_1_inputpath="../input/level_1"
-level_2_inputpath="../input/level_2"
-level_3_inputpath="../input/level_3"
-advance_inputpath="../input/advance"
+level_1_inputpath="./input/level_1"
+level_2_inputpath="./input/level_2"
+level_3_inputpath="./input/level_3"
+advance_inputpath="./input/advance"
+source_root_dir="./sources"
 
 if [[ $? != 0 ]]
 then
@@ -50,32 +51,34 @@ else
     echo Upgrading pip...
     $runner -m pip install --upgrade pip > /dev/null 
     echo Installing requirements...
-    $runner -m pip install -r ./env-requirements.txt > /dev/null 
+    $runner -m pip install -r $source_root_dir/env-requirements.txt > /dev/null 
 fi
 
 set -e
 
+
+
 echo Running Level 1 'for' with 5 algorithms.
-$runner main.py -a BFS -m NORMAL -i $level_1_inputpath -o $output_dir --github-cicd true
-$runner main.py -a DFS -m NORMAL -i $level_1_inputpath -o $output_dir --github-cicd true
-$runner main.py -a UCS -m NORMAL -i $level_1_inputpath -o $output_dir --github-cicd true
+$runner $source_root_dir/main.py -a BFS -m NORMAL -i $level_1_inputpath -o $output_dir --github-cicd true
+$runner $source_root_dir/main.py -a DFS -m NORMAL -i $level_1_inputpath -o $output_dir --github-cicd true
+$runner $source_root_dir/main.py -a UCS -m NORMAL -i $level_1_inputpath -o $output_dir --github-cicd true
 
-$runner main.py -a A_STAR -m NORMAL -i $level_1_inputpath -o $output_dir --github-cicd true -hf 1
-$runner main.py -a GBFS -m NORMAL -i $level_1_inputpath -o $output_dir --github-cicd true -hf 1
+$runner $source_root_dir/main.py -a A_STAR -m NORMAL -i $level_1_inputpath -o $output_dir --github-cicd true -hf 1
+$runner $source_root_dir/main.py -a GBFS -m NORMAL -i $level_1_inputpath -o $output_dir --github-cicd true -hf 1
 
-$runner main.py -a A_STAR -m NORMAL -i $level_1_inputpath -o $output_dir --github-cicd true -hf 2
-$runner main.py -a GBFS -m NORMAL -i $level_1_inputpath -o $output_dir --github-cicd true -hf 2
+$runner $source_root_dir/main.py -a A_STAR -m NORMAL -i $level_1_inputpath -o $output_dir --github-cicd true -hf 2
+$runner $source_root_dir/main.py -a GBFS -m NORMAL -i $level_1_inputpath -o $output_dir --github-cicd true -hf 2
 
 echo Running Level 2 with A* algorithm.
-$runner main.py -a A_STAR -m BONUS -i $level_2_inputpath -o $output_dir --github-cicd true
+$runner $source_root_dir/main.py -a A_STAR -m BONUS -i $level_2_inputpath -o $output_dir --github-cicd true
 
 echo Running Level 3 with A* algorithm.
-$runner main.py -a A_STAR -m INTERMEDIATE -i $level_3_inputpath -o $output_dir --github-cicd true
+$runner $source_root_dir/main.py -a A_STAR -m INTERMEDIATE -i $level_3_inputpath -o $output_dir --github-cicd true
 
 echo Running advance level with A* algorithm.
-$runner main.py -a A_STAR -m TELEPORT -i $advance_inputpath -o $output_dir --github-cicd true
+$runner $source_root_dir/main.py -a A_STAR -m TELEPORT -i $advance_inputpath -o $output_dir --github-cicd true
 
 echo Running advance level with GBFS algorithm.
-$runner main.py -a BFS -m TELEPORT -i $advance_inputpath -o $output_dir --github-cicd true
+$runner $source_root_dir/main.py -a BFS -m TELEPORT -i $advance_inputpath -o $output_dir --github-cicd true
 
 echo All 'Done'! Let\'s check $output_dir.
