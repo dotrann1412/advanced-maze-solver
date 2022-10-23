@@ -38,6 +38,11 @@ echo Using $python_version from $runner
 
 pip_version=$($runner -m pip --version)
 
+level_1_inputpath="../input-samples/level_1"
+level_2_inputpath="../input-samples/level_2"
+level_3_inputpath="../input-samples/level_3"
+advance_inputpath="../input-samples/advance"
+
 if [[ $? != 0 ]]
 then
     echo If any problem occurs during demo 'time' try to install pip by this command: "apt install python3-pip" \(Run with administrator permission 'if' needed\)!
@@ -51,34 +56,26 @@ fi
 set -e
 
 echo Running Level 1 'for' with 5 algorithms.
-$runner main.py -a BFS -m NORMAL -i ../input-samples/normal -o $output_dir
-$runner main.py -a DFS -m NORMAL -i ../input-samples/normal -o $output_dir
-$runner main.py -a UCS -m NORMAL -i ../input-samples/normal -o $output_dir
+$runner main.py -a BFS -m NORMAL -i $level_1_inputpath -o $output_dir
+$runner main.py -a DFS -m NORMAL -i $level_1_inputpath -o $output_dir
+$runner main.py -a UCS -m NORMAL -i $level_1_inputpath -o $output_dir
 
-$runner main.py -a A_STAR -m NORMAL -i ../input-samples/normal -o $output_dir -hf 1
-$runner main.py -a GBFS -m NORMAL -i ../input-samples/normal -o $output_dir -hf 1
+$runner main.py -a A_STAR -m NORMAL -i $level_1_inputpath -o $output_dir -hf 1
+$runner main.py -a GBFS -m NORMAL -i $level_1_inputpath -o $output_dir -hf 1
 
-$runner main.py -a A_STAR -m NORMAL -i ../input-samples/normal -o $output_dir -hf 2
-$runner main.py -a GBFS -m NORMAL -i ../input-samples/normal -o $output_dir -hf 2
+$runner main.py -a A_STAR -m NORMAL -i $level_1_inputpath -o $output_dir -hf 2
+$runner main.py -a GBFS -m NORMAL -i $level_1_inputpath -o $output_dir -hf 2
 
 echo Running Level 2 with A* algorithm.
-$runner main.py -a A_STAR -m BONUS -i ../input-samples/bonus -o $output_dir
-$runner main.py -a A_STAR -m BONUS -i ../input-samples/bonus -o $output_dir
-$runner main.py -a A_STAR -m BONUS -i ../input-samples/bonus -o $output_dir
+$runner main.py -a A_STAR -m BONUS -i $level_2_inputpath -o $output_dir
 
 echo Running Level 3 with A* algorithm.
-$runner main.py -a A_STAR -m INTERMEDIATE -i ../input-samples/intermediate -o $output_dir
-$runner main.py -a A_STAR -m INTERMEDIATE -i ../input-samples/intermediate -o $output_dir
-$runner main.py -a A_STAR -m INTERMEDIATE -i ../input-samples/intermediate -o $output_dir
+$runner main.py -a A_STAR -m INTERMEDIATE -i $level_3_inputpath -o $output_dir
 
 echo Running advance level with A* algorithm.
-$runner main.py -a A_STAR -m TELEPORT -i ../input-samples/teleport -o $output_dir
-$runner main.py -a A_STAR -m TELEPORT -i ../input-samples/teleport -o $output_dir
-$runner main.py -a A_STAR -m TELEPORT -i ../input-samples/teleport -o $output_dir
+$runner main.py -a A_STAR -m TELEPORT -i $advance_inputpath -o $output_dir
 
 echo Running advance level with GBFS algorithm.
-$runner main.py -a GBFS -m TELEPORT -i ../input-samples/teleport -o $output_dir
-$runner main.py -a GBFS -m TELEPORT -i ../input-samples/teleport -o $output_dir
-$runner main.py -a GBFS -m TELEPORT -i ../input-samples/teleport -o $output_dir
+$runner main.py -a BFS -m TELEPORT -i $advance_inputpath -o $output_dir
 
 echo All 'Done'! Let\'s check $output_dir.
