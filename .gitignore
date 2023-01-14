@@ -131,4 +131,5 @@ dmypy.json
 # personal 
 *personal*
 
-lab-01/output/**
+output/**
+personal/**
