@@ -11,7 +11,7 @@ Content:
     - [**2.4. Teleport maze**](#teleport-maze)
 
 
-## 1. Project description
+## **1. Project description**
 <a name='project-description'></a>
 
 In this project, we mentioned about 2 types of searching algorithms:
@@ -43,12 +43,10 @@ About the maze, we have 3 types:
     <img height="150px" src="./readme-resources/images/teleport-ex.jpg"></img>
     </p>
 
-## 2. Maze solving
+## **2. Maze solving**
 <a name='maze-solving'></a>
-- some words
-- use gifs, put in the `readme-resources/gifs` folder
  
-### 2.1. Normal maze
+### **2.1. Normal maze**
 <a name='normal-maze'></a>
 
 #### 2.1.1. DFS algorithm
@@ -92,7 +90,7 @@ About the maze, we have 3 types:
 <p align="center" style="font-size: 13px; font-style: italic;">With Euclidean distance as heuristic function</p>
 </p>
 
-### 2.2. Bonus maze
+### **2.2. Bonus maze**
 <a name='bonus-maze'></a>
 
 - We used A* algorithm with the following heuristic function, calculated on the current node $n$:
@@ -116,7 +114,7 @@ $$h(n)=\min_{b \in Specials} \left ( M(n, b) + value(b) + M(b, end) \right )$$
     <img height = "150px" src="./readme-resources/gifs/level_2/input2/astar/astar.gif"/>
     </p>
 
-### 2.3. Intermediate maze
+### **2.3. Intermediate maze**
 <a name='inter-maze'></a>
 - We also used A* algorithm with the following heuristic function, calculated on the current node $n$:
 
@@ -143,7 +141,7 @@ $$h(n) = \left\{
     <img height = "150px" src="./readme-resources/gifs/level_3/input2/astar/astar.gif"/>
     </p>
 
-### 2.4. Teleport maze
+### **2.4. Teleport maze**
 <a name='teleport-maze'></a>
 
 - In this maze, when we are at node $n$ with coordinate $(i,j)$, we are able to reach up to 5 other nodes instead of 4, included $(i, j+1)$, $(i, j-1)$, $(i+1, j)$, $(i-1, j)$, and $(i', j')$ is the relevant teleport nodes.
